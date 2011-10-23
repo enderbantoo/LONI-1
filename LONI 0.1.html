@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html>
 <head>
 <meta charset="UTF-8" />
@@ -47,6 +48,7 @@ makingConnection.connectingFrom=-1;
 	this.inputConnect=false;
 	this.outputConnect=false;
 	this.connecting=false;
+	this.rotate=0;
 	
 	/*
 	if (input=="normal")
@@ -143,10 +145,13 @@ function init()
 	 ctx = canvas.getContext("2d");
 	 var module1=new module(75,50,"normal",1,1);
 	 var module2=new module(200,200,"normal",1,1);
+	 var module3=new module(350,350,"normal",1,1);
 	 myModules[0]=module1;
 	 myModules[1]=module2;
+	 myModules[2]=module3;
 	 myConnections[0]=-1;
 	 myConnections[1]=-1;
+	 myConnections[2]=-1;
 	 return setInterval(draw, 10);
 }
 
@@ -158,16 +163,15 @@ function clear()
 }
 function draw(){
 	clear();
-
-	ctx.beginPath();
-	ctx.fillStyle = "LightBlue";
-	ctx.lineWidth = "3";
+	ctx.strokeStyle="black";
 	
 	//Draw the Modules
 	var i = 0;
 	for (i = 0; i < myModules.length; i++)
 	{
 		var drawModule=myModules[i];
+		ctx.fillStyle = "LightBlue";
+		ctx.lineWidth = "3";
 		ctx.beginPath();
 		ctx.arc(drawModule.x, drawModule.y, 45, 0, 2 * 3.141592653589792348624, 0);
 		ctx.stroke();
@@ -192,10 +196,11 @@ function draw(){
 	{
 		if (myConnections[i] != -1)
 		{
-			ctx.beginPath();
-			ctx.moveTo(myModules[i].x,myModules[i].y+53)
-			ctx.lineTo(myModules[myConnections[i]].x,myModules[myConnections[i]].y-53)
-			ctx.stroke();
+			//ctx.beginPath();
+			//ctx.moveTo(myModules[i].x,myModules[i].y+53)
+			//ctx.lineTo(myModules[myConnections[i]].x,myModules[myConnections[i]].y-53)
+			//ctx.stroke();
+			drawConnection(myModules[i].x,myModules[i].y+53,myModules[myConnections[i]].x,myModules[myConnections[i]].y-53)
 		}
 	}
 	//Drawing a Line
@@ -205,10 +210,8 @@ function draw(){
 		for (i = 0; i < myModules.length; i++) {
 			if (myModules[i].connecting == true) {
 				makingConnection.connectingFrom = i;
-				ctx.beginPath();
-				ctx.moveTo(myModules[i].x, myModules[i].y + 53)
-				ctx.lineTo(makingConnection.x, makingConnection.y)
-				ctx.stroke();
+				drawConnection(myModules[i].x, myModules[i].y + 53,makingConnection.x, makingConnection.y)
+
 			}
 		}
 	}
@@ -224,6 +227,180 @@ function myMove(e)
 init()
 canvas.onmousedown = moduleMouseDown;
 canvas.onmouseup = moduleMouseUp;
+
+
+function drawConnection(x1,y1,x2,y2) {
+    var delta_x = x2 - x1;
+    var delta_y = y2 - y1;
+    var fromRotate=0;
+	var toRotate=0;
+    if(fromRotate==0 && toRotate==0) {
+	    if(y2>=y1) {
+	        if (abs(delta_x) < abs(delta_y) / 2) { // 3 segments
+	            var temp = (abs(delta_y) - abs(delta_x)) / 2;
+			    drawLine(x1,y1,x1,y1+signum(delta_y) * temp);
+			    drawLine(x1,y1+signum(delta_y) * temp, x2, y2-signum(delta_y) * temp);
+			    drawLine(x2, y2-signum(delta_y) * temp, x2, y2);
+	        } else { // 5 segments
+	            var y_step = delta_y / 4;
+	            var x_step = signum(delta_x) * abs(y_step);
+	            var mid_y = (y1 + y2) / 2;
+			    drawLine(x1,y1,x1,y1 + y_step);
+			    drawLine(x1,y1 + y_step, x1+x_step, mid_y);
+			    drawLine(x1+x_step, mid_y, x2-x_step, mid_y);
+			    drawLine(x2-x_step, mid_y, x2, y2-y_step);
+			    drawLine(x2, y2-y_step, x2, y2);
+	        }
+	     } else {
+	     	var midx = (x1+x2)/2;
+	     	var midy = (y1+y2)/2;
+	     	drawULine(x1, y1, midx, midy, 0); // u shape
+	     	drawULine(midx, midy, x2, y2, 1); // n shape
+	     }
+     } else if(fromRotate==1 && toRotate==1) {
+     	if(x2>=x1) {
+ 			if (abs(delta_y) < abs(delta_x) / 2) { // 3 segments
+                var temp = (abs(delta_x) - abs(delta_y)) / 2;
+			    drawLine(x1,y1,x1+signum(delta_x) * temp,y1);
+			    drawLine(x1+signum(delta_x) * temp,y1, x2-signum(delta_x) * temp, y2);
+			    drawLine(x2-signum(delta_x) * temp, y2, x2, y2);
+            } else { // 5 segments |
+                var x_step = delta_x / 4;
+                var y_step = signum(delta_y) * abs(x_step);
+                var mid_x = (x1+ x2) / 2;
+			    drawLine(x1,y1,x1+x_step,y1);
+			    drawLine(x1+x_step,y1,mid_x,y1+y_step);
+			    drawLine(mid_x,y1+y_step,mid_x, y2-y_step);
+			    drawLine(mid_x, y2-y_step, x2-x_step, y2);
+			    drawLine(x2-x_step, y2, x2, y2);
+            }
+         } else {
+	     	var midx = (x1+x2)/2;
+	     	var midy = (y1+y2)/2;
+	     	drawULine(x1, y1, midx, midy, 2); // ) shape
+	     	drawULine(midx, midy, x2, y2, 3); // ( shape
+         }
+     } else {
+     	if(from.rotate==0 && to.rotate==1) { // Down, 45, Left/Right 
+     		if (abs(delta_x) > abs(delta_y)) {
+                var y_step = delta_y / 2;
+			    drawLine(x1,y1,x1,y1+y_step);
+			    drawLine(x1,y1+y_step,x1+signum(delta_x)*abs(y_step), y2);
+			    drawLine(x1+signum(delta_x)*abs(y_step), y2,x2,y2);
+            } else {
+                var x_step = delta_x / 2;
+                var temp = abs(delta_y) - abs(x_step);
+			    drawLine(x1,y1,x1,y1+signum(delta_y) * temp);
+			    drawLine(x1,y1+signum(delta_y) * temp,x1+x_step,y2);
+			    drawLine(x1+x_step,y2,x2,y2);
+            }
+     	} else {
+            if (abs(delta_y) > abs(delta_x)) {
+                var x_step = delta_x / 2;
+			    drawLine(x1,y1,x1+x_step,y1);
+			    drawLine(x1+x_step,y1,x2,y1+signum(delta_y)*abs(x_step));
+			    drawLine(x2,y1+signum(delta_y)*abs(x_step),x2,y2);
+            } else {
+                var y_step = delta_y / 2;
+                var temp = abs(delta_x) - abs(y_step);
+			    drawLine(x1,y1,x1+signum(delta_x)*temp,y1);
+			    drawLine(x1+signum(delta_x)*temp,y1,x2,y2-y_step);
+			    drawLine(x2,y2-y_step,x2,y2);
+            }
+     	
+     	}
+     }
+  }
+function drawULine(x1, y1, x2, y2, direction){
+	var delta_x = x2 - x1;
+	var delta_y = y2 - y1;
+	var extension = 0; // How far the line will go out before looping back
+	if (direction <= 1) {
+		var step_x = delta_x / 3;
+		var step_y = abs(step_x);
+		if (direction == 0) {
+			// open up: u shape
+			if (y1 >= y2) { // pointing down
+				step_y = step_y * signum(-delta_y);
+				if (delta_y > 0) 
+					extension += delta_y;
+			}
+			else {
+				step_y = step_y * signum(delta_y);
+				if (delta_y < 0) // pointing up
+					extension += delta_y;
+			}
+		}
+		else {
+			// open down: n shape
+			if (y2 >= y1) { // pointing down
+				step_y *= signum(-delta_y);
+				if (delta_y > 0) 
+					extension += delta_y;
+			}
+			else {
+				step_y *= signum(delta_y);
+				if (delta_y < 0) // pointing up
+					extension += delta_y;
+			}
+		}
+		drawLine(x1, y1, x1, y1 + extension + step_y);
+		drawLine(x1, y1 + extension + step_y, x1 + step_x, y1 + extension + 2 * step_y);
+		drawLine(x1 + step_x, y1 + extension + 2 * step_y, x2 - step_x, y1 + extension + 2 * step_y);
+		drawLine(x2 - step_x, y1 + extension + 2 * step_y, x2, y1 + extension + step_y);
+		drawLine(x2, y1 + extension + step_y, x2, y2);
+		
+	}
+	else {
+		var step_y = delta_y / 3;
+		var step_x = abs(step_y);
+		if (direction == 2) {
+			// open left: ) shape
+			step_x *= signum(-delta_x);
+			if (delta_x > 0) 
+				extension += delta_x;
+		}
+		else {
+			// open right: ( shape
+			step_x *= signum(delta_x);
+			if (delta_x < 0) 
+				extension += delta_x;
+		}
+		
+		drawLine(x1, y1, x1 + extension + step_x, y1);
+		drawLine(x1 + extension + step_x, y1, x1 + extension + 2 * step_x, y1 + step_y);
+		drawLine(x1 + extension + 2 * step_x, y1 + step_y, x1 + extension + 2 * step_x, y2 - step_y);
+		drawLine(x1 + extension + 2 * step_x, y2 - step_y, x1 + extension + step_x, y2);
+		drawLine(x1 + extension + step_x, y2, x2, y2);
+	}
+}
+	
+	function drawLine(x1,y1,x2,y2)
+	{
+		ctx.strokeStyle="#7585C1";
+		ctx.beginPath();
+		ctx.moveTo(x1,y1);
+		ctx.lineTo(x2,y2);
+		ctx.stroke();
+		
+	}
+	
+	
+	function abs(i) {
+	if(i>=0)
+	 	return i;
+	else
+		return -1*i;
+}
+
+	function signum(i) {
+	if(i==0)
+		return 0;
+	else if(i<0)
+		return -1;
+	else
+		return 1;
+}
 </script>
 
 </section>
