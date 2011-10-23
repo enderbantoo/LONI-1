@@ -27,10 +27,14 @@ var x = 75;
 var y = 50;
 var WIDTH = 800;
 var HEIGHT = 600;
-var dragok = false;
 var myModules=new Array();
+var myConnections=new Array();
+makingConnection=new Object();
+makingConnection.x=0;
+makingConnection.y=0;
+makingConnection.connecting=false;
+makingConnection.connectingFrom=-1;
 //class variables
-
  function module(x,y,type,input,output)
  {
  	this.x=x;
@@ -40,6 +44,9 @@ var myModules=new Array();
 	this.output=output;
 	draw=draw;
 	this.dragOK = false;
+	this.inputConnect=false;
+	this.outputConnect=false;
+	this.connecting=false;
 	
 	/*
 	if (input=="normal")
@@ -58,15 +65,22 @@ function moveModule(e){
 	}
 }
  
+function moveLine(e)
+{
+	makingConnection.x = e.pageX - canvas.offsetLeft;
+	makingConnection.y = e.pageY - canvas.offsetTop;
+
+}
 function moduleMouseDown(e)
 {
 	var i=0
+	//check if moving module
 	for (i=0;i<myModules.length;i++)
 	{
-		if (e.pageX < myModules[i].x + 23 + canvas.offsetLeft &&
-		e.pageX > myModules[i].x - 23 + canvas.offsetLeft &&
-		e.pageY < myModules[i].y + 23 + canvas.offsetTop &&
-		e.pageY > myModules[i].y - 23 + canvas.offsetTop)
+		if (e.pageX < myModules[i].x + 45 + canvas.offsetLeft &&
+		e.pageX > myModules[i].x - 45 + canvas.offsetLeft &&
+		e.pageY < myModules[i].y + 45 + canvas.offsetTop &&
+		e.pageY > myModules[i].y - 45 + canvas.offsetTop)
 		{
 			myModules[i].x = e.pageX - canvas.offsetLeft;
 			myModules[i].y = e.pageY - canvas.offsetTop;
@@ -75,13 +89,51 @@ function moduleMouseDown(e)
 			break;
 		}
 	}
+	//check if connecting
+	for (i=0;i<myModules.length;i++)
+	{
+		if (e.pageX < myModules[i].x + 5 + canvas.offsetLeft &&
+		e.pageX > myModules[i].x - 5 + canvas.offsetLeft &&
+		e.pageY < myModules[i].y + 58 + canvas.offsetTop &&
+		e.pageY > myModules[i].y + 48 + canvas.offsetTop &&
+		myConnections[i] == -1) 
+		{
+			makingConnection.connecting=true;
+			makingConnection.x = e.pageX - canvas.offsetLeft;
+			makingConnection.y = e.pageY - canvas.offsetTop;
+			myModules[i].connecting = true;
+			canvas.onmousemove = moveLine;
+			break;
+		}
+	}
 }
 
-function moduleMouseUp()
-{
-	for(i=0;i<myModules.length;i++)
+function moduleMouseUp(e){
+	for (i = 0; i < myModules.length; i++) {
+		
+		if (e.pageX < myModules[i].x + 5 + canvas.offsetLeft &&
+		e.pageX > myModules[i].x - 5 + canvas.offsetLeft &&
+		e.pageY > myModules[i].y - 58 + canvas.offsetTop &&
+		e.pageY < myModules[i].y - 48 + canvas.offsetTop)
+		{
+			var k=0;
+			for (k = 0;k < myModules.length; k++) {
+				if(i != k && myModules[k].connecting==true)
+				{
+					myConnections[k]= i;
+					break;
+				}
+			}
+		}
+	}
+	
+	for (i = 0; i < myModules.length; i++) {
 		myModules[i].dragOK = false;
-	 canvas.onmousemove = null;
+		myModules[i].connecting=false;
+	}
+	
+	makingConnection.connecting=false;
+	canvas.onmousemove = null;
 } 
  
  //initialization
@@ -93,6 +145,8 @@ function init()
 	 var module2=new module(200,200,"normal",1,1);
 	 myModules[0]=module1;
 	 myModules[1]=module2;
+	 myConnections[0]=-1;
+	 myConnections[1]=-1;
 	 return setInterval(draw, 10);
 }
 
@@ -109,6 +163,7 @@ function draw(){
 	ctx.fillStyle = "LightBlue";
 	ctx.lineWidth = "3";
 	
+	//Draw the Modules
 	var i = 0;
 	for (i = 0; i < myModules.length; i++)
 	{
@@ -130,6 +185,32 @@ function draw(){
 		ctx.arc(drawModule.x, drawModule.y - 53, 5, 0, 2 * 3.141592653589792348624, 0)
 		ctx.stroke();
 		ctx.fill();
+	}
+	
+	//Draw the connections
+	for (i=0; i < myModules.length; i++)
+	{
+		if (myConnections[i] != -1)
+		{
+			ctx.beginPath();
+			ctx.moveTo(myModules[i].x,myModules[i].y+53)
+			ctx.lineTo(myModules[myConnections[i]].x,myModules[myConnections[i]].y-53)
+			ctx.stroke();
+		}
+	}
+	//Drawing a Line
+	if (makingConnection.connecting==true)
+	{
+		var connectingFrom;
+		for (i = 0; i < myModules.length; i++) {
+			if (myModules[i].connecting == true) {
+				makingConnection.connectingFrom = i;
+				ctx.beginPath();
+				ctx.moveTo(myModules[i].x, myModules[i].y + 53)
+				ctx.lineTo(makingConnection.x, makingConnection.y)
+				ctx.stroke();
+			}
+		}
 	}
 }
 function myMove(e)
