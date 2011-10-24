@@ -29,7 +29,6 @@ var y = 50;
 var WIDTH = 800;
 var HEIGHT = 600;
 var myModules=new Array();
-var myConnections=new Array();
 makingConnection=new Object();
 makingConnection.x=0;
 makingConnection.y=0;
@@ -47,18 +46,29 @@ makingConnection.connectingFrom=-1;
 	this.connecting=false;
 	this.rotate=0;
 	this.checkConnection=checkConnection;
+	this.checkConnected=checkConnected;
 	this.checkMoving=checkMoving;
 	this.outputs=new Array();	
 	this.outputsTrue=new Array();
 	this.outputsFalse=new Array();
 		
-	if (type == "normal") 
+	switch(this.type)
 	{
-	}
-	else if (type = "conditional")
-	{
+	case "normal":
+		this.radius=53;
+		break;
+	case "conditional":
+		this.radius=53;
 		this.connectingTrue=false;
 		this.connectingFalse=false;
+		break;
+	case "source":
+	case "study":
+		this.radius=28;
+		break;
+	case "sink":
+		this.radius=35;
+		break;
 	}
  }
  function checkMoving (mouseX,mouseY,offsetLeft,offsetTop)
@@ -83,9 +93,53 @@ makingConnection.connectingFrom=-1;
 				return true;
 		else 	
 			return false;
+			
+	case "source":
+	case "study":
+		if (mouseX < this.x + 25 + offsetLeft &&
+			mouseX > this.x - 25 + offsetLeft &&
+			mouseY < this.y + 25 + offsetTop &&
+			mouseY > this.y - 25 + offsetTop)
+				return true;
+		else 	
+			return false;	
+	
+	case "sink":
+		if (mouseX < this.x + 25 + offsetLeft &&
+			mouseX > this.x - 25 + offsetLeft &&
+			mouseY < this.y + 25 + offsetTop &&
+			mouseY > this.y - 25 + offsetTop)
+				return true;
+		else 	
+			return false;		
 	}	
  }
- function checkConnection (mouseX,mouseY,offsetLeft,offsetTop,i)
+ function checkConnected(mouseX,mouseY,offsetLeft,offsetTop)
+ {
+ 	switch(this.type)
+	{
+	case "normal":
+	case "conditional":	
+ 	if (mouseX < this.x + 5 + offsetLeft &&
+		mouseX > this.x - 5 + offsetLeft &&
+		mouseY > this.y - 58 + offsetTop &&
+		mouseY < this.y - 48 + offsetTop)
+		return true;
+	else
+		return false;
+	case "sink":
+ 	if (mouseX < this.x + 5 + offsetLeft &&
+		mouseX > this.x - 5 + offsetLeft &&
+		mouseY > this.y - 38 + offsetTop &&
+		mouseY < this.y - 28 + offsetTop)
+		return true;
+	else
+		return false;
+	default:
+		return false;
+	}
+ }
+ function checkConnection (mouseX,mouseY,offsetLeft,offsetTop)
  {
  	switch(this.type)
 	{
@@ -124,6 +178,19 @@ makingConnection.connectingFrom=-1;
 		
 		else
 			return -1;
+	case "source":
+	case "study":
+		if (mouseX < this.x + 7 + offsetLeft &&
+			mouseX > this.x - 7 + offsetLeft &&
+			mouseY < this.y + 45 + offsetTop &&
+			mouseY > this.y + 30 + offsetTop)
+			{
+					this.connecting = true;
+					return 1;
+			}
+			else
+				return -1;
+	
 	default:
 		return -1;
 	} 
@@ -137,7 +204,6 @@ makingConnection.connectingFrom=-1;
  	var index=myModules.length;
 	 var module1=new module(x,y,type,1,1);
 	 myModules[index]=module1;
-	 myConnections[index]=-1;
  }
  
  function deleteModule(index)
@@ -146,6 +212,8 @@ makingConnection.connectingFrom=-1;
 	{
 		switch(myModules[i].type)
 		{
+		case "study":
+		case "source":
 		case "normal":
 			for (j=0;j<myModules[i].outputs.length;j++)
 			{
@@ -208,7 +276,7 @@ function moduleMouseDown(e){
 	}
 	//check if connecting
 	for (i = 0; i < myModules.length; i++) {
-		var testConnect = myModules[i].checkConnection (e.pageX,e.pageY,canvas.offsetLeft,canvas.offsetTop,i);
+		var testConnect = myModules[i].checkConnection (e.pageX,e.pageY,canvas.offsetLeft,canvas.offsetTop);
 		if (testConnect >0) {
 			makingConnection.connecting = true;
 			makingConnection.x = e.pageX - canvas.offsetLeft;
@@ -220,64 +288,58 @@ function moduleMouseDown(e){
 
 function moduleMouseUp(e){
 	for (i = 0; i < myModules.length; i++) {
-		
-		switch(myModules[i].type)
+		var checkConnect = myModules[i].checkConnected(e.pageX,e.pageY,canvas.offsetLeft,canvas.offsetTop)
+		if (checkConnect == true)
 		{
-		case "normal":
-		case "conditional":
-			if (e.pageX < myModules[i].x + 5 + canvas.offsetLeft &&
-			e.pageX > myModules[i].x - 5 + canvas.offsetLeft &&
-			e.pageY > myModules[i].y - 58 + canvas.offsetTop &&
-			e.pageY < myModules[i].y - 48 + canvas.offsetTop)
-			{
-				var k = 0;
-				for (k = 0; k < myModules.length; k++) {
-					if (i != k && myModules[k].connecting == true) {
-						switch(myModules[k].type)
+			var doubleFlag = false;
+			var k = 0;
+			for (k = 0; k < myModules.length; k++) {
+				if (i != k && myModules[k].connecting == true) {
+					switch(myModules[k].type)
+					{
+						
+					case "study":
+					case "source":
+					case "normal":
+						for (j=0;j<myModules[k].outputs.length;j++)
 						{
-						case "normal":
+							if (myModules[k].outputs[j]==i)
+								doubleFlag = true;
+						}
+						if (doubleFlag == false)
 							myModules[k].outputs[myModules[k].outputs.length]=i;
-							break;
-						
-						case "conditional":
-							if (myModules[k].connectingTrue == true)
-								myModules[k].outputsTrue[myModules[k].outputsTrue.length]=i;
-							else if (myModules[k].connectingFalse == true)
-								myModules[k].outputsFalse[myModules[k].outputsFalse.length]=i;
-							break;
-						}
-					break;
-					}
+						else
+							doubleFlag = false;
+						break;
 					
-				}
-			}
-			/*
-		case "conditional":
-			if (e.pageX < myModules[i].x + 5 + canvas.offsetLeft &&
-			e.pageX > myModules[i].x - 5 + canvas.offsetLeft &&
-			e.pageY > myModules[i].y - 58 + canvas.offsetTop &&
-			e.pageY < myModules[i].y - 48 + canvas.offsetTop)
-			{
-				var k = 0;
-				for (k = 0; k < myModules.length; k++) {
-					if (i != k && myModules[k].connecting == true) {
-						switch(myModules[k].type)
-						{
-						case "normal":
-							myModules[k].outputs[0]=i;
-							break;
-						
-						case "conditional":
-							if (myModules[k].connectingTrue == true)
-								myModules[k].outputsTrue[0]=i;
-							else if (myModules[k].connectingFalse == true)
-								myModules[k].outputsFalse[0]=i;
-							break;
+					case "conditional":
+						if (myModules[k].connectingTrue == true) {
+							for (j = 0; j < myModules[k].outputsTrue.length; j++) {
+								if (myModules[k].outputsTrue[j] = i) 
+									doubleFlag = true;
+							}
+							if (doubleFlag == false)
+								myModules[k].outputsTrue[myModules[k].outputsTrue.length] = i;
+							else
+								doubleFlag = false;
 						}
-					break;
+						else 
+							if (myModules[k].connectingFalse == true) {
+								for (j = 0; j < myModules[k].outputsFalse.length; j++) {
+									if (myModules[k].outputsFalse[j] = i) 
+										doubleFlag = true;
+								}
+								if (doubleFlag == false)
+									myModules[k].outputsFalse[myModules[k].outputsFalse.length] = i;
+								else
+									doubleFlag = false;
+							}
+						break;
 					}
+				break;
 				}
-			}*/				
+				
+			}
 		}
 	}
 	
@@ -302,6 +364,9 @@ function init()
 		createModule(350,350,"normal",1,1);
 		deleteModule(2);
 		createModule(200,200,"conditional",1,1)
+		createModule(150,150,"source",0,1)
+		createModule(300,300,"sink",1,0)
+		createModule(400,400,"study",0,1)
 	 return setInterval(draw, 10);
 }
 
@@ -345,6 +410,15 @@ function draw(){
 		case "conditional":
 			drawConditional(drawModule);
 			break;
+		case "source":
+			drawSource(drawModule);
+			break;
+		case "sink":
+			drawSink(drawModule);
+			break;
+		case "study":
+			drawStudy(drawModule);
+			break;
 		default:
 		
 		}
@@ -359,17 +433,26 @@ function draw(){
 			for (j=0;j<myModules[i].outputs.length;j++)
 			{
 				if (myModules[i].outputs[j] != -1) 
-					drawConnection(myModules[i].x, myModules[i].y + 53, myModules[myModules[i].outputs[j]].x, myModules[myModules[i].outputs[j]].y - 53)
+					drawConnection(myModules[i].x, myModules[i].y + 53, myModules[myModules[i].outputs[j]].x, myModules[myModules[i].outputs[j]].y - myModules[myModules[i].outputs[j]].radius)
 			}
 			break;
 			
 		case "conditional":
 			for (j=0;j<myModules[i].outputsTrue.length;j++)
 				if (myModules[i].outputsTrue[j] != -1) 
-					drawConnection(myModules[i].x - 20, myModules[i].y + 53, myModules[myModules[i].outputsTrue[j]].x, myModules[myModules[i].outputsTrue[j]].y - 53)
+					drawConnection(myModules[i].x - 20, myModules[i].y + 53, myModules[myModules[i].outputsTrue[j]].x, myModules[myModules[i].outputsTrue[j]].y - myModules[myModules[i].outputsTrue[j]].radius)
 			for (j=0;j<myModules[i].outputsFalse.length;j++)		
 				if (myModules[i].outputsFalse[j] != -1) 
-					drawConnection(myModules[i].x + 20, myModules[i].y + 53, myModules[myModules[i].outputsFalse[j]].x, myModules[myModules[i].outputsFalse[j]].y - 53)				
+					drawConnection(myModules[i].x + 20, myModules[i].y + 53, myModules[myModules[i].outputsFalse[j]].x, myModules[myModules[i].outputsFalse[j]].y - myModules[myModules[i].outputsFalse[j]].radius)				
+			break;
+			
+		case "source":
+		case "study":
+			for (j=0;j<myModules[i].outputs.length;j++)
+			{
+				if (myModules[i].outputs[j] != -1) 
+					drawConnection(myModules[i].x, myModules[i].y + 36, myModules[myModules[i].outputs[j]].x, myModules[myModules[i].outputs[j]].y - myModules[myModules[i].outputs[j]].radius)
+			}
 			break;
 			
 			
@@ -396,10 +479,19 @@ function draw(){
 				else 
 					if (myModules[i].connectingFalse == true) {
 						drawConnection(myModules[i].x + 20, myModules[i].y + 53, makingConnection.x, makingConnection.y)
+						break;
 					}
 				else
 					break;
-					
+			
+			case "source":
+			case "study":
+				if (myModules[i].connecting == true) {
+					makingConnection.connectingFrom = i;
+					drawConnection(myModules[i].x, myModules[i].y + 36, makingConnection.x, makingConnection.y)
+				}
+				break;	
+						
 			}
 		}
 	}
@@ -454,6 +546,70 @@ function drawConditional (drawModule)
 		ctx.stroke();
 		ctx.fill();
 }
+
+function drawSource (drawModule)
+{
+	ctx.beginPath();
+	ctx.fillStyle = "LightGray";
+	ctx.lineWidth = "3";
+	ctx.beginPath();
+	ctx.arc(drawModule.x, drawModule.y, 25, 0, 2 * 3.141592653589792348624, 0);
+	ctx.stroke();
+	ctx.fill();
+	ctx.lineWidth = "1";
+	ctx.fillStyle = "Gray";
+	ctx.beginPath();
+	ctx.moveTo(drawModule.x-8,drawModule.y+30);
+	ctx.lineTo(drawModule.x+8,drawModule.y+30);
+	ctx.lineTo(drawModule.x,drawModule.y+45);
+	ctx.closePath();
+	ctx.stroke();
+	ctx.lineWidth = "3";
+}
+
+function drawSink (drawModule)
+{
+	ctx.beginPath();
+	ctx.fillStyle = "LightGray";
+	ctx.lineWidth = "3";
+	ctx.beginPath();
+	
+	ctx.moveTo(drawModule.x-25,drawModule.y-25);
+	ctx.lineTo(drawModule.x+25,drawModule.y-25);
+	ctx.lineTo(drawModule.x,drawModule.y+25);
+	ctx.closePath();
+	ctx.stroke();
+	ctx.fill();
+	
+	ctx.lineWidth = "1";
+	ctx.fillStyle = "Gray";
+	ctx.beginPath();
+	ctx.arc(drawModule.x,drawModule.y-35,5,0,2*3.14159265,0);
+	ctx.stroke();
+	
+	ctx.lineWidth = "3";
+}
+
+function drawStudy (drawModule)
+{
+	ctx.beginPath();
+	ctx.fillStyle = "LightGray";
+	ctx.lineWidth = "3";
+	
+	ctx.strokeRect(drawModule.x-25,drawModule.y-25,50,50);
+	ctx.fillRect(drawModule.x-25,drawModule.y-25,50,50);
+	
+	ctx.lineWidth = "1";
+	ctx.fillStyle = "Gray";
+	ctx.beginPath();
+	ctx.moveTo(drawModule.x-8,drawModule.y+30);
+	ctx.lineTo(drawModule.x+8,drawModule.y+30);
+	ctx.lineTo(drawModule.x,drawModule.y+45);
+	ctx.closePath();
+	ctx.stroke();
+	ctx.lineWidth = "3";
+}
+
 function myMove(e)
 {
 	 if (dragok){
