@@ -10,12 +10,12 @@
 $(document).ready( function() {
 var option = { width: 150, items: [
 				{ text: "New", alias: "new", action: menuAction, type: "group", width: 170, items: [
-					{ text: "Modules...", alias: "ctm_modules", action: menuAction },
+					{ text: "Modules...", alias: "ctm_modules", action: ctm_modules },
 					{ type: "splitLine" },
-					{ text: "Data source", alias: "ctm_data_source", action: menuAction },
-					{ text: "Data sink", alias: "ctm_data_sink", action: menuAction },
-					{ text: "Study...", alias: "ctm_study", action: menuAction },
-					{ text: "Conditional...", alias: "ctm_conditional", action: menuAction }
+					{ text: "Data source", alias: "ctm_data_source", action: ctm_data_source },
+					{ text: "Data sink", alias: "ctm_data_sink", action: ctm_data_sink },
+					{ text: "Study...", alias: "ctm_study", action: ctm_study },
+					{ text: "Conditional...", alias: "ctm_conditional", action: ctm_conditional }
 				]},
 				{ type: "splitLine" },
 				{ text: "Cut", alias: "ctm_cut", action: menuAction },
@@ -29,6 +29,29 @@ var option = { width: 150, items: [
 function menuAction() {
 	alert(this.data.alias);
 }
+
+
+function ctm_modules() {
+	createModule(400,300,"normal",1,1);
+}
+
+function ctm_data_source() {
+		createModule(400,300,"source",0,1);
+}
+
+function ctm_study() {
+		createModule(400,300,"study",0,1);
+}
+
+function ctm_data_sink() {
+		createModule(400,300,"sink",1,0);
+	
+}
+
+function ctm_conditional() {
+		createModule(400,300,"conditional",1,1);
+}		
+
 
 $("#canvas").contextmenu(option);
 });

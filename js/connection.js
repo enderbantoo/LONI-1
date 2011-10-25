@@ -338,14 +338,14 @@ function init()
 {
 	 canvas = document.getElementById("canvas");
 	 ctx = canvas.getContext("2d");
-		createModule(75,50,"normal",1,1);
+		/*createModule(75,50,"normal",1,1);
 		createModule(200,200,"normal",1,1);
 		createModule(350,350,"normal",1,1);
 		deleteModule(2);
 		createModule(200,200,"conditional",1,1)
 		createModule(150,150,"source",0,1)
 		createModule(300,300,"sink",1,0)
-		createModule(400,400,"study",0,1)
+		createModule(400,400,"study",0,1)*/
 	 return setInterval(draw, 10);
 }
 
