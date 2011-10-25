@@ -245,7 +245,7 @@ function moduleMouseDown(e){
 	var i = 0
 	//check if moving module
 	for (i = 0; i < myModules.length; i++) {
-		if (myModules[i].checkMoving(e.pageX,e.pageY,canvas.offsetLeft,canvas.offsetTop == true)) {
+		if (myModules[i].checkMoving(e.pageX,e.pageY,canvas.offsetLeft,canvas.offsetTop)) {
 			myModules[i].x = e.pageX - canvas.offsetLeft;
 			myModules[i].y = e.pageY - canvas.offsetTop;
 			myModules[i].dragOK = true;
