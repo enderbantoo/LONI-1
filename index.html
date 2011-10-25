@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><br />
+<link href="css/global.css" rel="stylesheet" type="text/css" />
+<link href="css/contextmenu.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.contextmenu.js"></script>
+<script type="text/javascript">
+$(document).ready( function() {
+var option = { width: 150, items: [
+				{ text: "New", alias: "new", action: menuAction, type: "group", width: 170, items: [
+					{ text: "Modules...", alias: "ctm_modules", action: menuAction },
+					{ type: "splitLine" },
+					{ text: "Data source", alias: "ctm_data_source", action: menuAction },
+					{ text: "Data sink", alias: "ctm_data_sink", action: menuAction },
+					{ text: "Study...", alias: "ctm_study", action: menuAction },
+					{ text: "Conditional...", alias: "ctm_conditional", action: menuAction }
+				]},
+				{ type: "splitLine" },
+				{ text: "Cut", alias: "ctm_cut", action: menuAction },
+				{ text: "Copy", alias: "ctm_copy", action: menuAction },
+				{ text: "Paste", alias: "ctm_paste", action: menuAction }, 
+				{ text: "Select all", alias: "ctm_select_all", action: menuAction }
+				
+			]
+};
+
+function menuAction() {
+	alert(this.data.alias);
+}
+
+$("#canvas").contextmenu(option);
+});
+</script>
+<title>LONI 1</title>
+</head>
+<body>
+<section>
+
+<div>
+<canvas id="canvas" width="800" height="600">
+	
+This text is displayed if your browser does not support HTML5 Canvas.
+</canvas>
+</div>
+<script type="text/javascript" src="js/connection.js"></script>
+
+</section>
+
+</body>
+</html>
