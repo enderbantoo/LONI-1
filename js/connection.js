@@ -1,6 +1,8 @@
 // JavaScript Document
 
 //initial variables
+var testMouseX=0;
+var testMouseY=0;
 var canvas;
 var ctx;
 var x = 75;
@@ -237,10 +239,10 @@ function moveLine(e)
 
 }
 
-
- //============================================
- //        Mouse Manipulations
- //============================================
+//sarashour@gmail.com
+//============================================
+//        Mouse Manipulations
+//============================================
 function moduleMouseDown(e){
 	var i = 0
 	//check if moving module

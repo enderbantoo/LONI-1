@@ -141,6 +141,8 @@
 
         /* to show menu  */
         function showMenu(e, menutarget) {
+			testMouseX = e.pageX;
+			testMouseY = e.pageY;
             target = menutarget;
             showMenuGroup.call(groups.cmroot, { left: e.pageX, top: e.pageY }, 0);
             $(document).one('mousedown', hideMenuPane);
