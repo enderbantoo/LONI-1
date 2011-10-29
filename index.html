@@ -20,15 +20,28 @@ var option = { width: 150, items: [
 				{ type: "splitLine" },
 				{ text: "Cut", alias: "ctm_cut", action: cutModule },
 				{ text: "Copy", alias: "ctm_copy", action: ctm_copy },
-				{ text: "Paste", alias: "ctm_paste", action: menuAction }, 
+				{ text: "Paste", alias: "ctm_paste", action: ctm_paste }, 
 				{ text: "Select all", alias: "ctm_select_all", action: menuAction }
 				
 			]
 };
 
 function ctm_copy() {
-	alert(this.data.alias);
+	for (i=0;i<myModules.length;i++)
+	{
+		if (myModules[i].x == testMouseX - canvas.offsetLeft &&
+		    myModules[i].y == testMouseY - canvas.offsetTop) {
+			
+			copyModule = myModules[i];
+			break;
+			}
+	}	
 }
+
+function ctm_paste() {
+	createModule(testMouseX,testMouseY,copyModule.type,copyModule.input,copyModule.output);
+}
+
 function menuAction() {
 	alert(this.data.alias);
 }
