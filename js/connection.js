@@ -27,26 +27,36 @@ var copyModules = new Array();
 //class variables
  function module(x,y,type,input,output)
  {
+ 	//basic variables
  	this.x=x;
 	this.y=y;
 	this.type=type;
 	this.input=input;
 	this.output=output;
+	this.rotate=0;
+	//connection + moving + copying
 	this.dragOK = false;
 	this.connecting=false;
-	this.rotate=0;
+	this.copiedIndex = -1;
+	
+	//methods
 	this.checkConnection=checkConnection;
 	this.checkConnected=checkConnected;
 	this.checkMoving=checkMoving;
 	this.rotateModule=rotateModule;
 	this.copy=copy;
+	
+	//outputs
 	this.outputs=new Array();	
 	this.outputsTrue=new Array();
 	this.outputsFalse=new Array();
+	
+	//selection and group move
 	this.selected=false;
 	this.groupMoveOffsetX = 0;
 	this.groupMoveOffsetY = 0;
 	
+	//radius
 	switch(this.type)
 	{
 	case "normal":

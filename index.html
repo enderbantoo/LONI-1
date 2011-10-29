@@ -45,6 +45,7 @@ function ctm_copy() {
 			copyModules[last].outputs.splice(0,copyModules[last].outputs.length);
 			copyModules[last].outputsTrue.splice(0,copyModules[last].outputsTrue.length);
 			copyModules[last].outputsFalse.splice(0,copyModules[last].outputsFalse.length);
+			copyModules[last].copiedIndex = i;
 			
 			//copy connections
 			switch(myModules[i].type)
@@ -80,7 +81,41 @@ function ctm_copy() {
 				break;
 			}
 		}
-	}	
+	}
+	
+	//fix outputs
+	for (i=0;i<copyModules.length;i++)
+	{
+		for (k=0;k<copyModules[i].outputs.length;k++)
+		{
+			for (j=0;j<copyModules.length;j++)
+			{
+				if (copyModules[i].outputs[k] == copyModules[j].copiedIndex)
+					copyModules[i].outputs[k]=j;
+			}
+		}
+		
+		for (k=0;k<copyModules[i].outputsTrue.length;k++)
+		{
+			for (j=0;j<copyModules.length;j++)
+			{
+				if (copyModules[i].outputsTrue[k] == copyModules[j].copiedIndex)
+					copyModules[i].outputsTrue[k]=j;
+			}
+		}
+		
+		for (k=0;k<copyModules[i].outputsFalse.length;k++)
+		{
+			for (j=0;j<copyModules.length;j++)
+			{
+				if (copyModules[i].outputsFalse[k] == copyModules[j].copiedIndex)
+					copyModules[i].outputsFalse[k]=j;
+			}
+		}
+	}
+	
+	
+		
 }
 
 function ctm_select_all()
@@ -118,6 +153,12 @@ function ctm_paste() {
 			myModules[last].outputsFalse[k]+=previousLength;
 		}
 	}
+	
+	for (i=previousLength;i<myModules.length;i++)
+	{
+		myModules[i].selected = true;
+	}
+	
 }
 
 function menuAction() {
