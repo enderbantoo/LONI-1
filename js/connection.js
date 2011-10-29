@@ -43,6 +43,8 @@ var copyModule = module(0,0,"none",0,0);
 	this.outputsTrue=new Array();
 	this.outputsFalse=new Array();
 	this.selected=false;
+	this.groupMoveOffsetX = 0;
+	this.groupMoveOffsetY = 0;
 	
 	switch(this.type)
 	{
@@ -257,6 +259,19 @@ function moveModule(e){
 		if (myModules[i].dragOK == true) {
 			myModules[i].x = e.pageX - canvas.offsetLeft;
 			myModules[i].y = e.pageY - canvas.offsetTop;
+			
+			if (myModules[i].selected == true)
+			{
+				for (k=0;k<myModules.length;k++)
+				{
+					if (k != i && myModules[k].selected == true)
+					{
+						myModules[k].x = e.pageX - canvas.offsetLeft - myModules[k].groupMoveOffsetX;
+						myModules[k].y = e.pageY - canvas.offsetLeft - myModules[k].groupMoveOffsetY;
+					}
+				}
+			}
+		return;
 		}
 	}
 }
@@ -331,6 +346,17 @@ function moduleMouseDown(e){
 					for (k = 0; k < myModules.length; k++) {
 						myModules[k].selected = false;
 					}
+			}
+			else
+			{
+				for (k=0;k < myModules.length;k++)
+				{
+					if (i != k && myModules[k].selected == true)
+					{
+						myModules[k].groupMoveOffsetX = myModules[i].x - myModules[k].x;
+						myModules[k].groupMoveOffsetY = myModules[i].y - myModules[k].y;
+					}
+				}
 			}
 			myModules[i].x = e.pageX - canvas.offsetLeft;
 			myModules[i].y = e.pageY - canvas.offsetTop;
@@ -535,7 +561,7 @@ function draw(){
 			{
 				if (myModules[i].outputs[j] != -1) {
 					if (myModules[myModules[i].outputs[j]].selected == true || myModules[i].selected == true)
-						ctx.strokeStyle="yellow";
+						ctx.strokeStyle="#99CC32";
 					else
 						ctx.strokeStyle="#7585C1";
 					drawConnection(myModules[i].x, myModules[i].y + 53, myModules[myModules[i].outputs[j]].x, myModules[myModules[i].outputs[j]].y - myModules[myModules[i].outputs[j]].radius)
@@ -548,7 +574,7 @@ function draw(){
 				if (myModules[i].outputsTrue[j] != -1) {
 					
 					if (myModules[myModules[i].outputsTrue[j]].selected == true || myModules[i].selected == true)
-						ctx.strokeStyle="yellow";
+						ctx.strokeStyle="#99CC32";
 					else
 						ctx.strokeStyle="#7585C1";
 						
@@ -558,7 +584,7 @@ function draw(){
 				if (myModules[i].outputsFalse[j] != -1) {
 					
 					if (myModules[myModules[i].outputsFalse[j]].selected == true || myModules[i].selected == true)
-						ctx.strokeStyle="yellow";
+						ctx.strokeStyle="#99CC32";
 					else
 						ctx.strokeStyle="#7585C1";
 					
@@ -573,7 +599,7 @@ function draw(){
 				if (myModules[i].outputs[j] != -1) {
 					
 					if (myModules[myModules[i].outputs[j]].selected == true || myModules[i].selected == true)
-						ctx.strokeStyle="yellow";
+						ctx.strokeStyle="#99CC32";
 					else
 						ctx.strokeStyle="#7585C1";
 					
@@ -671,7 +697,7 @@ function draw(){
 function drawNormal(drawModule){
 	
 	if (drawModule.selected == true)
-		ctx.strokeStyle = "yellow";
+		ctx.strokeStyle = "#99CC32";
 	else
 		ctx.strokeStyle = "black"
 	ctx.beginPath();
@@ -699,7 +725,7 @@ function drawNormal(drawModule){
 function drawConditional (drawModule)
 {
 		if (drawModule.selected == true)
-			ctx.strokeStyle = "yellow";
+			ctx.strokeStyle = "#99CC32";
 		else
 			ctx.strokeStyle = "black"
 			
@@ -731,7 +757,7 @@ function drawConditional (drawModule)
 function drawSource (drawModule)
 {
 	if (drawModule.selected == true)
-		ctx.strokeStyle = "yellow";
+		ctx.strokeStyle = "#99CC32";
 	else
 		ctx.strokeStyle = "black"
 			
@@ -756,7 +782,7 @@ function drawSource (drawModule)
 function drawSink (drawModule)
 {
 	if (drawModule.selected == true)
-		ctx.strokeStyle = "yellow";
+		ctx.strokeStyle = "#99CC32";
 	else
 		ctx.strokeStyle = "black"
 		
@@ -784,7 +810,7 @@ function drawSink (drawModule)
 function drawStudy (drawModule)
 {
 	if (drawModule.selected == true)
-		ctx.strokeStyle = "yellow";
+		ctx.strokeStyle = "#99CC32";
 	else
 		ctx.strokeStyle = "black"
 		
