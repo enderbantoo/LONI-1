@@ -23,7 +23,7 @@ selectionBox.x=0;
 selectionBox.y=0;
 selectionBox.selecting = false;
 
-var copyModule = module(0,0,"none",0,0);
+var copyModules = new Array();
 
 //class variables
  function module(x,y,type,input,output)
@@ -39,6 +39,7 @@ var copyModule = module(0,0,"none",0,0);
 	this.checkConnection=checkConnection;
 	this.checkConnected=checkConnected;
 	this.checkMoving=checkMoving;
+	this.copy=copy;
 	this.outputs=new Array();	
 	this.outputsTrue=new Array();
 	this.outputsFalse=new Array();
@@ -65,6 +66,68 @@ var copyModule = module(0,0,"none",0,0);
 		break;
 	}
  }
+ 
+function copy(sourceModule)
+{
+ 	this.x=sourceModule.x;
+	this.y=sourceModule.y;
+	this.type=sourceModule.type;
+	this.input=sourceModule.input;
+	this.output=sourceModule.output;
+	this.dragOK = false;
+	this.connecting = false;
+	this.rotate=sourceModule.rotate;
+	this.checkConnection=checkConnection;
+	this.checkConnected=checkConnected;
+	this.checkMoving=checkMoving;
+	this.copy=copy;
+	this.outputs=new Array();
+	
+	for (p=0;p<sourceModule.outputs.length;p++)
+	{
+		this.outputs[p]=sourceModule.outputs[p];
+	}
+		
+	this.outputsTrue=new Array();
+	
+	for (p=0;p<sourceModule.outputsTrue.length;p++)
+	{
+		this.outputsTrue[p]=sourceModule.outputsTrue[p];
+	}
+	
+	this.outputsFalse=new Array();
+	
+	for (p=0;p<sourceModule.outputsFalse.length;p++)
+	{
+		this.outputsFalse[p]=sourceModule.outputsFalse[p];
+	}
+	
+	this.selected=false;
+	this.groupMoveOffsetX = sourceModule.groupMoveOffsetX;
+	this.groupMoveOffsetY = sourceModule.groupMoveOffsetY;
+	
+	switch(this.type)
+	{
+	case "normal":
+		this.radius=53;
+		break;
+	case "conditional":
+		this.radius=53;
+		this.connectingTrue=false;
+		this.connectingFalse=false;
+		break;
+	case "source":
+	case "study":
+		this.radius=28;
+		break;
+	case "sink":
+		this.radius=35;
+		break;
+	} 	
+}
+ 
+ 
+ 
  function checkMoving (mouseX,mouseY,offsetLeft,offsetTop)
  {
  	
