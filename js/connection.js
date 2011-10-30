@@ -22,6 +22,13 @@ selectionBox.x=0;
 selectionBox.y=0;
 selectionBox.selecting = false;
 
+lineSelection = new Object();
+lineSelection.selected = false;
+lineSelection.fromModule = -1;
+lineSelection.fromType = "none"; //normal false or true
+lineSelection.toIndex = -1;
+
+
 var copyModules = new Array();
 
 //class variables
@@ -492,6 +499,10 @@ function moduleMouseDown(e){
 					for (k = 0; k < myModules.length; k++) {
 						myModules[k].selected = false;
 					}
+					lineSelection.selected = false;
+					lineSelection.fromModule = -1;
+					lineSelection.toIndex = -1;
+					lineSelection.fromType = "none";
 			}
 			else
 			{
@@ -517,6 +528,10 @@ function moduleMouseDown(e){
 	for (i = 0; i < myModules.length; i++) {
 		myModules[i].selected = false;
 	}
+	lineSelection.selected = false;
+	lineSelection.fromModule = -1;
+	lineSelection.toIndex = -1;
+	lineSelection.fromType = "none";	
 	
 	//check if connecting
 	for (i = 0; i < myModules.length; i++) {
@@ -531,6 +546,184 @@ function moduleMouseDown(e){
 	}
 	
 	//check if selecting line.
+	for (i=0;i < myModules.length;i++)
+	{
+		switch (myModules[i].type)
+		{
+			case "normal":
+				for (p=0;p<myModules[i].outputs.length;p++)
+				{
+					if (myModules[i].rotate == 0 && myModules[myModules[i].outputs[p]].rotate == 0) {
+						if (clickConnection(myModules[i].x, myModules[i].y + 53, myModules[myModules[i].outputs[p]].x, myModules[myModules[i].outputs[p]].y - myModules[myModules[i].outputs[p]].radius, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "normal";
+						}
+					}
+					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputs[p]].rotate == 0) {
+						if 	(clickConnection(myModules[i].x + 53, myModules[i].y, myModules[myModules[i].outputs[p]].x, myModules[myModules[i].outputs[p]].y - myModules[myModules[i].outputs[p]].radius, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "normal";
+						}
+					}
+					else if (myModules[i].rotate == 0 && myModules[myModules[i].outputs[p]].rotate == 1) {
+						if (clickConnection(myModules[i].x, myModules[i].y + 53, myModules[myModules[i].outputs[p]].x - myModules[myModules[i].outputs[p]].radius, myModules[myModules[i].outputs[p]].y, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "normal";
+						}
+					}
+					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputs[p]].rotate == 1) {
+						if (clickConnection(myModules[i].x + 53, myModules[i].y, myModules[myModules[i].outputs[p]].x - myModules[myModules[i].outputs[p]].radius, myModules[myModules[i].outputs[p]].y, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "normal";
+						}
+					}
+				}
+			
+				break;
+			case "source":
+			case "study":
+				for (p=0;p<myModules[i].outputs.length;p++)
+				{
+					if (myModules[i].rotate == 0 && myModules[myModules[i].outputs[p]].rotate == 0) {
+						if (clickConnection(myModules[i].x, myModules[i].y + 36, myModules[myModules[i].outputs[p]].x, myModules[myModules[i].outputs[p]].y - myModules[myModules[i].outputs[p]].radius, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "normal";
+						}
+					}
+					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputs[p]].rotate == 0) {
+						if 	(clickConnection(myModules[i].x + 36, myModules[i].y, myModules[myModules[i].outputs[p]].x, myModules[myModules[i].outputs[p]].y - myModules[myModules[i].outputs[p]].radius, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "normal";
+						}
+					}
+					else if (myModules[i].rotate == 0 && myModules[myModules[i].outputs[p]].rotate == 1) {
+						if (clickConnection(myModules[i].x, myModules[i].y + 36, myModules[myModules[i].outputs[p]].x - myModules[myModules[i].outputs[p]].radius, myModules[myModules[i].outputs[p]].y, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "normal";
+						}
+					}
+					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputs[p]].rotate == 1) {
+						if (clickConnection(myModules[i].x + 36, myModules[i].y, myModules[myModules[i].outputs[p]].x - myModules[myModules[i].outputs[p]].radius, myModules[myModules[i].outputs[p]].y, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "normal";
+						}
+					}
+				}
+			
+				break;
+			
+			
+			case "conditional":
+				for (p=0;p<myModules[i].outputsFalse.length;p++)
+				{
+					if (myModules[i].rotate == 0 && myModules[myModules[i].outputsFalse[p]].rotate == 0) {
+						if (clickConnection(myModules[i].x+20, myModules[i].y + 53, myModules[myModules[i].outputsFalse[p]].x, myModules[myModules[i].outputsFalse[p]].y - myModules[myModules[i].outputsFalse[p]].radius, myModules[i].rotate, myModules[myModules[i].outputsFalse[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "False";
+						}
+					}
+					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputsFalse[p]].rotate == 0) {
+						if 	(clickConnection(myModules[i].x + 53, myModules[i].y+20, myModules[myModules[i].outputsFalse[p]].x, myModules[myModules[i].outputsFalse[p]].y - myModules[myModules[i].outputsFalse[p]].radius, myModules[i].rotate, myModules[myModules[i].outputsFalse[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "False";
+						}
+					}
+					else if (myModules[i].rotate == 0 && myModules[myModules[i].outputsFalse[p]].rotate == 1) {
+						if (clickConnection(myModules[i].x+20, myModules[i].y + 53, myModules[myModules[i].outputsFalse[p]].x - myModules[myModules[i].outputsFalse[p]].radius, myModules[myModules[i].outputsFalse[p]].y, myModules[i].rotate, myModules[myModules[i].outputsFalse[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "False";
+						}
+					}
+					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputsFalse[p]].rotate == 1) {
+						if (clickConnection(myModules[i].x + 53, myModules[i].y+20, myModules[myModules[i].outputsFalse[p]].x - myModules[myModules[i].outputsFalse[p]].radius, myModules[myModules[i].outputsFalse[p]].y, myModules[i].rotate, myModules[myModules[i].outputsFalse[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "False";
+						}
+					}
+				}
+				
+				for (p=0;p<myModules[i].outputsTrue.length;p++)
+				{
+					if (myModules[i].rotate == 0 && myModules[myModules[i].outputsTrue[p]].rotate == 0) {
+						if (clickConnection(myModules[i].x-20, myModules[i].y + 53, myModules[myModules[i].outputsTrue[p]].x, myModules[myModules[i].outputsTrue[p]].y - myModules[myModules[i].outputsTrue[p]].radius, myModules[i].rotate, myModules[myModules[i].outputsTrue[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "True";
+						}
+					}
+					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputsTrue[p]].rotate == 0) {
+						if 	(clickConnection(myModules[i].x + 53, myModules[i].y-20, myModules[myModules[i].outputsTrue[p]].x, myModules[myModules[i].outputsTrue[p]].y - myModules[myModules[i].outputsTrue[p]].radius, myModules[i].rotate, myModules[myModules[i].outputsTrue[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "True";
+						}
+					}
+					else if (myModules[i].rotate == 0 && myModules[myModules[i].outputsTrue[p]].rotate == 1) {
+						if (clickConnection(myModules[i].x-20, myModules[i].y + 53, myModules[myModules[i].outputsTrue[p]].x - myModules[myModules[i].outputsTrue[p]].radius, myModules[myModules[i].outputsTrue[p]].y, myModules[i].rotate, myModules[myModules[i].outputsTrue[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "True";
+						}
+					}
+					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputsTrue[p]].rotate == 1) {
+						if (clickConnection(myModules[i].x + 53, myModules[i].y-20, myModules[myModules[i].outputsTrue[p]].x - myModules[myModules[i].outputsTrue[p]].radius, myModules[myModules[i].outputsTrue[p]].y, myModules[i].rotate, myModules[myModules[i].outputsTrue[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+						{
+							lineSelection.selected = true;
+							lineSelection.fromModule = i;
+							lineSelection.toIndex = p;
+							lineSelection.fromType = "True";
+						}
+					}
+				}
+				break;
+			default:
+				break;
+		}
+	}
+	
+	
 	
 	//otherwise start dragging selection box.
 	selectionBox.startX = e.pageX - canvas.offsetLeft;
@@ -680,7 +873,7 @@ function draw(){
 			for (j=0;j<myModules[i].outputs.length;j++)
 			{
 				if (myModules[i].outputs[j] != -1) {
-					if (myModules[myModules[i].outputs[j]].selected == true || myModules[i].selected == true)
+					if (myModules[myModules[i].outputs[j]].selected == true || myModules[i].selected == true || ((lineSelection.selected == true) && (lineSelection.fromType == "normal") && (lineSelection.fromModule == i) && (lineSelection.toIndex == j)))
 						ctx.strokeStyle="#99CC32";
 					else
 						ctx.strokeStyle="#7585C1";
@@ -701,7 +894,7 @@ function draw(){
 			for (j = 0; j < myModules[i].outputsTrue.length; j++) 
 				if (myModules[i].outputsTrue[j] != -1) {
 					
-					if (myModules[myModules[i].outputsTrue[j]].selected == true || myModules[i].selected == true)
+					if (myModules[myModules[i].outputsTrue[j]].selected == true || myModules[i].selected == true || ((lineSelection.fromType == "True") &&(lineSelection.selected == true) && (lineSelection.fromModule == i) && (lineSelection.toIndex == j)))
 						ctx.strokeStyle="#99CC32";
 					else
 						ctx.strokeStyle="#7585C1";
@@ -718,7 +911,7 @@ function draw(){
 			for (j = 0; j < myModules[i].outputsFalse.length; j++) 
 				if (myModules[i].outputsFalse[j] != -1) {
 					
-					if (myModules[myModules[i].outputsFalse[j]].selected == true || myModules[i].selected == true)
+					if (myModules[myModules[i].outputsFalse[j]].selected == true || myModules[i].selected == true || ((lineSelection.fromType == "False") &&(lineSelection.selected == true) && (lineSelection.fromModule == i) && (lineSelection.toIndex == j)))
 						ctx.strokeStyle="#99CC32";
 					else
 						ctx.strokeStyle="#7585C1";
@@ -740,7 +933,7 @@ function draw(){
 			{
 				if (myModules[i].outputs[j] != -1) {
 					
-					if (myModules[myModules[i].outputs[j]].selected == true || myModules[i].selected == true)
+					if (myModules[myModules[i].outputs[j]].selected == true || myModules[i].selected == true || ((lineSelection.fromType == "normal") && (lineSelection.fromModule == i) && (lineSelection.toIndex == j)))
 						ctx.strokeStyle="#99CC32";
 					else
 						ctx.strokeStyle="#7585C1";
@@ -871,7 +1064,7 @@ function draw(){
 		ctx.beginPath();
 		ctx.lineWidth = 1;
 		ctx.strokeRect(minX,minY,width,height);
-		
+		ctx.lineWidth = 3;
 		
 		
 			
@@ -1101,6 +1294,240 @@ function drawStudy (drawModule)
 }
 
 
+function clickConnection(x1,y1,x2,y2, fromRotate, toRotate,mouseX,mouseY) {
+    var delta_x = x2 - x1;
+    var delta_y = y2 - y1;
+    if(fromRotate==0 && toRotate==0) {
+	    if(y2>=y1) {
+	        if (abs(delta_x) < abs(delta_y) / 2) { // 3 segments
+	            var temp = (abs(delta_y) - abs(delta_x)) / 2;
+				return (checkLine(x1,y1,x1,y1+signum(delta_y) * temp,mouseX,mouseY) ||
+			    checkLine(x1,y1+signum(delta_y) * temp, x2, y2-signum(delta_y) * temp,mouseX,mouseY) ||
+			    checkLine(x2, y2-signum(delta_y) * temp, x2, y2,mouseX,mouseY))
+	        } else { // 5 segments
+	            var y_step = delta_y / 4;
+	            var x_step = signum(delta_x) * abs(y_step);
+	            var mid_y = (y1 + y2) / 2;
+				
+			    return (checkLine(x1,y1,x1,y1 + y_step,mouseX,mouseY) ||
+			    checkLine(x1,y1 + y_step, x1+x_step, mid_y,mouseX,mouseY) ||
+			    checkLine(x1+x_step, mid_y, x2-x_step, mid_y,mouseX,mouseY) ||
+			    checkLine(x2-x_step, mid_y, x2, y2-y_step,mouseX,mouseY) ||
+			    checkLine(x2, y2-y_step, x2, y2,mouseX,mouseY))
+	        }
+	     } else {
+	     	var midx = (x1+x2)/2;
+	     	var midy = (y1+y2)/2;
+	     	return (checkULine(x1, y1, midx, midy, 0,mouseX,mouseY) ||  // u shape
+	     	checkULine(midx, midy, x2, y2, 1,mouseX,mouseY)) // n shape
+	     }
+     } else if(fromRotate==1 && toRotate==1) {
+     	if(x2>=x1) {
+ 			if (abs(delta_y) < abs(delta_x) / 2) { // 3 segments
+                var temp = (abs(delta_x) - abs(delta_y)) / 2;
+			    return (checkLine(x1,y1,x1+signum(delta_x) * temp,y1,mouseX,mouseY) ||
+			    checkLine(x1+signum(delta_x) * temp,y1, x2-signum(delta_x) * temp, y2,mouseX,mouseY) ||
+			    checkLine(x2-signum(delta_x) * temp, y2, x2, y2,mouseX,mouseY))
+            } else { // 5 segments |
+                var x_step = delta_x / 4;
+                var y_step = signum(delta_y) * abs(x_step);
+                var mid_x = (x1+ x2) / 2;
+			    return (checkLine(x1,y1,x1+x_step,y1,mouseX,mouseY) ||
+			    checkLine(x1+x_step,y1,mid_x,y1+y_step,mouseX,mouseY) ||
+			    checkLine(mid_x,y1+y_step,mid_x, y2-y_step,mouseX,mouseY) ||
+			    checkLine(mid_x, y2-y_step, x2-x_step, y2,mouseX,mouseY) ||
+			    checkLine(x2-x_step, y2, x2, y2,mouseX,mouseY))
+            }
+         } else {
+	     	var midx = (x1+x2)/2;
+	     	var midy = (y1+y2)/2;
+	     	return (checkULine(x1, y1, midx, midy, 2,mouseX,mouseY) || // ) shape
+	     	checkULine(midx, midy, x2, y2, 3,mouseX,mouseY)) // ( shape
+         }
+     } else {
+     	if(fromRotate==0 && toRotate==1) { // Down, 45, Left/Right 
+     		if (abs(delta_x) > abs(delta_y)) {
+                var y_step = delta_y / 2;
+			    return (checkLine(x1,y1,x1,y1+y_step,mouseX,mouseY) ||
+			    checkLine(x1,y1+y_step,x1+signum(delta_x)*abs(y_step), y2,mouseX,mouseY) ||
+			    checkLine(x1+signum(delta_x)*abs(y_step), y2,x2,y2,mouseX,mouseY))
+            } else {
+                var x_step = delta_x / 2;
+                var temp = abs(delta_y) - abs(x_step);
+			    return (checkLine(x1,y1,x1,y1+signum(delta_y) * temp,mouseX,mouseY) ||
+			    checkLine(x1,y1+signum(delta_y) * temp,x1+x_step,y2,mouseX,mouseY) ||
+			    checkLine(x1+x_step,y2,x2,y2,mouseX,mouseY))
+            }
+     	} else {
+            if (abs(delta_y) > abs(delta_x)) {
+                var x_step = delta_x / 2;
+			    return (checkLine(x1,y1,x1+x_step,y1,mouseX,mouseY) ||
+			    checkLine(x1+x_step,y1,x2,y1+signum(delta_y)*abs(x_step),mouseX,mouseY) ||
+			    checkLine(x2,y1+signum(delta_y)*abs(x_step),x2,y2,mouseX,mouseY))
+            } else {
+                var y_step = delta_y / 2;
+                var temp = abs(delta_x) - abs(y_step);
+			    return (checkLine(x1,y1,x1+signum(delta_x)*temp,y1,mouseX,mouseY) ||
+			    checkLine(x1+signum(delta_x)*temp,y1,x2,y2-y_step,mouseX,mouseY) ||
+			    checkLine(x2,y2-y_step,x2,y2,mouseX,mouseY))
+            }
+     	
+     	}
+     }
+  }
+function checkULine(x1, y1, x2, y2, direction,mouseX,mouseY){
+	var delta_x = x2 - x1;
+	var delta_y = y2 - y1;
+	var extension = 0; // How far the line will go out before looping back
+	if (direction <= 1) {
+		var step_x = delta_x / 3;
+		var step_y = abs(step_x);
+		if (direction == 0) {
+			// open up: u shape
+			if (y1 >= y2) { // pointing down
+				step_y = step_y * signum(-delta_y);
+				if (delta_y > 0) 
+					extension += delta_y;
+			}
+			else {
+				step_y = step_y * signum(delta_y);
+				if (delta_y < 0) // pointing up
+					extension += delta_y;
+			}
+		}
+		else {
+			// open down: n shape
+			if (y2 >= y1) { // pointing down
+				step_y *= signum(-delta_y);
+				if (delta_y > 0) 
+					extension += delta_y;
+			}
+			else {
+				step_y *= signum(delta_y);
+				if (delta_y < 0) // pointing up
+					extension += delta_y;
+			}
+		}
+		return (checkLine(x1, y1, x1, y1 + extension + step_y,mouseX,mouseY) ||
+		checkLine(x1, y1 + extension + step_y, x1 + step_x, y1 + extension + 2 * step_y,mouseX,mouseY) ||
+		checkLine(x1 + step_x, y1 + extension + 2 * step_y, x2 - step_x, y1 + extension + 2 * step_y,mouseX,mouseY) ||
+		checkLine(x2 - step_x, y1 + extension + 2 * step_y, x2, y1 + extension + step_y,mouseX,mouseY) ||
+		checkLine(x2, y1 + extension + step_y, x2, y2,mouseX,mouseY))
+		
+	}
+	else {
+		var step_y = delta_y / 3;
+		var step_x = abs(step_y);
+		if (direction == 2) {
+			// open left: ) shape
+			step_x *= signum(-delta_x);
+			if (delta_x > 0) 
+				extension += delta_x;
+		}
+		else {
+			// open right: ( shape
+			step_x *= signum(delta_x);
+			if (delta_x < 0) 
+				extension += delta_x;
+		}
+		
+		return (checkLine(x1, y1, x1 + extension + step_x, y1,mouseX,mouseY) ||
+		checkLine(x1 + extension + step_x, y1, x1 + extension + 2 * step_x, y1 + step_y,mouseX,mouseY) ||
+		checkLine(x1 + extension + 2 * step_x, y1 + step_y, x1 + extension + 2 * step_x, y2 - step_y,mouseX,mouseY) ||
+		checkLine(x1 + extension + 2 * step_x, y2 - step_y, x1 + extension + step_x, y2,mouseX,mouseY) ||
+		checkLine(x1 + extension + step_x, y2, x2, y2,mouseX,mouseY))
+	}
+}
+	
+
+function checkLine(x1,y1,x2,y2,mouseX,mouseY)
+{
+	//3 pixel buffer
+	var buffer = 5;
+	//horizontal line -->
+	if (y1==y2 && x1 < x2)
+	{
+		if ((mouseX < x2) && (mouseX > x1) && (mouseY < y1 + buffer ) && (mouseY> y1 - buffer ))
+			return true;
+		else
+			return false;
+	}
+	//horizontal line <--
+	else if (y1 == y2 && x1 > x2)
+	{
+		if ((mouseX > x2) && (mouseX < x1) && (mouseY < y1 + buffer) && (mouseY > y1 - buffer))
+			return true;
+		else
+			return false;		
+	}
+	//vertical line down
+	else if (x1==x2 && y1 < y2)
+	{
+		if ((mouseY < y2) && (mouseY > y1) && (mouseX < x1 + buffer) && (mouseX > x1 - buffer))
+			return true;
+		else
+			return false;		
+	}
+	//vertical line up
+	else if (x1==x2 && y1 > y2)
+	{
+		if ((mouseY > y2) && (mouseY < y1) && (mouseX < x1 + buffer) && (mouseX > x1 - buffer))
+			return true;
+		else
+			return false;				
+	}
+	//top left bottom right
+	else if (x1 < x2 && y1 < y2)
+	{
+		if (abs((y1-mouseY)-(x1-mouseX)) < buffer && mouseX > x1 && mouseX < x2)
+			return true
+		else
+			return false;
+	}
+	//bottom right top left
+	else if (x1 > x2 && y1 > y2)
+	{
+		if (abs((y2-mouseY)-(x2-mouseX)) < buffer && mouseX < x1 && mouseX > x2)
+			return true
+		else 
+			return false;		
+	}
+	//top right bottom left
+	else if (x2 < x1 && y2 > y1)
+	{
+		if (abs((y2-mouseY)-(mouseX -x2)) < buffer && mouseX < x1 && mouseX > x2)
+			return true
+		else
+			return false;		
+	}
+	//bottom left top right
+	else if (x2 > x1 && y2 < y1)
+	{
+		if (abs((y1-mouseY)-(mouseX -x1)) < buffer && mouseX > x1 && mouseX < x2)
+			return true
+		else 
+			return false;		
+	}	
+}
+	
+
+	function abs(i) {
+	if(i>=0)
+	 	return i;
+	else
+		return -1*i;
+}
+
+	function signum(i) {
+	if(i==0)
+		return 0;
+	else if(i<0)
+		return -1;
+	else
+		return 1;
+}
+
+
 function drawConnection(x1,y1,x2,y2, fromRotate, toRotate) {
     var delta_x = x2 - x1;
     var delta_y = y2 - y1;
@@ -1244,29 +1671,15 @@ function drawULine(x1, y1, x2, y2, direction,selected){
 		drawLine(x1 + extension + step_x, y2, x2, y2);
 	}
 }
+
+function drawLine(x1,y1,x2,y2)
+{
+	ctx.beginPath();
+	ctx.moveTo(x1,y1);
+	ctx.lineTo(x2,y2);
+	ctx.stroke();
 	
-	function drawLine(x1,y1,x2,y2)
-	{
-		ctx.beginPath();
-		ctx.moveTo(x1,y1);
-		ctx.lineTo(x2,y2);
-		ctx.stroke();
-		
-	}
-	
-	
-	function abs(i) {
-	if(i>=0)
-	 	return i;
-	else
-		return -1*i;
 }
 
-	function signum(i) {
-	if(i==0)
-		return 0;
-	else if(i<0)
-		return -1;
-	else
-		return 1;
-}
+
+

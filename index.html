@@ -195,6 +195,25 @@ function cutModule() {
 			c--;
 		}
 	}
+	if (lineSelection.selected == true) {
+		switch(lineSelection.fromType)
+		{
+			case "normal":
+				myModules[lineSelection.fromModule].outputs.splice(lineSelection.toIndex,1);
+				break;
+			case "True":
+				myModules[lineSelection.fromModule].outputsTrue.splice(lineSelection.toIndex,1);
+				break;
+			case "False":
+				myModules[lineSelection.fromModule].outputsFalse.splice(lineSelection.toIndex,1);
+				break;
+		}
+		
+		lineSelection.selected = false;
+		lineSelection.fromModule=-1;
+		lineSelection.toIndex=-1;
+		lineSelection.fromType="none";
+	}
 }
 function ctm_rotate() {
 	for (c = 0; c < myModules.length;c++)
