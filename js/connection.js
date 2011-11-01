@@ -1,8 +1,8 @@
 // JavaScript Document
 
 //initial variables
-var testMouseX=0;
-var testMouseY=0;
+var testMouseX=50;
+var testMouseY=50;
 var canvas;
 var ctx;
 var x = 75;
@@ -28,8 +28,14 @@ lineSelection.fromModule = -1;
 lineSelection.fromType = "none"; //normal false or true
 lineSelection.toIndex = -1;
 
+input =  {
+ctrlFlag : false
+}
 
 var copyModules = new Array();
+init()
+canvas.onmousedown = moduleMouseDown;
+canvas.onmouseup = moduleMouseUp;
 
 //class variables
  function module(x,y,type,input,output)
@@ -488,6 +494,8 @@ function rotateModule()
 //        Mouse Manipulations
 //============================================
 function moduleMouseDown(e){
+	if (e.button == 2) //right click
+		return;
 	var i = 0
 	//check if moving module
 	for (i = 0; i < myModules.length; i++) {
@@ -735,6 +743,8 @@ function moduleMouseDown(e){
 }
 
 function moduleMouseUp(e){
+	if (e.button == 2)
+		return;
 	for (i = 0; i < myModules.length; i++) {
 		var checkConnect = myModules[i].checkConnected(e.pageX,e.pageY,canvas.offsetLeft,canvas.offsetTop)
 		if (checkConnect == true)
@@ -835,10 +845,6 @@ function init()
 		createModule(400,400,"study",0,1)
 	 return setInterval(draw, 10);
 }
-
-init()
-canvas.onmousedown = moduleMouseDown;
-canvas.onmouseup = moduleMouseUp;
 
 //============================================
 //        Draw Functions
