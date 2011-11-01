@@ -9,21 +9,19 @@
 <script type="text/javascript">
 $(document).ready( function() {
 var option = { width: 150, items: [
-				{ text: "New", alias: "new", action: menuAction, type: "group", width: 170, items: [
-					{ text: "Modules...", alias: "ctm_modules", action: ctm_modules },
+				{ text: "New", icon: "", alias: "new", action: menuAction, type: "group", width: 170, items: [
+					{ text: "Modules...", icon: "", alias: "ctm_modules", action: menuAction },
 					{ type: "splitLine" },
-					{ text: "Data source", alias: "ctm_data_source", action: ctm_data_source },
-					{ text: "Data sink", alias: "ctm_data_sink", action: ctm_data_sink },
-					{ text: "Study...", alias: "ctm_study", action: ctm_study },
-					{ text: "Conditional...", alias: "ctm_conditional", action: ctm_conditional }
+					{ text: "Data source", icon: "", alias: "ctm_data_source", action: menuAction },
+					{ text: "Data sink",icon: "",  alias: "ctm_data_sink", action: menuAction },
+					{ text: "Study...", icon: "", alias: "ctm_study", action: menuAction },
+					{ text: "Conditional...", icon: "", alias: "ctm_conditional", action: menuAction }
 				]},
 				{ type: "splitLine" },
-				{ text: "Delete", alias: "ctm_cut", action: cutModule },
-				{ text: "Copy", alias: "ctm_copy", action: ctm_copy },
-				{ text: "Paste", alias: "ctm_paste", action: ctm_paste }, 
-				{ text: "Select all", alias: "ctm_select_all", action: ctm_select_all },
-				{ text: "Rotate", alias: "ctm_rotate", action: ctm_rotate }
-				
+				{ text: "Cut", icon: "", alias: "ctm_cut", action: menuAction },
+				{ text: "Copy", icon: "", alias: "ctm_copy", action: menuAction },
+				{ text: "Paste", icon: "", alias: "ctm_paste", action: menuAction }, 
+				{ text: "Select all", icon: "", alias: "ctm_select_all", action: menuAction }
 			]
 };
 
