@@ -1,41 +1,44 @@
 // JavaScript Document
 
 //initial variables
-var testMouseX=50;
-var testMouseY=50;
 var canvas;
 var ctx;
-var x = 75;
-var y = 50;
 var WIDTH = 800;
 var HEIGHT = 600;
 var myModules=new Array();
-makingConnection=new Object();
-makingConnection.x=0;
-makingConnection.y=0;
-makingConnection.connecting=false;
 
-selectionBox = new Object();
-selectionBox.startX = 0;
-selectionBox.startY = 0;
-selectionBox.x=0;
-selectionBox.y=0;
-selectionBox.selecting = false;
 
-lineSelection = new Object();
-lineSelection.selected = false;
-lineSelection.fromModule = -1;
-lineSelection.fromType = "none"; //normal false or true
-lineSelection.toIndex = -1;
+//object literals
+makingConnection= {
+	x : 0,
+	y : 0,
+	connecting : false
+}
+selectionBox = {
+	startX : 0,
+	startY : 0,
+	x : 0,
+	y : 0,
+	selecting : false
+}
+lineSelection = {
+	selected : false,
+	fromModule : -1,
+	fromType : "none", //normal false or true
+	toIndex : -1
+}
 
-input =  {
-ctrlFlag : false
+
+testMouse = {
+	X : -1,
+	Y : -1
 }
 
 var copyModules = new Array();
 init()
 canvas.onmousedown = moduleMouseDown;
 canvas.onmouseup = moduleMouseUp;
+canvas.onmousemove = captureMousePosition; //'capture mouse saves mouse position
 
 //class variables
  function module(x,y,type,input,output)
@@ -106,21 +109,21 @@ function copy(sourceModule)
 	this.copy=copy;
 	this.outputs=new Array();
 	
-	for (p=0;p<sourceModule.outputs.length;p++)
+	for (var p=0;p<sourceModule.outputs.length;p++)
 	{
 		this.outputs[p]=sourceModule.outputs[p];
 	}
 		
 	this.outputsTrue=new Array();
 	
-	for (p=0;p<sourceModule.outputsTrue.length;p++)
+	for (var p=0;p<sourceModule.outputsTrue.length;p++)
 	{
 		this.outputsTrue[p]=sourceModule.outputsTrue[p];
 	}
 	
 	this.outputsFalse=new Array();
 	
-	for (p=0;p<sourceModule.outputsFalse.length;p++)
+	for (var p=0;p<sourceModule.outputsFalse.length;p++)
 	{
 		this.outputsFalse[p]=sourceModule.outputsFalse[p];
 	}
@@ -358,14 +361,14 @@ function copy(sourceModule)
  	var cutOff = index;
 	myModules.splice(index, 1);
 	
-	for (i=0;i<myModules.length;i++)
+	for (var i=0;i<myModules.length;i++)
 	{
 		switch(myModules[i].type)
 		{
 		case "study":
 		case "source":
 		case "normal":
-			for (j=0;j<myModules[i].outputs.length;j++)
+			for (var j=0;j<myModules[i].outputs.length;j++)
 			{
 				if (myModules[i].outputs[j] == cutOff) {
 					myModules[i].outputs.splice(j, 1);
@@ -379,7 +382,7 @@ function copy(sourceModule)
 			break;
 			
 		case "conditional":
-			for (j=0;j<myModules[i].outputsTrue.length;j++)
+			for (var j=0;j<myModules[i].outputsTrue.length;j++)
 			{
 				if (myModules[i].outputsTrue[j] == cutOff) {
 					myModules[i].outputsTrue.splice(j, 1)
@@ -389,7 +392,7 @@ function copy(sourceModule)
 					if (myModules[i].outputsTrue[j] > cutOff) 
 						myModules[i].outputsTrue[j]--;
 			}
-			for (j=0;j<myModules[i].outputsFalse.length;j++)
+			for (var j=0;j<myModules[i].outputsFalse.length;j++)
 			{
 				if (myModules[i].outputsFalse[j] == cutOff) {
 					myModules[i].outputsFalse.splice(j, 1)
@@ -407,20 +410,23 @@ function copy(sourceModule)
  
  
 function moveModule(e){
-	for (i = 0; i < myModules.length; i++)
+	testMouse.X = e.pageX - canvas.offsetLeft;
+	testMouse.Y = e.pageY - canvas.offsetTop;
+	
+	for (var i = 0; i < myModules.length; i++)
 	{
 		if (myModules[i].dragOK == true) {
-			myModules[i].x = e.pageX - canvas.offsetLeft;
-			myModules[i].y = e.pageY - canvas.offsetTop;
+			myModules[i].x = e.pageX - canvas.offsetLeft - myModules[i].groupMoveOffsetX;
+			myModules[i].y = e.pageY - canvas.offsetTop - myModules[i].groupMoveOffsetY;
 			
 			if (myModules[i].selected == true)
 			{
-				for (k=0;k<myModules.length;k++)
+				for (var k=0;k<myModules.length;k++)
 				{
 					if (k != i && myModules[k].selected == true)
 					{
 						myModules[k].x = e.pageX - canvas.offsetLeft - myModules[k].groupMoveOffsetX;
-						myModules[k].y = e.pageY - canvas.offsetLeft - myModules[k].groupMoveOffsetY;
+						myModules[k].y = e.pageY - canvas.offsetTop - myModules[k].groupMoveOffsetY;
 					}
 				}
 			}
@@ -431,6 +437,10 @@ function moveModule(e){
  
 function moveLine(e)
 {
+	testMouse.X = e.pageX - canvas.offsetLeft;
+	testMouse.Y = e.pageY - canvas.offsetTop;
+	
+	
 	makingConnection.x = e.pageX - canvas.offsetLeft;
 	makingConnection.y = e.pageY - canvas.offsetTop;
 
@@ -438,6 +448,10 @@ function moveLine(e)
 
 function selectBox(e)
 {
+	testMouse.X = e.pageX - canvas.offsetLeft;
+	testMouse.Y = e.pageY - canvas.offsetTop;
+	
+	
 	selectionBox.x = e.pageX - canvas.offsetLeft;
 	selectionBox.y = e.pageY - canvas.offsetTop;
 }
@@ -471,7 +485,7 @@ function checkSelected()
 		maxY = selectionBox.startY;
 	}		
 		
-	for (i=0;i<myModules.length;i++)
+	for (var i=0;i<myModules.length;i++)
 	{
 		if (myModules[i].x < maxX && myModules[i].x > minX &&
 			myModules[i].y < maxY && myModules[i].y > minY)
@@ -495,16 +509,20 @@ function rotateModule()
 //============================================
 function moduleMouseDown(e){
 	if (e.button == 2) //right click
+	{
+		testMouse.X = e.pageX - canvas.offsetLeft;
+		testMouse.Y = e.pageY - canvas.offsetTop;
 		return;
-	var i = 0
+	}
+
 	//check if moving module
-	for (i = 0; i < myModules.length; i++) {
+	for (var i = 0; i < myModules.length; i++) {
 		if (myModules[i].checkMoving(e.pageX, e.pageY, canvas.offsetLeft, canvas.offsetTop)) {
 			
 			//if not selected reset selection
 			if (myModules[i].selected == false)
 			{
-					for (k = 0; k < myModules.length; k++) {
+					for (var k = 0; k < myModules.length; k++) {
 						myModules[k].selected = false;
 					}
 					lineSelection.selected = false;
@@ -514,17 +532,19 @@ function moduleMouseDown(e){
 			}
 			else
 			{
-				for (k=0;k < myModules.length;k++)
+				for (var k=0;k < myModules.length;k++)
 				{
 					if (i != k && myModules[k].selected == true)
 					{
-						myModules[k].groupMoveOffsetX = myModules[i].x - myModules[k].x;
-						myModules[k].groupMoveOffsetY = myModules[i].y - myModules[k].y;
+						myModules[k].groupMoveOffsetX = e.pageX - canvas.offsetLeft - myModules[k].x;
+						myModules[k].groupMoveOffsetY = e.pageY - canvas.offsetTop- myModules[k].y;
 					}
 				}
 			}
-			myModules[i].x = e.pageX - canvas.offsetLeft;
-			myModules[i].y = e.pageY - canvas.offsetTop;
+			myModules[i].groupMoveOffsetX = e.pageX - canvas.offsetLeft - myModules[i].x;
+			myModules[i].groupMoveOffsetY = e.pageY - canvas.offsetTop- myModules[i].y;
+			//myModules[i].x = e.pageX - canvas.offsetLeft;
+			//myModules[i].y = e.pageY - canvas.offsetTop;
 			myModules[i].dragOK = true;
 			canvas.onmousemove = moveModule;
 			myModules[i].selected = true;
@@ -533,7 +553,7 @@ function moduleMouseDown(e){
 	}
 	
 	//if not moving, reset selection
-	for (i = 0; i < myModules.length; i++) {
+	for (var i = 0; i < myModules.length; i++) {
 		myModules[i].selected = false;
 	}
 	lineSelection.selected = false;
@@ -542,7 +562,7 @@ function moduleMouseDown(e){
 	lineSelection.fromType = "none";	
 	
 	//check if connecting
-	for (i = 0; i < myModules.length; i++) {
+	for (var i = 0; i < myModules.length; i++) {
 		var testConnect = myModules[i].checkConnection (e.pageX,e.pageY,canvas.offsetLeft,canvas.offsetTop);
 		if (testConnect >0) {
 			makingConnection.connecting = true;
@@ -554,91 +574,34 @@ function moduleMouseDown(e){
 	}
 	
 	//check if selecting line.
-	for (i=0;i < myModules.length;i++)
+	for (var i=0;i < myModules.length;i++)
 	{
 		switch (myModules[i].type)
 		{
 			case "normal":
-				for (p=0;p<myModules[i].outputs.length;p++)
+				for (var p=0;p<myModules[i].outputs.length;p++)
 				{
-					if (myModules[i].rotate == 0 && myModules[myModules[i].outputs[p]].rotate == 0) {
-						if (clickConnection(myModules[i].x, myModules[i].y + 53, myModules[myModules[i].outputs[p]].x, myModules[myModules[i].outputs[p]].y - myModules[myModules[i].outputs[p]].radius, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "normal";
-						}
+					if (clickConnection(myModules[i].x, myModules[i].y + 53, myModules[myModules[i].outputs[p]].x, myModules[myModules[i].outputs[p]].y - myModules[myModules[i].outputs[p]].radius, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+					{
+						lineSelection.selected = true;
+						lineSelection.fromModule = i;
+						lineSelection.toIndex = p;
+						lineSelection.fromType = "normal";
 					}
-					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputs[p]].rotate == 0) {
-						if 	(clickConnection(myModules[i].x + 53, myModules[i].y, myModules[myModules[i].outputs[p]].x, myModules[myModules[i].outputs[p]].y - myModules[myModules[i].outputs[p]].radius, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "normal";
-						}
-					}
-					else if (myModules[i].rotate == 0 && myModules[myModules[i].outputs[p]].rotate == 1) {
-						if (clickConnection(myModules[i].x, myModules[i].y + 53, myModules[myModules[i].outputs[p]].x - myModules[myModules[i].outputs[p]].radius, myModules[myModules[i].outputs[p]].y, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "normal";
-						}
-					}
-					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputs[p]].rotate == 1) {
-						if (clickConnection(myModules[i].x + 53, myModules[i].y, myModules[myModules[i].outputs[p]].x - myModules[myModules[i].outputs[p]].radius, myModules[myModules[i].outputs[p]].y, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "normal";
-						}
-					}
+
 				}
 			
 				break;
 			case "source":
 			case "study":
-				for (p=0;p<myModules[i].outputs.length;p++)
+				for (var p=0;p<myModules[i].outputs.length;p++)
 				{
-					if (myModules[i].rotate == 0 && myModules[myModules[i].outputs[p]].rotate == 0) {
-						if (clickConnection(myModules[i].x, myModules[i].y + 36, myModules[myModules[i].outputs[p]].x, myModules[myModules[i].outputs[p]].y - myModules[myModules[i].outputs[p]].radius, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "normal";
-						}
-					}
-					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputs[p]].rotate == 0) {
-						if 	(clickConnection(myModules[i].x + 36, myModules[i].y, myModules[myModules[i].outputs[p]].x, myModules[myModules[i].outputs[p]].y - myModules[myModules[i].outputs[p]].radius, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "normal";
-						}
-					}
-					else if (myModules[i].rotate == 0 && myModules[myModules[i].outputs[p]].rotate == 1) {
-						if (clickConnection(myModules[i].x, myModules[i].y + 36, myModules[myModules[i].outputs[p]].x - myModules[myModules[i].outputs[p]].radius, myModules[myModules[i].outputs[p]].y, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "normal";
-						}
-					}
-					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputs[p]].rotate == 1) {
-						if (clickConnection(myModules[i].x + 36, myModules[i].y, myModules[myModules[i].outputs[p]].x - myModules[myModules[i].outputs[p]].radius, myModules[myModules[i].outputs[p]].y, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "normal";
-						}
+					if (clickConnection(myModules[i].x, myModules[i].y + 36, myModules[myModules[i].outputs[p]].x, myModules[myModules[i].outputs[p]].y - myModules[myModules[i].outputs[p]].radius, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+					{
+						lineSelection.selected = true;
+						lineSelection.fromModule = i;
+						lineSelection.toIndex = p;
+						lineSelection.fromType = "normal";
 					}
 				}
 			
@@ -646,9 +609,8 @@ function moduleMouseDown(e){
 			
 			
 			case "conditional":
-				for (p=0;p<myModules[i].outputsFalse.length;p++)
+				for (var p=0;p<myModules[i].outputsFalse.length;p++)
 				{
-					if (myModules[i].rotate == 0 && myModules[myModules[i].outputsFalse[p]].rotate == 0) {
 						if (clickConnection(myModules[i].x+20, myModules[i].y + 53, myModules[myModules[i].outputsFalse[p]].x, myModules[myModules[i].outputsFalse[p]].y - myModules[myModules[i].outputsFalse[p]].radius, myModules[i].rotate, myModules[myModules[i].outputsFalse[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
 						{
 							lineSelection.selected = true;
@@ -656,73 +618,16 @@ function moduleMouseDown(e){
 							lineSelection.toIndex = p;
 							lineSelection.fromType = "False";
 						}
-					}
-					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputsFalse[p]].rotate == 0) {
-						if 	(clickConnection(myModules[i].x + 53, myModules[i].y+20, myModules[myModules[i].outputsFalse[p]].x, myModules[myModules[i].outputsFalse[p]].y - myModules[myModules[i].outputsFalse[p]].radius, myModules[i].rotate, myModules[myModules[i].outputsFalse[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "False";
-						}
-					}
-					else if (myModules[i].rotate == 0 && myModules[myModules[i].outputsFalse[p]].rotate == 1) {
-						if (clickConnection(myModules[i].x+20, myModules[i].y + 53, myModules[myModules[i].outputsFalse[p]].x - myModules[myModules[i].outputsFalse[p]].radius, myModules[myModules[i].outputsFalse[p]].y, myModules[i].rotate, myModules[myModules[i].outputsFalse[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "False";
-						}
-					}
-					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputsFalse[p]].rotate == 1) {
-						if (clickConnection(myModules[i].x + 53, myModules[i].y+20, myModules[myModules[i].outputsFalse[p]].x - myModules[myModules[i].outputsFalse[p]].radius, myModules[myModules[i].outputsFalse[p]].y, myModules[i].rotate, myModules[myModules[i].outputsFalse[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "False";
-						}
-					}
 				}
 				
-				for (p=0;p<myModules[i].outputsTrue.length;p++)
+				for (var p=0;p<myModules[i].outputsTrue.length;p++)
 				{
-					if (myModules[i].rotate == 0 && myModules[myModules[i].outputsTrue[p]].rotate == 0) {
-						if (clickConnection(myModules[i].x-20, myModules[i].y + 53, myModules[myModules[i].outputsTrue[p]].x, myModules[myModules[i].outputsTrue[p]].y - myModules[myModules[i].outputsTrue[p]].radius, myModules[i].rotate, myModules[myModules[i].outputsTrue[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "True";
-						}
-					}
-					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputsTrue[p]].rotate == 0) {
-						if 	(clickConnection(myModules[i].x + 53, myModules[i].y-20, myModules[myModules[i].outputsTrue[p]].x, myModules[myModules[i].outputsTrue[p]].y - myModules[myModules[i].outputsTrue[p]].radius, myModules[i].rotate, myModules[myModules[i].outputsTrue[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "True";
-						}
-					}
-					else if (myModules[i].rotate == 0 && myModules[myModules[i].outputsTrue[p]].rotate == 1) {
-						if (clickConnection(myModules[i].x-20, myModules[i].y + 53, myModules[myModules[i].outputsTrue[p]].x - myModules[myModules[i].outputsTrue[p]].radius, myModules[myModules[i].outputsTrue[p]].y, myModules[i].rotate, myModules[myModules[i].outputsTrue[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "True";
-						}
-					}
-					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputsTrue[p]].rotate == 1) {
-						if (clickConnection(myModules[i].x + 53, myModules[i].y-20, myModules[myModules[i].outputsTrue[p]].x - myModules[myModules[i].outputsTrue[p]].radius, myModules[myModules[i].outputsTrue[p]].y, myModules[i].rotate, myModules[myModules[i].outputsTrue[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-						{
-							lineSelection.selected = true;
-							lineSelection.fromModule = i;
-							lineSelection.toIndex = p;
-							lineSelection.fromType = "True";
-						}
+					if (clickConnection(myModules[i].x-20, myModules[i].y + 53, myModules[myModules[i].outputsTrue[p]].x, myModules[myModules[i].outputsTrue[p]].y - myModules[myModules[i].outputsTrue[p]].radius, myModules[i].rotate, myModules[myModules[i].outputsTrue[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+					{
+						lineSelection.selected = true;
+						lineSelection.fromModule = i;
+						lineSelection.toIndex = p;
+						lineSelection.fromType = "True";
 					}
 				}
 				break;
@@ -745,13 +650,13 @@ function moduleMouseDown(e){
 function moduleMouseUp(e){
 	if (e.button == 2)
 		return;
-	for (i = 0; i < myModules.length; i++) {
+	for (var i = 0; i < myModules.length; i++) {
 		var checkConnect = myModules[i].checkConnected(e.pageX,e.pageY,canvas.offsetLeft,canvas.offsetTop)
 		if (checkConnect == true)
 		{
 			var doubleFlag = false;
 			var k = 0;
-			for (k = 0; k < myModules.length; k++) {
+			for (var k = 0; k < myModules.length; k++) {
 				if (i != k && myModules[k].connecting == true) {
 					switch(myModules[k].type)
 					{
@@ -759,7 +664,7 @@ function moduleMouseUp(e){
 					case "study":
 					case "source":
 					case "normal":
-						for (j=0;j<myModules[k].outputs.length;j++)
+						for (var j=0;j<myModules[k].outputs.length;j++)
 						{
 							if (myModules[k].outputs[j]==i)
 								doubleFlag = true;
@@ -772,7 +677,7 @@ function moduleMouseUp(e){
 					
 					case "conditional":
 						if (myModules[k].connectingTrue == true) {
-							for (j = 0; j < myModules[k].outputsTrue.length; j++) {
+							for (var j = 0; j < myModules[k].outputsTrue.length; j++) {
 								if (myModules[k].outputsTrue[j] == i) 
 									doubleFlag = true;
 							}
@@ -783,7 +688,7 @@ function moduleMouseUp(e){
 						}
 						else 
 							if (myModules[k].connectingFalse == true) {
-								for (j = 0; j < myModules[k].outputsFalse.length; j++) {
+								for (var j = 0; j < myModules[k].outputsFalse.length; j++) {
 									if (myModules[k].outputsFalse[j] == i) 
 										doubleFlag = true;
 								}
@@ -813,7 +718,7 @@ function moduleMouseUp(e){
 	}
 	
 	//reset values
-	for (i = 0; i < myModules.length; i++) {
+	for (var i = 0; i < myModules.length; i++) {
 		myModules[i].dragOK = false;
 		myModules[i].connecting=false;
 		myModules[i].connectingTrue=false;
@@ -821,7 +726,7 @@ function moduleMouseUp(e){
 	}
 	
 	makingConnection.connecting=false;
-	canvas.onmousemove = null;
+	canvas.onmousemove = captureMousePosition; //'capture mouse saves mouse position
 	
 	selectionBox.selecting = false;
 
@@ -829,6 +734,11 @@ function moduleMouseUp(e){
 	
 } 
  
+function captureMousePosition(e)
+{
+	testMouse.X = e.pageX - canvas.offsetLeft;
+	testMouse.Y = e.pageY - canvas.offsetTop;
+}
  
 //=============================================== 
 //initial conditions
@@ -871,12 +781,12 @@ function draw(){
 	
 	//Draw the connections
 	ctx.strokeStyle="#7585C1";
-	for (i=0; i < myModules.length; i++)
+	for (var i=0; i < myModules.length; i++)
 	{
 		switch(myModules[i].type)
 		{
 		case "normal":
-			for (j=0;j<myModules[i].outputs.length;j++)
+			for (var j=0;j<myModules[i].outputs.length;j++)
 			{
 				if (myModules[i].outputs[j] != -1) {
 					if (myModules[myModules[i].outputs[j]].selected == true || myModules[i].selected == true || ((lineSelection.selected == true) && (lineSelection.fromType == "normal") && (lineSelection.fromModule == i) && (lineSelection.toIndex == j)))
@@ -897,7 +807,7 @@ function draw(){
 			break;
 			
 		case "conditional":
-			for (j = 0; j < myModules[i].outputsTrue.length; j++) 
+			for (var j = 0; j < myModules[i].outputsTrue.length; j++) 
 				if (myModules[i].outputsTrue[j] != -1) {
 					
 					if (myModules[myModules[i].outputsTrue[j]].selected == true || myModules[i].selected == true || ((lineSelection.fromType == "True") &&(lineSelection.selected == true) && (lineSelection.fromModule == i) && (lineSelection.toIndex == j)))
@@ -914,7 +824,7 @@ function draw(){
 					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputsTrue[j]].rotate == 1)							
 						drawConnection(myModules[i].x+53, myModules[i].y-20, myModules[myModules[i].outputsTrue[j]].x - myModules[myModules[i].outputsTrue[j]].radius, myModules[myModules[i].outputsTrue[j]].y, myModules[i].rotate,myModules[myModules[i].outputsTrue[j]].rotate)
 				}	
-			for (j = 0; j < myModules[i].outputsFalse.length; j++) 
+			for (var j = 0; j < myModules[i].outputsFalse.length; j++) 
 				if (myModules[i].outputsFalse[j] != -1) {
 					
 					if (myModules[myModules[i].outputsFalse[j]].selected == true || myModules[i].selected == true || ((lineSelection.fromType == "False") &&(lineSelection.selected == true) && (lineSelection.fromModule == i) && (lineSelection.toIndex == j)))
@@ -935,7 +845,7 @@ function draw(){
 			
 		case "source":
 		case "study":
-			for (j=0;j<myModules[i].outputs.length;j++)
+			for (var j=0;j<myModules[i].outputs.length;j++)
 			{
 				if (myModules[i].outputs[j] != -1) {
 					
@@ -963,7 +873,7 @@ function draw(){
 	//Drawing a Line
 	if (makingConnection.connecting==true)
 	{
-		for (i = 0; i < myModules.length; i++) {
+		for (var i = 0; i < myModules.length; i++) {
 			switch(myModules[i].type)
 			{
 			case "normal":
@@ -1008,7 +918,7 @@ function draw(){
 	}
 	
 	//Draw the Modules
-	for (i = 0; i < myModules.length; i++)
+	for (var i = 0; i < myModules.length; i++)
 	{
 		var drawModule=myModules[i];
 		switch(drawModule.type)
