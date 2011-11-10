@@ -1,3 +1,28 @@
+body {
+	font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+
+label {
+	display: block;
+	float: left;
+	width: 150px;	
+}
+
+span {
+	display: block;
+}
+
+input {
+	width: 200px;
+}
+
+textarea {
+	float: left;
+	width: 250px;
+	height: 100px;
+}
+
 #canvas {
 	border: dotted 2px black;
 	background-color:#FAF7F8;
