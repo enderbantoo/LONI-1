@@ -231,7 +231,7 @@ function ctm_rotate() {
 }
 
 $("#canvas").contextmenu(option);
-$("body").keydown(function(e){
+$(document).keydown(function(e){
 	if (e.keyCode === 46)
 		cutModule();
 	else if (e.keyCode === 65)
