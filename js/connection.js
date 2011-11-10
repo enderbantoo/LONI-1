@@ -93,6 +93,33 @@ canvas.onmousemove = captureMousePosition; //'capture mouse saves mouse position
 	}
  }
  
+function Output()
+{
+	this.x;
+	this.y;
+	this.type;
+	this.connectedToInput = false;
+	this.inputConnectedTo;
+	this.connectOut = connectOut;
+}
+
+function Input()
+{
+	this.x;
+	this.y;
+	this.type;
+	this.connectedToOutput = false;
+	this.outputConnectedTo;
+	//this.connectIn = connectIn;
+}
+function connectOut(input)
+{
+	this.connectedToInput = true;
+	this.inputConnectedTo = input;
+	input.connectedToOutput = true;
+	this.outputConnectedTo = this;
+}
+
 function copy(sourceModule)
 {
  	this.x=sourceModule.x;
@@ -995,13 +1022,34 @@ function drawNormal(drawModule){
 		ctx.strokeStyle = "#99CC32";
 	else
 		ctx.strokeStyle = "black"
-	ctx.beginPath();
+	/*ctx.beginPath();
 	ctx.fillStyle = "LightBlue";
 	ctx.lineWidth = "3";
 	ctx.beginPath();
 	ctx.arc(drawModule.x, drawModule.y, 45, 0, 2 * 3.141592653589792348624, 0);
 	ctx.stroke();
+	ctx.fill();*/
+	 ctx.save();
+    ctx.translate(drawModule.x, drawModule.y);	
+    var r = 45;
+	var linGrd = ctx.createLinearGradient(-0.71*r,-0.71*r,0.71*r,0.71*r);
+	linGrd.addColorStop(0, "#8491C8"); // start with red at 0
+	linGrd.addColorStop(0.5, "#98A1D0"); // put blue at the halfway point
+	linGrd.addColorStop(1,"#AEB3DA"); // finish with green
+	ctx.fillStyle = linGrd;
+	ctx.strokeStyle = "#9DA1CF";
+	ctx.lineWidth = r/5;
+	
+	ctx.beginPath();
+	ctx.arc(0,0,r,0,2*Math.PI);
+	ctx.stroke(); 
+	
+	ctx.shadowColor = "#2F388B";
+	ctx.shadowOffsetX = 1/25*r;
+	ctx.shadowOffsetY = 1/25*r;
+	ctx.shadowBlur = 1/30*r;
 	ctx.fill();
+	ctx.restore();
 	
 	if (drawModule.rotate == 0) {
 		ctx.lineWidth = "3";
@@ -1094,14 +1142,38 @@ function drawSource (drawModule)
 	else
 		ctx.strokeStyle = "black"
 			
-	ctx.beginPath();
+	/*ctx.beginPath();
 	ctx.fillStyle = "LightGray";
 	ctx.lineWidth = "3";
 	ctx.beginPath();
 	ctx.arc(drawModule.x, drawModule.y, 25, 0, 2 * 3.141592653589792348624, 0);
 	ctx.stroke();
-	ctx.fill();
-	
+	ctx.fill();*/
+	ctx.save();	
+	var s = 25;
+	    ctx.translate(drawModule.x, drawModule.y);
+	    var ss = 0.68*s; 
+		var innerLinGrd = ctx.createLinearGradient(-ss/2,-ss/2,ss/2,ss/2); //gradiance of inner square
+		innerLinGrd.addColorStop(0, "#52525A"); 
+		innerLinGrd.addColorStop(0.25, "#676770"); 
+		innerLinGrd.addColorStop(0.5, "#7D7D85"); 
+		innerLinGrd.addColorStop(0.75, "#95959C"); 
+		innerLinGrd.addColorStop(1,"#A9A9AF"); 
+		
+		var outterLinGrd = ctx.createLinearGradient(-s/2,-s/2,s/2,s/2); //gradiance of inner square
+		outterLinGrd.addColorStop(0, "#DBDBE0"); 
+		outterLinGrd.addColorStop(1,"#7F7F88"); 
+		                        						
+		ctx.beginPath();
+		ctx.arc(0,0,s,0,2*Math.PI);  
+	    ctx.fillStyle = outterLinGrd;
+	    ctx.fill(); 
+	               
+		ctx.beginPath();                        
+	    ctx.arc(0,0,ss,0,2*Math.PI);  
+		ctx.fillStyle = innerLinGrd;
+		ctx.fill();				
+	ctx.restore();
 	if (drawModule.rotate == 0) {
 		ctx.lineWidth = "1";
 		ctx.fillStyle = "Gray";
@@ -1138,12 +1210,46 @@ function drawSink (drawModule)
 	
 	if (drawModule.rotate == 0) {
 		ctx.beginPath();
-		ctx.moveTo(drawModule.x - 25, drawModule.y - 25);
+		/*ctx.moveTo(drawModule.x - 25, drawModule.y - 25);
 		ctx.lineTo(drawModule.x + 25, drawModule.y - 25);
 		ctx.lineTo(drawModule.x, drawModule.y + 25);
 		ctx.closePath();
 		ctx.stroke();
-		ctx.fill();
+		ctx.fill();*/
+		ctx.save();
+		var s = 50;
+            ctx.translate(drawModule.x, drawModule.y);
+            var ss = 0.58*s; 
+			var innerLinGrd = ctx.createLinearGradient(-ss/2,-ss/2,ss/2,ss/2); //gradiance of inner square
+			innerLinGrd.addColorStop(0, "#52525A"); 
+			innerLinGrd.addColorStop(0.25, "#676770"); 
+			innerLinGrd.addColorStop(0.5, "#7D7D85"); 
+			innerLinGrd.addColorStop(0.75, "#95959C"); 
+			innerLinGrd.addColorStop(1,"#A9A9AF"); 
+			
+			var outterLinGrd = ctx.createLinearGradient(-s/2,-s/2,s/2,s/2); //gradiance of inner square
+			outterLinGrd.addColorStop(0, "#DBDBE0"); 
+			outterLinGrd.addColorStop(1,"#7F7F88"); 
+			
+			function drawEtriangle(x,y,l)
+			{		
+			ctx.beginPath();
+			ctx.moveTo(0,0.55735*l);
+			ctx.lineTo(-0.5*l,-0.55735*l/2);
+			ctx.lineTo(0.5*l,-0.55735*l/2);
+			ctx.lineTo(0,0.55735*l);
+								             
+			}
+            
+            drawEtriangle(0,0,s);
+			ctx.fillStyle = outterLinGrd;
+			ctx.fill();
+				         
+			drawEtriangle(0,0,ss);  						
+			ctx.fillStyle = innerLinGrd;
+			ctx.fill();
+            
+		ctx.restore();
 		
 		ctx.lineWidth = "1";
 		ctx.fillStyle = "Gray";
@@ -1154,14 +1260,47 @@ function drawSink (drawModule)
 	
 	else
 	{
-		ctx.beginPath();
+		/*ctx.beginPath();
 		ctx.moveTo(drawModule.x - 25, drawModule.y - 25);
 		ctx.lineTo(drawModule.x - 25, drawModule.y + 25);
 		ctx.lineTo(drawModule.x + 25, drawModule.y);
 		ctx.closePath();
 		ctx.stroke();
-		ctx.fill();
-		
+		ctx.fill();*/
+		ctx.save();
+		var s = 50;
+            ctx.translate(drawModule.x, drawModule.y);
+            var ss = 0.58*s; 
+			var innerLinGrd = ctx.createLinearGradient(-ss/2,-ss/2,ss/2,ss/2); //gradiance of inner square
+			innerLinGrd.addColorStop(0, "#52525A"); 
+			innerLinGrd.addColorStop(0.25, "#676770"); 
+			innerLinGrd.addColorStop(0.5, "#7D7D85"); 
+			innerLinGrd.addColorStop(0.75, "#95959C"); 
+			innerLinGrd.addColorStop(1,"#A9A9AF"); 
+			
+			var outterLinGrd = ctx.createLinearGradient(-s/2,-s/2,s/2,s/2); //gradiance of inner square
+			outterLinGrd.addColorStop(0, "#DBDBE0"); 
+			outterLinGrd.addColorStop(1,"#7F7F88"); 
+			
+			function drawRotatedEtriangle(x,y,l)
+			{		
+			ctx.beginPath();
+			ctx.moveTo(0.55735*l,0);
+			ctx.lineTo(-0.55735*l/2,-0.5*l);
+			ctx.lineTo(-0.55735*l/2,0.5*l);
+			ctx.lineTo(0.55735*l,0);
+								             
+			}
+            
+            drawRotatedEtriangle(0,0,s);
+			ctx.fillStyle = outterLinGrd;
+			ctx.fill();
+				         
+			drawRotatedEtriangle(0,0,ss);  						
+			ctx.fillStyle = innerLinGrd;
+			ctx.fill();
+            
+		ctx.restore();
 		ctx.lineWidth = "1";
 		ctx.fillStyle = "Gray";
 		ctx.beginPath();
@@ -1177,13 +1316,43 @@ function drawStudy (drawModule)
 		ctx.strokeStyle = "#99CC32";
 	else
 		ctx.strokeStyle = "black"
-		
+		/*
 	ctx.beginPath();
 	ctx.fillStyle = "LightGray";
 	ctx.lineWidth = "3";
 	
 	ctx.strokeRect(drawModule.x-25,drawModule.y-25,50,50);
 	ctx.fillRect(drawModule.x-25,drawModule.y-25,50,50);
+	*/
+	 ctx.save();	
+	 var s = 50;
+        ctx.translate(drawModule.x, drawModule.y);
+		var innerLinGrd = ctx.createLinearGradient(-s/2.2,-s/2.2,s/2.2,s/2.2); //gradiance of inner square
+		innerLinGrd.addColorStop(0, "#3D3D47"); 
+		innerLinGrd.addColorStop(0.50, "#7D7D84"); 
+		innerLinGrd.addColorStop(1,"#BDBDC3"); 
+		
+		var outterLinGrd = ctx.createLinearGradient(-s/2,-s/2,s/2,s/2); //gradiance of inner square
+		outterLinGrd.addColorStop(0, "#DBDBE0"); 
+		outterLinGrd.addColorStop(1,"#7F7F88"); 
+		
+		ctx.fillStyle = outterLinGrd;
+		ctx.fillRect(-s/2,-s/2,s,s);
+		
+		var r = s/6.5; 
+		//arc radius    
+        var ss = 0.75*s; 
+        //side length of inner square
+        
+		ctx.beginPath();                        
+		ctx.moveTo(-ss/2,-ss/2+r);
+		ctx.arcTo(-ss/2,-ss/2,ss/2-r,-ss/2,r);
+		ctx.arcTo(ss/2,-ss/2,ss/2,ss/2-r,r); 
+		ctx.arcTo(ss/2,ss/2,-ss/2+r,ss/2,r);
+		ctx.arcTo(-ss/2,ss/2,-ss/2,-ss/2+r,r);
+		ctx.fillStyle = innerLinGrd;
+		ctx.fill();				
+	ctx.restore();
 	
 	ctx.lineWidth = "1";
 	ctx.fillStyle = "Gray";
@@ -1596,6 +1765,3 @@ function drawLine(x1,y1,x2,y2)
 	ctx.stroke();
 	
 }
-
-
-
