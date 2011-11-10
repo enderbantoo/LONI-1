@@ -112,8 +112,7 @@ function Input()
 	this.outputConnectedTo;
 	//this.connectIn = connectIn;
 }
-
-connectOut(input)
+function connectOut(input)
 {
 	this.connectedToInput = true;
 	this.inputConnectedTo = input;
