@@ -76,7 +76,7 @@ canvas.onmousemove = captureMousePosition; //'capture mouse saves mouse position
 	switch(this.type)
 	{
 	case "normal":
-		this.radius=53;
+		this.radius=57;
 		break;
 	case "conditional":
 		this.radius=53;
@@ -227,6 +227,23 @@ function copy(sourceModule)
  	switch(this.type)
 	{
 	case "normal":
+	if (this.rotate == 0) {
+		if (mouseX < this.x + 5 + offsetLeft &&
+		mouseX > this.x - 5 + offsetLeft &&
+		mouseY > this.y - 62 + offsetTop &&
+		mouseY < this.y - 52 + offsetTop) 
+			return true;
+	}
+	else if (this.rotate == 1){
+		if (mouseX > this.x - 62 + offsetLeft &&
+		mouseX < this.x - 52 + offsetLeft &&
+		mouseY < this.y + 5 + offsetTop &&
+		mouseY > this.y - 5 + offsetTop) 
+			return true;
+	}
+	else 
+		return false;
+		
 	case "conditional":	
 	if (this.rotate == 0) {
 		if (mouseX < this.x + 5 + offsetLeft &&
@@ -274,8 +291,8 @@ function copy(sourceModule)
 		if (this.rotate == 0) {
 			if (mouseX < this.x + 7 + offsetLeft &&
 			mouseX > this.x - 7 + offsetLeft &&
-			mouseY < this.y + 58 + offsetTop &&
-			mouseY > this.y + 48 + offsetTop) {
+			mouseY < this.y + 63 + offsetTop &&
+			mouseY > this.y + 53 + offsetTop) {
 				this.connecting = true;
 				return 1;
 			}
@@ -284,8 +301,8 @@ function copy(sourceModule)
 		}
 		else
 		{
-			if (mouseX > this.x + 48 + offsetLeft &&
-			mouseX < this.x + 58 + offsetLeft &&
+			if (mouseX > this.x + 53 + offsetLeft &&
+			mouseX < this.x + 63 + offsetLeft &&
 			mouseY > this.y - 7  + offsetTop &&
 			mouseY < this.y + 7 + offsetTop) {
 				this.connecting = true;
@@ -537,6 +554,27 @@ function rotateModule()
 function moduleMouseDown(e){
 	if (e.button == 2) //right click
 	{
+		//check if right click selecting
+		for (var i = 0; i < myModules.length; i++) {
+			if (myModules[i].checkMoving(e.pageX, e.pageY, canvas.offsetLeft, canvas.offsetTop))
+			{
+				if (myModules[i].selected == true)
+					break;
+				else {
+					//if not selected reset selection and select
+					for (var k = 0; k < myModules.length; k++) {
+						myModules[k].selected = false;
+					}
+					lineSelection.selected = false;
+					lineSelection.fromModule = -1;
+					lineSelection.toIndex = -1;
+					lineSelection.fromType = "none";
+					
+					myModules[i].selected = true;
+					break;
+				}
+			}
+		}
 		testMouse.X = e.pageX - canvas.offsetLeft;
 		testMouse.Y = e.pageY - canvas.offsetTop;
 		return;
@@ -608,7 +646,7 @@ function moduleMouseDown(e){
 			case "normal":
 				for (var p=0;p<myModules[i].outputs.length;p++)
 				{
-					if (clickConnection(myModules[i].x, myModules[i].y + 53, myModules[myModules[i].outputs[p]].x, myModules[myModules[i].outputs[p]].y - myModules[myModules[i].outputs[p]].radius, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
+					if (clickConnection(myModules[i].x, myModules[i].y + 65, myModules[myModules[i].outputs[p]].x, myModules[myModules[i].outputs[p]].y - myModules[myModules[i].outputs[p]].radius, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
 					{
 						lineSelection.selected = true;
 						lineSelection.fromModule = i;
@@ -822,13 +860,13 @@ function draw(){
 						ctx.strokeStyle="#7585C1";
 						
 					if (myModules[i].rotate == 0 && myModules[myModules[i].outputs[j]].rotate == 0)	
-						drawConnection(myModules[i].x, myModules[i].y + 53, myModules[myModules[i].outputs[j]].x, myModules[myModules[i].outputs[j]].y - myModules[myModules[i].outputs[j]].radius, myModules[i].rotate,myModules[myModules[i].outputs[j]].rotate)
+						drawConnection(myModules[i].x, myModules[i].y + 65, myModules[myModules[i].outputs[j]].x, myModules[myModules[i].outputs[j]].y - myModules[myModules[i].outputs[j]].radius, myModules[i].rotate,myModules[myModules[i].outputs[j]].rotate)
 					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputs[j]].rotate == 0)
-						drawConnection(myModules[i].x+53, myModules[i].y, myModules[myModules[i].outputs[j]].x, myModules[myModules[i].outputs[j]].y - myModules[myModules[i].outputs[j]].radius, myModules[i].rotate,myModules[myModules[i].outputs[j]].rotate)
+						drawConnection(myModules[i].x+65, myModules[i].y, myModules[myModules[i].outputs[j]].x, myModules[myModules[i].outputs[j]].y - myModules[myModules[i].outputs[j]].radius, myModules[i].rotate,myModules[myModules[i].outputs[j]].rotate)
 					else if (myModules[i].rotate == 0 && myModules[myModules[i].outputs[j]].rotate == 1)	
-						drawConnection(myModules[i].x, myModules[i].y+53, myModules[myModules[i].outputs[j]].x - myModules[myModules[i].outputs[j]].radius, myModules[myModules[i].outputs[j]].y, myModules[i].rotate,myModules[myModules[i].outputs[j]].rotate)			
+						drawConnection(myModules[i].x, myModules[i].y+65, myModules[myModules[i].outputs[j]].x - myModules[myModules[i].outputs[j]].radius, myModules[myModules[i].outputs[j]].y, myModules[i].rotate,myModules[myModules[i].outputs[j]].rotate)			
 					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputs[j]].rotate == 1)							
-						drawConnection(myModules[i].x+53, myModules[i].y, myModules[myModules[i].outputs[j]].x - myModules[myModules[i].outputs[j]].radius, myModules[myModules[i].outputs[j]].y, myModules[i].rotate,myModules[myModules[i].outputs[j]].rotate)
+						drawConnection(myModules[i].x+65, myModules[i].y, myModules[myModules[i].outputs[j]].x - myModules[myModules[i].outputs[j]].radius, myModules[myModules[i].outputs[j]].y, myModules[i].rotate,myModules[myModules[i].outputs[j]].rotate)
 				}
 			}
 			break;
@@ -906,9 +944,9 @@ function draw(){
 			case "normal":
 				if (myModules[i].connecting == true) {
 					if (myModules[i].rotate == 0)
-						drawConnection(myModules[i].x, myModules[i].y + 53, makingConnection.x, makingConnection.y,myModules[i].rotate,0)
+						drawConnection(myModules[i].x, myModules[i].y + 65, makingConnection.x, makingConnection.y,myModules[i].rotate,0)
 					else
-						drawConnection(myModules[i].x + 53, myModules[i].y, makingConnection.x, makingConnection.y,myModules[i].rotate,0)
+						drawConnection(myModules[i].x + 65, myModules[i].y, makingConnection.x, makingConnection.y,myModules[i].rotate,0)
 				}
 				break;	
 			case "conditional":
@@ -1021,7 +1059,7 @@ function drawNormal(drawModule){
 	if (drawModule.selected == true)
 		ctx.strokeStyle = "#99CC32";
 	else
-		ctx.strokeStyle = "black"
+		ctx.strokeStyle = "#7585C1"
 	/*ctx.beginPath();
 	ctx.fillStyle = "LightBlue";
 	ctx.lineWidth = "3";
@@ -1055,42 +1093,65 @@ function drawNormal(drawModule){
 		ctx.lineWidth = "3";
 		ctx.fillStyle = "Gray";
 		ctx.beginPath();
-		ctx.arc(drawModule.x, drawModule.y + 53, 5, 0, 2 * 3.141592653589792348624, 0)
+		ctx.moveTo(drawModule.x-7,drawModule.y+53)
+		ctx.lineTo(drawModule.x+7,drawModule.y+53)
+		ctx.lineTo(drawModule.x,drawModule.y+65)
+		ctx.closePath();
 		ctx.stroke();
-		ctx.fill();
+		if (drawModule.outputs.length > 0) {
+			ctx.fillStyle = "#7585C1"
+			ctx.fill();
+		}
+
 		ctx.lineWidth = "3";
 		ctx.fillStyle = "Gray";
 		
 		ctx.beginPath();
-		ctx.arc(drawModule.x, drawModule.y - 53, 5, 0, 2 * 3.141592653589792348624, 0)
+		ctx.arc(drawModule.x, drawModule.y - 57, 5, 0, 2 * 3.141592653589792348624, 0)
 		ctx.stroke();
-		ctx.fill();
 	}
 	else
 	{
 		ctx.lineWidth = "3";
 		ctx.fillStyle = "Gray";
 		ctx.beginPath();
-		ctx.arc(drawModule.x+53, drawModule.y, 5, 0, 2 * 3.141592653589792348624, 0)
+		
+		ctx.moveTo(drawModule.x+53,drawModule.y-7)
+		ctx.lineTo(drawModule.x+53,drawModule.y+7)
+		ctx.lineTo(drawModule.x+65,drawModule.y)
+		ctx.closePath();
 		ctx.stroke();
-		ctx.fill();
+		if (drawModule.outputs.length > 0) {
+			ctx.fillStyle = "#7585C1"
+			ctx.fill();
+		}
 		ctx.lineWidth = "3";
 		ctx.fillStyle = "Gray";
 		
 		ctx.beginPath();
-		ctx.arc(drawModule.x-53, drawModule.y , 5, 0, 2 * 3.141592653589792348624, 0)
+		ctx.arc(drawModule.x-57, drawModule.y , 5, 0, 2 * 3.141592653589792348624, 0)
 		ctx.stroke();
-		ctx.fill();
+		/*if (drawModule.outputs.length > 0) {
+			ctx.fillstyle = "#7585C1"
+			ctx.fill();
+		}*/
 	}
 }		
-
+                                                                
+                                             
 function drawConditional (drawModule)
 {
-		if (drawModule.selected == true)
+		var isSelected = new Boolean();
+		if (drawModule.selected == true){
 			ctx.strokeStyle = "#99CC32";
-		else
+			isSelected = true;
+		}
+		else{
 			ctx.strokeStyle = "black"
+			isSelected = false;
+		}
 			
+			/*
 		ctx.beginPath();
 		ctx.fillStyle = "LightBlue";
 		ctx.lineWidth = "2";
@@ -1099,7 +1160,70 @@ function drawConditional (drawModule)
 		
 		ctx.lineWidth = "3";
 		ctx.fillStyle = "Gray";
+		*/
+		ctx.save();	
 		
+		//outer rect size
+		var height = 80; 
+		var width = 100;
+		
+        ctx.translate(drawModule.x, drawModule.y);
+		var innerLinGrd = ctx.createLinearGradient(-width/2.2,-height/2.2,width/2.2,height/2.2); //gradiance of inner square
+		innerLinGrd.addColorStop(0, "#8491C8"); 
+		innerLinGrd.addColorStop(0.50, "#98A1D0"); 
+		innerLinGrd.addColorStop(1,"#AEB3DA"); 
+
+		var outterLinGrd = ctx.createLinearGradient(-width/2,-height/2,width/2,height/2); //gradiance of outer square
+		outterLinGrd.addColorStop(0, "#AEB3DA"); 
+		outterLinGrd.addColorStop(1,"#2F388B"); 
+		
+		if(isSelected){
+			var oh = height*1.06;
+			var ow = width*1.06;
+			var rad = oh/6.5;
+			
+			ctx.beginPath();                        
+			ctx.moveTo(-ow/2,-oh/2+rad);
+			ctx.arcTo(-ow/2,-oh/2,ow/2-rad,-oh/2,rad);
+			ctx.arcTo(ow/2,-oh/2,ow/2,oh/2-rad,rad); 
+			ctx.arcTo(ow/2,oh/2,-ow/2+rad,oh/2,rad);
+			ctx.arcTo(-ow/2,oh/2,-ow/2,-oh/2+rad,rad);
+			ctx.fillStyle = "yellow";
+			ctx.fill();
+		}
+
+		//arc radius
+		var r = height/6.5;
+		
+		//draw outer square
+		ctx.beginPath();
+		ctx.moveTo(-width/2,-height/2+r);
+		ctx.arcTo(-width/2,-height/2,width/2-r,-height/2,r);
+		ctx.arcTo(width/2,-height/2,width/2,height/2-r,r); 
+		ctx.arcTo(width/2,height/2,-width/2+r,height/2,r);
+		ctx.arcTo(-width/2,height/2,-width/2,-height/2+r,r);
+		ctx.fillStyle = outterLinGrd;
+		ctx.fill();
+		//ctx.fillRect(-width/2,-height/2,width,height);
+
+		//inner rect size
+        var ss = 0.92*height;
+		var ww = 0.92*width;
+
+        //draw inner rect
+		ctx.beginPath();                        
+		ctx.moveTo(-ww/2,-ss/2+r);
+		ctx.arcTo(-ww/2,-ss/2,ww/2-r,-ss/2,r);
+		ctx.arcTo(ww/2,-ss/2,ww/2,ss/2-r,r); 
+		ctx.arcTo(ww/2,ss/2,-ww/2+r,ss/2,r);
+		ctx.arcTo(-ww/2,ss/2,-ww/2,-ss/2+r,r);
+		ctx.fillStyle = innerLinGrd;
+		ctx.fill();				
+		ctx.restore();
+
+		ctx.lineWidth = "1";
+		ctx.fillStyle = "Grey";
+	
 		if (drawModule.rotate == 0) {
 			ctx.beginPath();
 			ctx.arc(drawModule.x, drawModule.y - 53, 5, 0, 2 * 3.141592653589792348624, 0)

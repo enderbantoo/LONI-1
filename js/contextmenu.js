@@ -31,8 +31,8 @@ function ctm_copy() {
 	{
 		if (myModules[i].selected == true) {
 			
-			myModules[i].groupMoveOffsetX = testMouseX - myModules[i].x;
-			myModules[i].groupMoveOffsetY = testMouseY - myModules[i].y;
+			myModules[i].groupMoveOffsetX = testMouse.X - myModules[i].x;
+			myModules[i].groupMoveOffsetY = testMouse.Y - myModules[i].y;
 			
 			var last = copyModules.length;
 			copyModules[last]=new module;
@@ -134,8 +134,8 @@ function ctm_paste() {
 		var last = myModules.length;
 		myModules[last] = new module;
 		myModules[last].copy(copyModules[i]);
-		myModules[last].x=testMouseX-copyModules[i].groupMoveOffsetX;
-		myModules[last].y=testMouseY-copyModules[i].groupMoveOffsetY;
+		myModules[last].x=testMouse.X-copyModules[i].groupMoveOffsetX;
+		myModules[last].y=testMouse.Y-copyModules[i].groupMoveOffsetY;
 		
 		for(k=0;k<copyModules[i].outputs.length;k++)
 		{
@@ -166,24 +166,24 @@ function menuAction() {
 
 
 function ctm_modules() {
-	createModule(testMouseX,testMouseY,"normal",1,1);
+	createModule(testMouse.X,testMouse.Y,"normal",1,1);
 }
 
 function ctm_data_source() {
-		createModule(testMouseX,testMouseY,"source",0,1);
+		createModule(testMouse.X,testMouse.Y,"source",0,1);
 }
 
 function ctm_study() {
-		createModule(testMouseX,testMouseY,"study",0,1);
+		createModule(testMouse.X,testMouse.Y,"study",0,1);
 }
 
 function ctm_data_sink() {
-		createModule(testMouseX,testMouseY,"sink",1,0);
+		createModule(testMouse.X,testMouse.Y,"sink",1,0);
 	
 }
 
 function ctm_conditional() {
-		createModule(testMouseX,testMouseY,"conditional",1,1);
+		createModule(testMouse.X,testMouse.Y,"conditional",1,1);
 }		
 
 function cutModule() {
