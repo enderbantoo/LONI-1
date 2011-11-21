@@ -1003,11 +1003,16 @@ function draw(){
 }
 
 function drawNormal(drawModule){
-	
-	if (drawModule.selected == true)
+
+	var isSelected = new Boolean();
+	if (drawModule.selected == true){
 		ctx.strokeStyle = "#99CC32";
-	else
+		isSelected = true;
+	}
+	else {
 		ctx.strokeStyle = "#7585C1"
+		isSelected = false;
+	}
 
 	ctx.save();
     ctx.translate(drawModule.x, drawModule.y);	
@@ -1016,6 +1021,15 @@ function drawNormal(drawModule){
 	linGrd.addColorStop(0, "#8491C8"); // start with red at 0
 	linGrd.addColorStop(0.5, "#98A1D0"); // put blue at the halfway point
 	linGrd.addColorStop(1,"#AEB3DA"); // finish with green
+	
+	if (isSelected) {
+		var orad = r*1.17;
+		ctx.fillStyle = "yellow";
+		ctx.beginPath();
+		ctx.arc(0,0,orad,0,2*Math.PI);
+		ctx.fill();
+	}
+	
 	ctx.fillStyle = linGrd;
 	ctx.strokeStyle = "#9DA1CF";
 	ctx.lineWidth = r/5;
@@ -1081,8 +1095,7 @@ function drawNormal(drawModule){
 			}
 		}
 	}
-}		
-                                                                
+}		                             
                                              
 function drawConditional (drawModule)
 {
@@ -1230,14 +1243,29 @@ function drawConditional (drawModule)
 
 function drawSource (drawModule)
 {
-	if (drawModule.selected == true)
+	var isSelected = new Boolean();
+	if (drawModule.selected == true){
 		ctx.strokeStyle = "#99CC32";
-	else
+		isSelected = true;
+	}
+	else {
 		ctx.strokeStyle = "black"
-	ctx.save();	
+		isSelected = false;
+	}
+	
+		ctx.save();	
 		var s = 25;
 	    ctx.translate(drawModule.x, drawModule.y);
 	    var ss = 0.68*s; 
+		
+		if (isSelected){
+			var orad = s*1.12;
+			ctx.fillStyle = "yellow";
+			ctx.beginPath();
+			ctx.arc(0,0,orad,0,2*Math.PI);
+			ctx.fill();
+		}
+		
 		var innerLinGrd = ctx.createLinearGradient(-ss/2,-ss/2,ss/2,ss/2); //gradiance of inner square
 		innerLinGrd.addColorStop(0, "#52525A"); 
 		innerLinGrd.addColorStop(0.25, "#676770"); 
@@ -1247,7 +1275,7 @@ function drawSource (drawModule)
 		
 		var outterLinGrd = ctx.createLinearGradient(-s/2,-s/2,s/2,s/2); //gradiance of inner square
 		outterLinGrd.addColorStop(0, "#DBDBE0"); 
-		outterLinGrd.addColorStop(1,"#7F7F88"); 
+		outterLinGrd.addColorStop(1,"#7F7F88");
 		                        						
 		ctx.beginPath();
 		ctx.arc(0,0,s,0,2*Math.PI);  
@@ -1301,10 +1329,15 @@ function drawSource (drawModule)
 
 function drawSink (drawModule)
 {
-	if (drawModule.selected == true)
+	var isSelected = new Boolean();
+	if (drawModule.selected == true) {
 		ctx.strokeStyle = "#99CC32";
-	else
-		ctx.strokeStyle = "black"
+		isSelected = true;
+	}
+	else {
+		ctx.strokeStyle = "black";
+		isSelected = false;
+	}	
 		
 	ctx.fillStyle = "LightGray";
 	ctx.lineWidth = "3";
@@ -1315,6 +1348,7 @@ function drawSink (drawModule)
 		var s = 50;
             ctx.translate(drawModule.x, drawModule.y);
             var ss = 0.58*s; 
+			
 			var innerLinGrd = ctx.createLinearGradient(-ss/2,-ss/2,ss/2,ss/2); //gradiance of inner square
 			innerLinGrd.addColorStop(0, "#52525A"); 
 			innerLinGrd.addColorStop(0.25, "#676770"); 
@@ -1326,6 +1360,7 @@ function drawSink (drawModule)
 			outterLinGrd.addColorStop(0, "#DBDBE0"); 
 			outterLinGrd.addColorStop(1,"#7F7F88"); 
 			
+			
 			function drawEtriangle(x,y,l)
 			{		
 			ctx.beginPath();
@@ -1334,6 +1369,13 @@ function drawSink (drawModule)
 			ctx.lineTo(0.5*l,-0.55735*l/2);
 			ctx.lineTo(0,0.55735*l);
 								             
+			}
+			
+			if (isSelected) {
+				var os = s*1.2;
+				drawEtriangle(0,0,os);
+				ctx.fillStyle = "yellow";
+				ctx.fill();
 			}
             
             drawEtriangle(0,0,s);
@@ -1385,6 +1427,13 @@ function drawSink (drawModule)
 			ctx.lineTo(0.55735*l,0);
 								             
 			}
+			
+			if (isSelected) {
+				var os = s*1.2;
+				drawRotatedEtriangle(0,0,os);
+				ctx.fillStyle = "yellow";
+				ctx.fill();
+			}
             
             drawRotatedEtriangle(0,0,s);
 			ctx.fillStyle = outterLinGrd;
@@ -1413,14 +1462,26 @@ function drawSink (drawModule)
 
 function drawStudy (drawModule)
 {
-	if (drawModule.selected == true)
+	var isSelected = new Boolean();
+	if (drawModule.selected == true) {
 		ctx.strokeStyle = "#99CC32";
-	else
-		ctx.strokeStyle = "black"
+		isSelected = true;
+	}
+	else {
+		ctx.strokeStyle = "black";
+		isSelected = false;
+	}
 		
 	 ctx.save();	
 	 var s = 50;
         ctx.translate(drawModule.x, drawModule.y);
+		
+		if (isSelected) {
+			var os = s*1.1;
+			ctx.fillStyle = "yellow";
+			ctx.fillRect(-os/2,-os/2,os,os);
+		}
+		
 		var innerLinGrd = ctx.createLinearGradient(-s/2.2,-s/2.2,s/2.2,s/2.2); //gradiance of inner square
 		innerLinGrd.addColorStop(0, "#3D3D47"); 
 		innerLinGrd.addColorStop(0.50, "#7D7D84"); 
