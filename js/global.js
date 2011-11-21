@@ -24,34 +24,25 @@ $(document).ready( function() {
 	
 	$("#canvas").contextmenu(option);
 	
-	$("body").keydown(function(e){
+	$("document").keydown(function(e){
 		if (e.keyCode === 46)
 			cutModule();
-		else if (e.keyCode === 17)
-			input.ctrlFlag = true;
 		else if (e.keyCode === 65)
 		{
-			if (input.ctrlFlag)
+			if (e.ctrlKey)
 				ctm_select_all();
 		}
 		else if (e.keyCode === 67)
 		{
-			if (input.ctrlFlag)
+			if (e.ctrlKey)
 				ctm_copy();
 		}
 		else if (e.keyCode === 86)
 		{
-			if (input.ctrlFlag)
+			if (e.ctrlKey)
 				ctm_paste();
 		}
 		return false;
 	})
-	
-	$("body").keydown(function(e){
-		if (e.keyCode ===46)
-			input.ctrlFlag = false;
-		return false;
-	})	
-		
 	
 });

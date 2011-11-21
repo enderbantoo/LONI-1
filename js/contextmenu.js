@@ -195,23 +195,13 @@ function cutModule() {
 		}
 	}
 	if (lineSelection.selected == true) {
-		switch(lineSelection.fromType)
-		{
-			case "normal":
-				myModules[lineSelection.fromModule].outputs.splice(lineSelection.toIndex,1);
-				break;
-			case "True":
-				myModules[lineSelection.fromModule].outputsTrue.splice(lineSelection.toIndex,1);
-				break;
-			case "False":
-				myModules[lineSelection.fromModule].outputsFalse.splice(lineSelection.toIndex,1);
-				break;
-		}
+		
+		lineSelection.fromOutput.inputConnectedTo = null;
+		lineSelection.toInput.outputConnectedTo = null;
 		
 		lineSelection.selected = false;
-		lineSelection.fromModule=-1;
-		lineSelection.toIndex=-1;
-		lineSelection.fromType="none";
+		lineSelection.fromOutput = null;
+		lineSelection.toInput = null;
 	}
 }
 
@@ -219,10 +209,7 @@ function ctm_rotate() {
 	for (c = 0; c < myModules.length;c++)
 	{
 		if (myModules[c].selected == true) {
-			if (myModules[c].rotate == 0)
-				myModules[c].rotate = 1;
-			else
-				myModules[c].rotate = 0;
+			myModules[c].rotateModule();
 		}
 	}
 }
