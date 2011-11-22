@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:complexType name="pipeline">
+        <xsd:choice>
+            <xsd:element name="connections" type="connections"/>
+            <xsd:element name="moduleGroup" type="moduleGroup" maxOccurs="unbounded"/>
+        </xsd:choice>
+        <xsd:attribute name="version" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="connections">
+        <xsd:choice>
+            <xsd:element name="connection" type="connection" maxOccurs="unbounded" minOccurs="0"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="connection">
+        <xsd:attribute name="source" type="xsd:string"/>
+        <xsd:attribute name="sink" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="moduleGroup">
+        <xsd:choice>
+            <xsd:element name="authors" type="authors" maxOccurs="unbounded"/>
+            <xsd:element name="annotations" type="annotations" maxOccurs="unbounded"/>
+            <xsd:element name="citations" type="citations" maxOccurs="unbounded"/>
+            <xsd:element name="dataModule" type="dataModule" maxOccurs="unbounded"/>
+            <xsd:element name="input" type="parameter" maxOccurs="unbounded"/>
+            <xsd:element name="metadata" type="metadata" maxOccurs="unbounded"/>
+            <xsd:element name="module" type="module" maxOccurs="unbounded"/>
+            <xsd:element name="moduleGroup" type="moduleGroup" maxOccurs="unbounded"/>
+            <xsd:element name="output" type="parameter" maxOccurs="unbounded"/>
+            <xsd:element name="tag" type="xsd:string" maxOccurs="unbounded"/>
+            <xsd:element name="uri" type="xsd:string" maxOccurs="1"/>
+            <xsd:element name="viewerModule" type="viewerModule" maxOccurs="unbounded"/>
+            <xsd:element name="variables" type="variables" maxOccurs="unbounded"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="optional"/>
+        <xsd:attribute name="package" type="xsd:string" use="optional"/>
+        <xsd:attribute name="version" type="xsd:string" use="optional"/>
+        <xsd:attribute name="description" type="xsd:string" use="optional"/>
+        <xsd:attribute name="icon" type="xsd:string" use="optional"/>
+        <xsd:attribute name="posX" type="xsd:integer" use="required"/>
+        <xsd:attribute name="posY" type="xsd:integer" use="required" />
+        <xsd:attribute name="rotation" type="xsd:integer" use="optional"/>
+        <xsd:attribute name="needsProvenance" type="xsd:boolean" use="optional"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="dataModule">
+        <xsd:choice>
+            <xsd:element name="authors" type="authors" maxOccurs="unbounded"/>
+            <xsd:element name="citations" type="citations" maxOccurs="unbounded"/>
+            <xsd:element name="dirSourceFilter" type="dirSourceFilter" maxOccurs="unbounded"/>
+            <xsd:element name="fileTypes" type="fileTypes" maxOccurs="unbounded"/>
+            <xsd:element name="metadata" type="metadata"/>
+            <xsd:element name="tag" type="xsd:string" maxOccurs="unbounded"/>
+            <xsd:element name="uri" type="xsd:string" maxOccurs="1"/>
+            <xsd:element name="values" type="values" maxOccurs="unbounded"/>
+            <xsd:element name="input" type="parameter" maxOccurs="1"/>
+            <xsd:element name="output" type="parameter" maxOccurs="1"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="optional"/>
+        <xsd:attribute name="package" type="xsd:string" use="optional"/>
+        <xsd:attribute name="version" type="xsd:string" use="optional"/>
+        <xsd:attribute name="description" type="xsd:string" use="optional"/>
+        <xsd:attribute name="posX" type="xsd:integer" use="required"/>
+        <xsd:attribute name="posY" type="xsd:integer" use="required"/>
+        <xsd:attribute name="rotation" type="xsd:integer" use="optional"/>
+        <xsd:attribute name="type" type="xsd:string" use="required"/>
+        <xsd:attribute name="source" type="xsd:boolean" use="required"/>
+        <xsd:attribute name="dirSource" type="xsd:boolean" use="optional"/>
+        <xsd:attribute name="dirDump" type="xsd:boolean" use="optional"/>
+        <xsd:attribute name="useDirSourceFilters" type="xsd:boolean" use="optional"/>
+        <xsd:attribute name="dirSourceFilterType" type="xsd:integer" use="optional"/>
+        <xsd:attribute name="recursive" type="xsd:boolean" use="optional"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="studyModule">
+        <xsd:choice>
+            <xsd:element name="authors" type="authors" maxOccurs="unbounded"/>
+            <xsd:element name="citations" type="citations" maxOccurs="unbounded"/>
+            <xsd:element name="dirSourceFilter" type="dirSourceFilter" maxOccurs="unbounded"/>
+            <xsd:element name="fileTypes" type="fileTypes" maxOccurs="unbounded"/>
+            <xsd:element name="metadata" type="metadata"/>
+            <xsd:element name="tag" type="xsd:string" maxOccurs="unbounded"/>
+            <xsd:element name="uri" type="xsd:string" maxOccurs="1"/>
+            <xsd:element name="values" type="values" maxOccurs="unbounded"/>
+            <xsd:element name="studyGroups" type="studyGroups" maxOccurs="unbounded"/>
+            <xsd:element name="matrixColumns" type="xsd:string" maxOccurs="1"/>
+            <xsd:element name="output" type="parameter" maxOccurs="1"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="optional"/>
+        <xsd:attribute name="package" type="xsd:string" use="optional"/>
+        <xsd:attribute name="version" type="xsd:string" use="optional"/>
+        <xsd:attribute name="description" type="xsd:string" use="optional"/>
+        <xsd:attribute name="posX" type="xsd:integer" use="required"/>
+        <xsd:attribute name="posY" type="xsd:integer" use="required"/>
+        <xsd:attribute name="isGroupAsOutput" type="xsd:boolean" use="optional"/>
+        <xsd:attribute name="rotation" type="xsd:integer" use="optional"/>
+        <xsd:attribute name="type" type="xsd:string" use="required"/>
+        <xsd:attribute name="dirSource" type="xsd:boolean" use="optional"/>
+        <xsd:attribute name="importStudyRule" type="xsd:string" use="optional"/>
+        <xsd:attribute name="derivedDataTag" type="xsd:string" use="optional"/>
+        <xsd:attribute name="useDirSourceFilters" type="xsd:boolean" use="optional"/>
+        <xsd:attribute name="dirSourceFilterType" type="xsd:integer" use="optional"/>
+        <xsd:attribute name="recursive" type="xsd:boolean" use="optional"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="module">
+        <xsd:choice>
+            <xsd:element name="authors" type="authors" maxOccurs="unbounded"/>
+            <xsd:element name="citations" type="xsd:string" maxOccurs="unbounded"/>
+            <xsd:element name="executableAuthors" type="authors" maxOccurs="unbounded"/>
+            <xsd:element name="executableProvenance" type="executableProvenance"/>
+            <xsd:element name="input" type="parameter" maxOccurs="unbounded"/>
+            <xsd:element name="metadata" type="metadata"/>
+            <xsd:element name="output" type="parameter" maxOccurs="unbounded"/>
+            <xsd:element name="tag" type="xsd:string"/>
+            <xsd:element name="uri" type="xsd:string"/>
+            <xsd:element name="license" type="xsd:string"/>
+            <xsd:element name="metadataActions" type="metadataActions"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="optional"/>
+        <xsd:attribute name="package" type="xsd:string" use="optional"/>
+        <xsd:attribute name="version" type="xsd:string" use="optional"/>
+        <xsd:attribute name="executableVersion" type="xsd:string" use="optional"/>
+        <xsd:attribute name="description" type="xsd:string" use="optional"/>
+        <xsd:attribute name="location" type="xsd:string" use="required"/>
+        <xsd:attribute name="posX" type="xsd:integer" use="required"/>
+        <xsd:attribute name="posY" type="xsd:integer" use="required"/>
+        <xsd:attribute name="rotation" type="xsd:integer" use="optional"/>
+        <xsd:attribute name="icon" type="xsd:string" use="optional"/>
+        <xsd:attribute name="advancedOptions" type="xsd:string" use="optional"/>
+        <xsd:attribute name="smartModule" type="xsd:boolean" use="optional"/>
+        <xsd:attribute name="isIDAModule" type="xsd:boolean" use="optional"/> 
+        <xsd:attribute name="isXNATModule" type="xsd:boolean" use="optional"/> 
+        <xsd:attribute name="sourceCode" type="xsd:string" use="optional"/>
+        <xsd:attribute name="requireNetAccess" type="xsd:boolean" use="optional"/> 
+        <xsd:attribute name="MPIEnabled" type="xsd:boolean" use="optional"/> 
+        <xsd:attribute name="MPIParallelEnv" type="xsd:string" use="optional"/> 
+        <xsd:attribute name="MPINumSlots" type="xsd:string" use="optional"/>
+        <xsd:attribute name="preserveInputFilename" type="xsd:boolean" use="optional"/> 
+        
+    </xsd:complexType>
+
+    <xsd:complexType name="viewerModule">
+        <xsd:choice>
+            <xsd:element name="authors" type="authors" maxOccurs="unbounded"/>
+            <xsd:element name="citations" type="xsd:string" maxOccurs="unbounded"/>
+            <xsd:element name="input" type="parameter" maxOccurs="unbounded"/>
+            <xsd:element name="metadata" type="metadata"/>
+            <xsd:element name="output" type="parameter" maxOccurs="unbounded"/>
+            <xsd:element name="tag" type="xsd:string"/>
+            <xsd:element name="uri" type="xsd:string"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="optional"/>
+        <xsd:attribute name="package" type="xsd:string" use="optional"/>
+        <xsd:attribute name="version" type="xsd:string" use="optional"/>
+        <xsd:attribute name="description" type="xsd:string" use="optional"/>
+        <xsd:attribute name="location" type="xsd:string" use="required"/>
+        <xsd:attribute name="posX" type="xsd:integer" use="required"/>
+        <xsd:attribute name="posY" type="xsd:integer" use="required"/>
+        <xsd:attribute name="rotation" type="xsd:integer" use="optional"/>
+        <xsd:attribute name="icon" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="conditionalModule">
+        <xsd:choice>
+            <xsd:element name="sourceCode" type="xsd:string" maxOccurs="unbounded"/>
+            <xsd:element name="authors" type="authors" maxOccurs="unbounded"/>
+            <xsd:element name="citations" type="xsd:string" maxOccurs="unbounded"/>
+            <xsd:element name="executableAuthors" type="authors" maxOccurs="unbounded"/>
+            <xsd:element name="executableProvenance" type="executableProvenance"/>
+            <xsd:element name="input" type="parameter" maxOccurs="unbounded"/>
+            <xsd:element name="metadata" type="metadata"/>
+            <xsd:element name="output" type="parameter" maxOccurs="unbounded"/>
+            <xsd:element name="tag" type="xsd:string"/>
+            <xsd:element name="uri" type="xsd:string"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="name" type="xsd:string" use="optional"/>
+        <xsd:attribute name="package" type="xsd:string" use="optional"/>
+        <xsd:attribute name="version" type="xsd:string" use="optional"/>
+        <xsd:attribute name="executableVersion" type="xsd:string" use="optional"/>
+        <xsd:attribute name="description" type="xsd:string" use="optional"/>
+        <xsd:attribute name="location" type="xsd:string" use="required"/>
+        <xsd:attribute name="posX" type="xsd:integer" use="required"/>
+        <xsd:attribute name="posY" type="xsd:integer" use="required"/>
+        <xsd:attribute name="rotation" type="xsd:integer" use="optional"/>
+        <xsd:attribute name="icon" type="xsd:string" use="optional"/>
+        <xsd:attribute name="advancedOptions" type="xsd:string" use="optional"/>
+        <xsd:attribute name="hasMetadata" type="xsd:boolean" use="optional"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="webServiceModule">
+        <xsd:choice>
+            <xsd:element name="authors" type="authors" maxOccurs="unbounded"/>
+            <xsd:element name="citations" type="xsd:string" maxOccurs="unbounded"/>
+            <xsd:element name="input" type="parameter" maxOccurs="unbounded"/>
+            <xsd:element name="output" type="parameter" maxOccurs="unbounded"/>
+            <xsd:element name="outputPreferences" type="wsOutputPreferences" maxOccurs="unbounded"/>
+            <xsd:element name="metadata" type="metadata"/>
+            <xsd:element name="tag" type="xsd:string"/>
+        </xsd:choice>
+        <xsd:attribute name="name" type="xsd:string" use="optional"/>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+        <xsd:attribute name="description" type="xsd:string" use="optional"/>
+        <xsd:attribute name="version" type="xsd:string" use="optional"/>
+        <xsd:attribute name="package" type="xsd:string" use="optional"/>
+        <xsd:attribute name="icon" type="xsd:string" use="optional"/>
+        <xsd:attribute name="wsdlLocation" type="xsd:string" use="optional"/>
+        <xsd:attribute name="selectedInterface" type="xsd:string" use="optional"/>
+        <xsd:attribute name="selectedOperation" type="xsd:string" use="optional"/>
+        <xsd:attribute name="executionServer" type="xsd:string" use="optional"/>
+        <xsd:attribute name="rotation" type="xsd:integer" use="optional"/>
+        <xsd:attribute name="posX" type="xsd:integer" use="required"/>
+        <xsd:attribute name="posY" type="xsd:integer" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="parameter">
+        <xsd:choice>
+            <xsd:element name="format" type="format"/>
+            <xsd:element name="fileTypes" type="fileTypes" maxOccurs="unbounded"/>
+            <xsd:element name="transform" type="transform" maxOccurs="unbounded"/>
+            <xsd:element name="metadataElement" type="metadataElement" maxOccurs="unbounded"/>
+            <xsd:element name="dependencies" type="dependencies"/>
+            <xsd:element name="values" type="values"/>
+            <xsd:element name="stringExtract" type="stringExtract"/>
+        </xsd:choice>
+        <xsd:attribute name="id" type="xsd:string"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="description" type="xsd:string"/>
+        <xsd:attribute name="enabled" type="xsd:boolean"/>
+        <xsd:attribute name="required" type="xsd:boolean"/>
+        <xsd:attribute name="predefined" type="xsd:boolean"/>
+        <xsd:attribute name="isMetadata" type="xsd:boolean"/>
+        <xsd:attribute name="isListFile" type="xsd:boolean"/>
+        <xsd:attribute name="isHideData" type="xsd:boolean"/>
+        <xsd:attribute name="includeTransformedParameter" type="xsd:boolean"/>
+        <xsd:attribute name="order" type="xsd:integer"/>
+        <xsd:attribute name="prefix" type="xsd:string"/>
+        <xsd:attribute name="prefixSpaced" type="xsd:boolean"/>
+        <xsd:attribute name="prefixAllArgs" type="xsd:boolean"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="wsOutputPreferences">
+        <xsd:choice>
+            <xsd:element name="pref" type="wsOutputPreference"/>
+        </xsd:choice>
+    </xsd:complexType>
+    
+    <xsd:complexType name="wsOutputPreference">
+        <xsd:choice>
+            <xsd:element name="output" type="xsd:string" maxOccurs="1" />
+            <xsd:element name="path" type="xsd:string" maxOccurs="1" />
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="annotations">
+        <xsd:choice>
+            <xsd:element name="annotation" type="annotation"/>
+        </xsd:choice>
+        <xsd:attribute name="visible" type="xsd:boolean"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="annotation">
+        <xsd:choice>
+            <xsd:element name="styles" type="styles"/>
+        </xsd:choice>
+        <xsd:attribute name="type" type="xsd:string"/>
+        <xsd:attribute name="expanded" type="xsd:boolean"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="width" type="xsd:string"/>
+        <xsd:attribute name="height" type="xsd:string"/>
+        <xsd:attribute name="posX" type="xsd:string"/>
+        <xsd:attribute name="posY" type="xsd:string"/>
+        <xsd:attribute name="background" type="xsd:string"/>
+        <xsd:attribute name="foreground" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="styles">
+        <xsd:choice>
+            <xsd:element name="style" type="style"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="style">
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="fontSize" type="xsd:string"/>
+        <xsd:attribute name="isBold" type="xsd:boolean"/>
+        <xsd:attribute name="isItalic" type="xsd:boolean"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="format">
+        <xsd:attribute name="type" type="xsd:string"/>
+        <xsd:attribute name="cardinality" type="xsd:integer"/>
+        <xsd:attribute name="cardinalityBase" type="xsd:string"/>
+        <xsd:attribute name="transformationBase" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="metadata">
+        <xsd:choice>
+            <xsd:element name="data" type="xsd:string"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="data">
+        <xsd:choice>
+            <xsd:element name="key" type="xsd:string"/>
+            <xsd:element name="value" type="xsd:string"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="authors">
+        <xsd:attribute name="fullName" type="xsd:string"/>
+        <xsd:attribute name="email" type="xsd:string"/>
+        <xsd:attribute name="website" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="citations">
+        <xsd:choice>
+            <xsd:element name="citation" type="xsd:string"/>
+        </xsd:choice>
+    </xsd:complexType>
+    
+    <xsd:complexType name="fileTypes">
+        <xsd:choice>
+            <xsd:element name="fileType" type="fileType" maxOccurs="unbounded"/> 
+        </xsd:choice>
+    </xsd:complexType>
+    
+    <xsd:complexType name="fileType">
+        <xsd:choice>
+            <xsd:element name="need" type="xsd:string"/>
+        </xsd:choice>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="extension" type="xsd:string" use="required"/>
+        <xsd:attribute name="description" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="dependencies">
+        <xsd:choice>
+            <xsd:element name="dependsOn" type="xsd:string" maxOccurs="unbounded"/>
+            <xsd:element name="dependent" type="xsd:string" maxOccurs="unbounded"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="values">
+        <xsd:choice>
+            <xsd:element name="value" type="value" maxOccurs="unbounded"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="value"> 
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="metadata" type="xsd:string" use="optional"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="studyGroups">
+        <xsd:choice>
+            <xsd:element name="studygroup" type="studygroup" maxOccurs="unbounded"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="studygroup">
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+        <xsd:attribute name="query" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="dirSourceFilter">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="condition" type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="transform">
+        <xsd:attribute name="order" type="xsd:integer"/>
+        <xsd:attribute name="operation" type="xsd:string"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="metadataElement">
+        <xsd:attribute name="location" type="xsd:string"/>
+        <xsd:attribute name="prefix" type="xsd:string"/>
+        <xsd:attribute name="spaceAfterPrefix" type="xsd:boolean"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="variables">
+        <xsd:choice>
+            <xsd:element name="variable" type="variable"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="variable">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="name" type="xsd:string"/>
+                <xsd:attribute name="description" type="xsd:string"/>
+                <xsd:attribute name="required" type="xsd:boolean"/>
+                <xsd:attribute name="secret" type="xsd:boolean"/>
+                <xsd:attribute name="order" type="xsd:integer"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="executableProvenance">
+        <xsd:choice>
+            <xsd:element name="binary" type="binary"/>
+            <xsd:element name="comment" type="xsd:string"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="metadataActions">
+        <xsd:choice>
+            <xsd:element name="metadataAction" type="metadataAction"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="metadataAction">
+        <xsd:choice>
+            <xsd:element name="name" type="metadataName"/>
+            <xsd:element name="value" type="metadataValue"/>
+        </xsd:choice>
+        <xsd:attribute name="location" type="xsd:string"/>
+        <xsd:attribute name="action" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="metadataName">
+        <xsd:choice>
+            <xsd:element name="stringExtract" type="stringExtract"/>
+        </xsd:choice>
+        <xsd:attribute name="nameOption" type="xsd:string"/>
+        <xsd:attribute name="nameValue" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="metadataValue">
+        <xsd:choice>
+            <xsd:element name="stringExtract" type="stringExtract"/>
+        </xsd:choice>
+        <xsd:attribute name="valueOption" type="xsd:string"/>
+        <xsd:attribute name="valueValue" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="stringExtract">
+        <xsd:attribute name="source" type="xsd:string"/>
+        <xsd:attribute name="rule" type="xsd:string"/>
+        <xsd:attribute name="startString" type="xsd:string"/>
+        <xsd:attribute name="endString" type="xsd:string"/>
+        <xsd:attribute name="caseSensitive" type="xsd:boolean"/>
+        <xsd:attribute name="delimiter" type="xsd:string"/>
+        <xsd:attribute name="row" type="xsd:integer"/>
+        <xsd:attribute name="col" type="xsd:integer"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="binary">
+        <xsd:choice>
+            <xsd:element name="systemConfig" type="systemConfig"/>
+            <xsd:element name="library" type="library"/>
+        </xsd:choice>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="description" type="xsd:string"/>
+        <xsd:attribute name="version" type="xsd:string"/>
+        <xsd:attribute name="package" type="xsd:string"/>
+        <xsd:attribute name="uri" type="xsd:string"/>
+        <xsd:attribute name="compilationTime" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="systemConfig">
+        <xsd:choice>
+            <xsd:element name="architecture" type="architecture"/>
+            <xsd:element name="OS" type="OS"/>
+            <xsd:element name="compiler" type="compiler"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="architecture">
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="vendor" type="xsd:string"/>
+        <xsd:attribute name="model" type="xsd:string"/>
+        <xsd:attribute name="processorFlags" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="OS">
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="version" type="xsd:string"/>
+        <xsd:attribute name="distribution" type="xsd:string"/>
+        <xsd:attribute name="kernelName" type="xsd:string"/>
+        <xsd:attribute name="kernelVersion" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="compiler">
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="version" type="xsd:string"/>
+        <xsd:attribute name="flags" type="xsd:string"/>
+        <xsd:attribute name="updates" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="library">
+        <xsd:choice>
+            <xsd:element name="systemConfig" type="systemConfig"/>
+        </xsd:choice>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="version" type="xsd:string"/>
+        <xsd:attribute name="package" type="xsd:string"/>
+        <xsd:attribute name="uri" type="xsd:string"/>
+        <xsd:attribute name="compilationTime" type="xsd:string"/>
+    </xsd:complexType>
+
+</xsd:schema>
