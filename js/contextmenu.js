@@ -44,7 +44,7 @@ function ctm_copy() {
 			copyModules[last].copiedIndex = i;
 			
 			//copy connections
-			switch(myModules[i].type)
+			/*switch(myModules[i].type)
 			{
 			case "normal":
 			case "source":
@@ -75,12 +75,12 @@ function ctm_copy() {
 					}
 				}
 				break;
-			}
+			}*/
 		}
 	}
 	
 	//fix outputs
-	for (i=0;i<copyModules.length;i++)
+	/*for (i=0;i<copyModules.length;i++)
 	{
 		for (k=0;k<copyModules[i].outputs.length;k++)
 		{
@@ -108,7 +108,7 @@ function ctm_copy() {
 					copyModules[i].outputsFalse[k]=j;
 			}
 		}
-	}
+	}*/
 	
 	
 		
@@ -137,7 +137,7 @@ function ctm_paste() {
 		myModules[last].x=testMouse.X-copyModules[i].groupMoveOffsetX;
 		myModules[last].y=testMouse.Y-copyModules[i].groupMoveOffsetY;
 		
-		for(k=0;k<copyModules[i].outputs.length;k++)
+		/*for(k=0;k<copyModules[i].outputs.length;k++)
 		{
 			myModules[last].outputs[k]+= previousLength;
 		}
@@ -150,7 +150,7 @@ function ctm_paste() {
 		for(k=0;k<copyModules[i].outputsFalse.length;k++)
 		{
 			myModules[last].outputsFalse[k]+=previousLength;
-		}
+		}*/
 	}
 	
 	for (i=previousLength;i<myModules.length;i++)
