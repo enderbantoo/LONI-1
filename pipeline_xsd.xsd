@@ -34,8 +34,11 @@
             <xsd:element name="tag" type="xsd:string" maxOccurs="unbounded"/>
             <xsd:element name="uri" type="xsd:string" maxOccurs="1"/>
             <xsd:element name="viewerModule" type="viewerModule" maxOccurs="unbounded"/>
-            <xsd:element name="variables" type="variables" maxOccurs="unbounded"/>
-        </xsd:choice>
+	    <xsd:element name="variables" type="variables" maxOccurs="unbounded"/>
+            <xsd:element name="studyModule" type="studyModule" maxOccurs="unbounded"/>
+	    <xsd:element name="webServiceModule" type="webServiceModule" maxOccurs="unbounded"/>
+	    <xsd:element name="conditionalModule" type="conditionalModule" maxOccurs="unbounded"/>
+	</xsd:choice>
         <xsd:attribute name="id" type="xsd:string" use="required"/>
         <xsd:attribute name="name" type="xsd:string" use="optional"/>
         <xsd:attribute name="package" type="xsd:string" use="optional"/>
