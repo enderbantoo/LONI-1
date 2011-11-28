@@ -10,9 +10,12 @@
 //initial variables
 var canvas;
 var ctx;
+var tabsCanvas;
+var tabsCtx;
 var WIDTH = 800;
 var HEIGHT = 600;
-var myModules=new Array();
+var myModules;
+var myModuleArrays = new Array();
 
 
 //object literals
@@ -21,6 +24,9 @@ makingConnection= {
 	y : 0,
 	connecting : false,
 	output : null
+}
+tabSelected = {
+	index : 0
 }
 selectionBox = {
 	startX : 0,
@@ -47,6 +53,8 @@ canvas.onmousedown = moduleMouseDown;
 canvas.onmouseup = moduleMouseUp;
 canvas.onmousemove = captureMousePosition; //'capture mouse saves mouse position
 
+tabsCanvas.onmousedown = tabsMouseDown;
+tabsCanvas.onmouseup = tabsMouseUp;
 //class variables
  function module(x,y,type,input,output)
  {
@@ -344,6 +352,41 @@ function copy(sourceModule)
 	return null; 
  }
  
+ 
+ //============================================
+ //        Tab Manipulations
+ //============================================
+ 
+ function selectTab(index)
+ {
+ 	myModules = myModuleArrays[index];
+	tabSelected.index = index;
+ }
+ function addTab()
+ {
+ 	tabSelected.index = myModuleArrays.length;
+ 	myModuleArrays[tabSelected.index] = new Array();
+	myModules = myModuleArrays[tabSelected.index];
+ }
+ 
+ function tabsMouseDown(e)
+ {	
+ 	var i;
+	for (i = 0; i < myModuleArrays.length;i++)
+	{
+	if (e.pageX < 100 +100*i + tabsCanvas.offsetLeft &&
+	    e.pageX > 25 + 100*i + tabsCanvas.offsetLeft )
+		selectTab(i);
+		
+	}
+	if (e.pageX < 100 +100*i + tabsCanvas.offsetLeft &&
+	    e.pageX > 25 + 100*i + tabsCanvas.offsetLeft )
+		addTab();
+ }
+ function tabsMouseUp()
+ {
+ 	
+ }
  //============================================
  //        Module Manipulations
  //============================================
@@ -960,9 +1003,13 @@ function captureMousePosition(e)
 //===============================================
 function init()
 {
+	
 	 canvas = document.getElementById("canvas");
 	 ctx = canvas.getContext("2d");
+     tabsCanvas = document.getElementById("tabsCanvas");
+	 tabsCtx = tabsCanvas.getContext("2d");  
 	 
+		addTab();
 		createModule(75,50,"normal",10,0);
 		createModule(200,200,"conditional",10,0);
 		createModule(150,150,"source",0,1);
@@ -1164,8 +1211,38 @@ function draw(){
 				break;
 			}
 		}
-		ctx.lineWidth = "3";
 	}
+	ctx.lineWidth = "3";
+	
+	
+	
+	tabsCtx.clearRect(0,0,700,25);
+	//drawTabs
+	var i;
+	for (i = 0; i < myModuleArrays.length;i++)
+	{
+		if (i == tabSelected.index)
+			tabsCtx.strokeStyle = "blue";
+		else
+			tabsCtx.strokeStyle = "black";
+			
+		tabsCtx.lineWidth = "2";
+		tabsCtx.beginPath();
+		tabsCtx.moveTo(50+100*i,2);
+		tabsCtx.lineTo(75+100*i,2);
+		tabsCtx.lineTo(100+100*i,23);
+		tabsCtx.lineTo(25+100*i,23);
+		tabsCtx.closePath();
+		tabsCtx.stroke();
+		tabsCtx.lineWidth = "0.5";
+		tabsCtx.strokeText("Tab",50+100*i,17)
+		tabsCtx.strokeText(i+1,70+100*i,17)
+	}
+	tabsCtx.lineWidth = "2";
+	tabsCtx.strokeStyle = "black";
+	tabsCtx.strokeRect(50+100*i,0,25,25);
+	tabsCtx.strokeRect(55+100*i,13,15,1);
+	tabsCtx.strokeRect(62+100*i,5,1,15);
 }
 
 function drawNormal(drawModule){
@@ -1211,14 +1288,14 @@ function drawNormal(drawModule){
 	ctx.fill();
 
 	ctx.restore();
-	ctx.lineWidth = "1";
+	ctx.lineWidth = "3";
 	ctx.fillStyle = "#7585C1";
 	if (drawModule.rotate == 0) {
 		//draw outputs
 		for (var i = 0; i < drawModule.outputs.length; i++) {
 			ctx.beginPath();
-			ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 7, drawModule.y + drawModule.outputs[i].offsetY - 5)
-			ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX + 7, drawModule.y + drawModule.outputs[i].offsetY - 5)
+			ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY - 5)
+			ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX + 5, drawModule.y + drawModule.outputs[i].offsetY - 5)
 			ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX, drawModule.y + drawModule.outputs[i].offsetY + 5)
 			ctx.closePath();
 			ctx.stroke();
@@ -1242,8 +1319,8 @@ function drawNormal(drawModule){
 		//draw outputs
 		for (var i = 0; i < drawModule.outputs.length; i++) {
 			ctx.beginPath();
-			ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY + 7)
-			ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY - 7)
+			ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY + 5)
+			ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY - 5)
 			ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX + 5, drawModule.y + drawModule.outputs[i].offsetY)
 			ctx.closePath();
 			ctx.stroke();

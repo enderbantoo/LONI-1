@@ -47,6 +47,10 @@
             <input name="loadFileButton" type="button" id="loadFileButton" value="Load file" />
        </div>       
        <section>
+       	<canvas id="tabsCanvas" width="700" height="25">
+         This text is displayed if your browser does not support HTML5 Canvas.
+        </canvas>
+		
 		<canvas id="canvas" width="700" height="600">
          This text is displayed if your browser does not support HTML5 Canvas.
         </canvas>
