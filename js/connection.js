@@ -1,3 +1,10 @@
+//todo
+/*
+ * copy paste inputs/outputs
+ * scrollbars
+ * 
+*/
+
 // JavaScript Document
 
 //initial variables
@@ -84,16 +91,16 @@ canvas.onmousemove = captureMousePosition; //'capture mouse saves mouse position
 	this.description;
 	this.package;
 	this.URI;
-	this.tage = new Array();
+	this.tags = new Array();
 	this.version;
 	this.license;
 	this.location;
 	this.metadata;
 	this.sourceCode;
 	this.advancedOptions;
-	this.excutableAuthors = new Array();
-	this.excutableVersion;
-	this.excutableProvinence;
+	this.executableAuthors = new Array();
+	this.executableVersion;
+	this.executableProvinence;
 	//true or false
 	this.IDAModule;
 	this.XNATModule;
@@ -109,7 +116,7 @@ function Output(type,parentModule)
 {
 	this.offsetX;
 	this.offsetY;
-	this.type;
+	this.type = type;
 	this.inputsConnectedTo = new Array();
 	this.connectOut = connectOut;
 	this.parentModule = parentModule;
@@ -122,7 +129,7 @@ function Input(type,parentModule)
 {
 	this.offsetX;
 	this.offsetY;
-	this.type;
+	this.type = type;
 	this.outputsConnectedTo = new Array();
 	this.parentModule = parentModule;
 	
@@ -150,49 +157,83 @@ function copy(sourceModule)
 	this.checkConnected=checkConnected;
 	this.checkMoving=checkMoving;
 	this.copy=copy;
-	this.outputs=new Array();
+	
 	
 	for (var p=0;p<sourceModule.outputs.length;p++)
 	{
-		this.outputs[p]=sourceModule.outputs[p];
+		this.addOutput(sourceModule.outputs[p].type);
 	}
 		
-	this.outputsTrue=new Array();
 	
 	for (var p=0;p<sourceModule.outputsTrue.length;p++)
 	{
-		this.outputsTrue[p]=sourceModule.outputsTrue[p];
+		this.addOutput(sourceModule.outputsTrue[p].type)
 	}
 	
-	this.outputsFalse=new Array();
 	
 	for (var p=0;p<sourceModule.outputsFalse.length;p++)
 	{
-		this.outputsFalse[p]=sourceModule.outputsFalse[p];
+		this.addOutput(sourceModule.outputsFalse[p].type)
+	}
+	
+	for (var p=0;p<sourceModule.inputs.length;p++)
+	{
+		this.addInput(sourceModule.inputs[p].type);
 	}
 	
 	this.selected=false;
 	this.groupMoveOffsetX = sourceModule.groupMoveOffsetX;
 	this.groupMoveOffsetY = sourceModule.groupMoveOffsetY;
 	
-	switch(this.type)
+	//information variables
+	this.idNumber; //string
+	this.Name = sourceModule.Name;
+	
+	for (var i = 0; i < sourceModule.Authors;i++)
 	{
-	case "normal":
-		this.radius=53;
-		break;
-	case "conditional":
-		this.radius=53;
-		this.connectingTrue=false;
-		this.connectingFalse=false;
-		break;
-	case "source":
-	case "study":
-		this.radius=28;
-		break;
-	case "sink":
-		this.radius=35;
-		break;
-	} 	
+		this.Authors[i] = sourceModule.Authors[i]
+	}
+	
+	for (var i = 0; i < sourceModule.Citations;i++)
+	{
+		this.Citations[i] = sourceModule.Citations[i]
+	}
+	this.description = sourceModule.description;
+	this.package = sourceModule.package;
+	this.URI = sourceModule.URI;
+	
+	for (var i = 0; i < sourceModule.tags;i++)
+	{
+		this.tags[i] = sourceModule.tags[i]
+	}
+	this.version = sourceModule.version;
+	this.license = sourceModule.license;
+	this.location = sourceModule.location;
+	this.metadata = sourceModule.metadata;
+	this.sourceCode = sourceModule.sourceCode;
+	this.advancedOptions = sourceModule.advancedOptions;
+	this.executableAuthors = new Array();
+	for (var i = 0; i < sourceModule.executableAuthors;i++)
+	{
+		this.executableAuthors[i] = sourceModule.executableAuthors[i]
+	}
+	this.executableVersion = sourceModule.excecutableVersion;
+	this.executableProvinence = sourceModule.excecutableProvinence;
+	//true or false
+	this.IDAModule = sourceModule.IDAModule;
+	this.XNATModule = sourceModule.XNATModule;
+	this.MPIEnabled = sourceModule.MPIEnabled;
+	this.preservedInputFileName = sourceModule.preservedInputFileName;
+	this.smartModule = sourceModule.smartModule;
+	
+	for (var i = 0; i < sourceModule.variables;i++)
+	{
+		this.variables[i] = sourceModule.variables[i]
+	}
+	for (var i = 0; i < sourceModule.inputsToSystem;i++)
+	{
+		this.inputsToSystem[i] = sourceModule.inputsToSystem[i]
+	}	
 }
  
  function checkMoving (mouseX,mouseY,offsetLeft,offsetTop)
@@ -715,7 +756,7 @@ function moduleMouseDown(e){
 					var endY = myModules[i].outputs[j].inputsConnectedTo[k].parentModule.y + myModules[i].outputs[j].inputsConnectedTo[k].offsetY;
 					var endRotate = myModules[i].outputs[j].inputsConnectedTo[k].parentModule.rotate;
 					
-					if (clickConnection(startX, startY, endX, endY, startRotate, endRotate)) {
+					if (clickConnection(startX, startY, endX, endY, startRotate, endRotate,e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop)) {
 						lineSelection.selected = true;
 						lineSelection.fromOutput = myModules[i].outputs[j];
 						lineSelection.toInput = myModules[i].outputs[j].inputsConnectedTo[k];
@@ -815,7 +856,7 @@ function moduleMouseUp(e){
 						
 				}
 				if (doubleFlag == false && checkConnect != null)*/
-				if (checkConnect != null && (checkConnect.parentModule != makingConnection.output.parentModule)) {
+				if (checkConnect != null && (checkConnect.parentModule != makingConnection.output.parentModule) && (checkConnect.type == makingConnection.output.type)) {
 					makingConnection.output.connectOut(checkConnect);
 					break;
 				}
@@ -864,11 +905,13 @@ function init()
 	 canvas = document.getElementById("canvas");
 	 ctx = canvas.getContext("2d");
 	 
-		createModule(75,50,"normal",10,0);;
-		createModule(200,200,"conditional",10,0)
-		createModule(150,150,"source",0,10)
-		createModule(300,300,"sink",10,0)
-		createModule(400,400,"study",0,10)
+		//createModule(75,50,"normal",10,0);
+		//createModule(200,200,"conditional",10,0);
+		createModule(150,150,"source",0,1);
+		myModules[0].addOutput("file");
+		createModule(300,300,"sink",1,0);
+		myModules[1].addInput("file");
+		//createModule(400,400,"study",0,10);
 	 return setInterval(draw, 10);
 }
 
@@ -968,16 +1011,6 @@ function draw(){
 			break;
 		}
 	}
-	ctx.lineWidth = "3";
-	ctx.strokeStyle="#7585C1";
-	//Drawing a Line
-	if (makingConnection.connecting==true)
-	{
-		var startX = makingConnection.output.parentModule.x+makingConnection.output.offsetX;
-		var startY = makingConnection.output.parentModule.y+makingConnection.output.offsetY;
-		var parentRotate = makingConnection.output.parentModule.rotate;
-		drawConnection(startX,startY, testMouse.X,testMouse.Y ,parentRotate,0)
-	}
 	
 	//Draw the Modules
 	for (var i = 0; i < myModules.length; i++)
@@ -1048,7 +1081,33 @@ function draw(){
 			
 	}
 	
-	
+	ctx.lineWidth = "3";
+	ctx.strokeStyle="#7585C1";
+	//Drawing a Line
+	if (makingConnection.connecting==true)
+	{
+		var startX = makingConnection.output.parentModule.x+makingConnection.output.offsetX;
+		var startY = makingConnection.output.parentModule.y+makingConnection.output.offsetY;
+		var parentRotate = makingConnection.output.parentModule.rotate;
+		drawConnection(startX,startY, testMouse.X,testMouse.Y ,parentRotate,0)
+		
+		//display input type if hovering
+		for (var i = 0; i < myModules.length; i++)
+		{
+			var hoverInput = myModules[i].checkConnected(testMouse.X,testMouse.Y,0,0);
+			if (hoverInput != null)
+			{
+				if (makingConnection.output.type == hoverInput.type)
+					ctx.strokeStyle = "blue";
+				else
+					ctx.strokeStyle = "red";
+				ctx.lineWidth = "1";
+				ctx.strokeText(hoverInput.type,hoverInput.parentModule.x+hoverInput.offsetX+7,hoverInput.parentModule.y+hoverInput.offsetY);
+				break;
+			}
+		}
+		ctx.lineWidth = "3";
+	}
 }
 
 function drawNormal(drawModule){
@@ -1477,7 +1536,7 @@ function drawSink (drawModule)
             
 			if (isSelected) {
 				var os = s*1.2;
-				drawEtriangle(0,0,os);
+				drawRotatedEtriangle(0,0,os);
 				ctx.fillStyle = "yellow";
 				ctx.fill();
 			}
