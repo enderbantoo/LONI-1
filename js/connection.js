@@ -1250,10 +1250,12 @@ function drawNormal(drawModule){
 	var isSelected = new Boolean();
 	if (drawModule.selected == true){
 		ctx.strokeStyle = "#99CC32";
+		ctx.fillStyle = "#99CC32";
 		isSelected = true;
 	}
 	else {
 		ctx.strokeStyle = "#7585C1"
+		ctx.fillStyle = "#7585C1"
 		isSelected = false;
 	}
 	
@@ -1289,7 +1291,6 @@ function drawNormal(drawModule){
 
 	ctx.restore();
 	ctx.lineWidth = "3";
-	ctx.fillStyle = "#7585C1";
 	if (drawModule.rotate == 0) {
 		//draw outputs
 		for (var i = 0; i < drawModule.outputs.length; i++) {
@@ -1344,14 +1345,16 @@ function drawNormal(drawModule){
 function drawConditional (drawModule)
 {
 		var isSelected = new Boolean();
-		if (drawModule.selected == true){
-			ctx.strokeStyle = "#99CC32";
-			isSelected = true;
-		}
-		else{
-			ctx.strokeStyle = "black"
-			isSelected = false;
-		}
+	if (drawModule.selected == true){
+		ctx.strokeStyle = "#99CC32";
+		ctx.fillStyle = "#99CC32";
+		isSelected = true;
+	}
+	else {
+		ctx.strokeStyle = "#7585C1"
+		ctx.fillStyle = "#7585C1"
+		isSelected = false;
+	}
 			
 		ctx.save();	
 		
@@ -1414,8 +1417,6 @@ function drawConditional (drawModule)
 
 		ctx.restore();	
 		ctx.lineWidth = "3";
-		ctx.fillStyle = "#7585C1";
-		ctx.strokeStyle = "#7585C1";
 		if (drawModule.rotate == 0) {
 			//draw outputs
 			for (var i = 0; i < drawModule.inputs.length; i++) {
@@ -1490,10 +1491,12 @@ function drawSource (drawModule)
 	var isSelected = new Boolean();
 	if (drawModule.selected == true){
 		ctx.strokeStyle = "#99CC32";
+		ctx.fillStyle = "#99CC32";
 		isSelected = true;
 	}
 	else {
-		ctx.strokeStyle = "black"
+		ctx.strokeStyle = "#7585C1"
+		ctx.fillStyle = "#7585C1"
 		isSelected = false;
 	}
 	
@@ -1537,8 +1540,6 @@ function drawSource (drawModule)
 		if (drawModule.rotate == 0) {
 		//draw outputs
 			ctx.lineWidth = "3";
-			ctx.fillStyle = "#7585C1";
-			ctx.strokeStyle = "#7585C1";
 			for (var i = 0; i < drawModule.outputs.length; i++) {
 				ctx.beginPath();
 				ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY - 5)
@@ -1555,8 +1556,6 @@ function drawSource (drawModule)
 		{
 		//draw outputs
 			ctx.lineWidth = "3";
-			ctx.fillStyle = "#7585C1";
-			ctx.strokeStyle = "#7585C1";
 			for (var i = 0; i < drawModule.outputs.length; i++) {
 				ctx.beginPath();
 				ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY + 5)
@@ -1574,15 +1573,17 @@ function drawSource (drawModule)
 function drawSink (drawModule)
 {
 	var isSelected = new Boolean();
-	if (drawModule.selected == true) {
+	if (drawModule.selected == true){
 		ctx.strokeStyle = "#99CC32";
+		ctx.fillStyle = "#99CC32";
 		isSelected = true;
 	}
 	else {
-		ctx.strokeStyle = "black";
+		ctx.strokeStyle = "#7585C1"
+		ctx.fillStyle = "#7585C1"
 		isSelected = false;
-	}	
-	ctx.fillStyle = "LightGray";
+	}
+	
 	ctx.lineWidth = "3";
 	
 	if (drawModule.rotate == 0) {
@@ -1630,8 +1631,6 @@ function drawSink (drawModule)
 		ctx.restore();
 		//draw inputs
 		ctx.lineWidth = "3";
-		ctx.fillStyle = "#7585C1";
-		ctx.strokeStyle = "#7585C1";
 		for (var i = 0; i < drawModule.inputs.length; i++) {	
 			ctx.beginPath();
 			ctx.arc(drawModule.x + drawModule.inputs[i].offsetX, drawModule.y + drawModule.inputs[i].offsetY, 5, 0, 2 * 3.141592653589792348624, 0)
@@ -1688,8 +1687,6 @@ function drawSink (drawModule)
 		ctx.restore();	
 		//draw inputs
 		ctx.lineWidth = "3";
-		ctx.fillStyle = "#7585C1";
-		ctx.strokeStyle = "#7585C1";
 		for (var i = 0; i < drawModule.inputs.length; i++) {	
 			ctx.beginPath();
 			ctx.arc(drawModule.x + drawModule.inputs[i].offsetX, drawModule.y + drawModule.inputs[i].offsetY, 5, 0, 2 * 3.141592653589792348624, 0)
@@ -1704,12 +1701,14 @@ function drawSink (drawModule)
 function drawStudy (drawModule)
 {
 	var isSelected = new Boolean();
-	if (drawModule.selected == true) {
+	if (drawModule.selected == true){
 		ctx.strokeStyle = "#99CC32";
+		ctx.fillStyle = "#99CC32";
 		isSelected = true;
 	}
 	else {
-		ctx.strokeStyle = "black";
+		ctx.strokeStyle = "#7585C1"
+		ctx.fillStyle = "#7585C1"
 		isSelected = false;
 	}
 	
@@ -1754,8 +1753,6 @@ function drawStudy (drawModule)
 	if (drawModule.rotate == 0) {
 	//draw outputs
 		ctx.lineWidth = "3";
-		ctx.fillStyle = "#7585C1";
-		ctx.strokeStyle = "#7585C1";
 		for (var i = 0; i < drawModule.outputs.length; i++) {
 			ctx.beginPath();
 			ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY - 5)
@@ -1772,8 +1769,6 @@ function drawStudy (drawModule)
 	{
 	//draw outputs
 		ctx.lineWidth = "3";
-		ctx.fillStyle = "#7585C1";
-		ctx.strokeStyle = "#7585C1";
 		for (var i = 0; i < drawModule.outputs.length; i++) {
 			ctx.beginPath();
 			ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY + 5)
