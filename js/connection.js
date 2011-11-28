@@ -534,6 +534,35 @@ function moveModule(e){
 			myModules[i].x = e.pageX - canvas.offsetLeft - myModules[i].groupMoveOffsetX;
 			myModules[i].y = e.pageY - canvas.offsetTop - myModules[i].groupMoveOffsetY;
 			
+			switch (myModules[i].type)
+			{
+			case "sink":
+				if (myModules[i].x < 30)
+					myModules[i].x = 30;
+				if (myModules[i].y < 20)
+					myModules[i].y = 20;
+			break;
+			case "normal":
+			if (myModules[i].x < 50)
+					myModules[i].x = 50;
+				if (myModules[i].y < 50)
+					myModules[i].y = 50;
+			break;
+			case "study":
+			case "source":
+				if (myModules[i].x < 30)
+					myModules[i].x = 30;
+				if (myModules[i].y < 30)
+					myModules[i].y = 30;
+			break;
+			case "conditional":
+				if (myModules[i].x < 50)
+				myModules[i].x = 50;
+				if (myModules[i].y < 40)
+					myModules[i].y = 40;
+				break;
+			}
+			
 			if (myModules[i].selected == true)
 			{
 				for (var k=0;k<myModules.length;k++)
@@ -542,6 +571,35 @@ function moveModule(e){
 					{
 						myModules[k].x = e.pageX - canvas.offsetLeft - myModules[k].groupMoveOffsetX;
 						myModules[k].y = e.pageY - canvas.offsetTop - myModules[k].groupMoveOffsetY;
+						
+						switch (myModules[k].type)
+						{
+						case "sink":
+							if (myModules[k].x < 30)
+								myModules[k].x = 30;
+							if (myModules[k].y < 20)
+								myModules[k].y = 20;
+						break;
+						case "normal":
+							if (myModules[k].x < 50)
+								myModules[k].x = 50;
+							if (myModules[k].y < 50)
+								myModules[k].y = 50;
+						break;
+						case "study":
+						case "source":
+							if (myModules[k].x < 30)
+								myModules[k].x = 30;
+							if (myModules[k].y < 30)
+								myModules[k].y = 30;
+						break;
+						case "conditional":
+							if (myModules[k].x < 50)
+								myModules[k].x = 50;
+							if (myModules[k].y < 40)
+								myModules[k].y = 40;
+							break;
+						}
 					}
 				}
 			}
@@ -905,13 +963,13 @@ function init()
 	 canvas = document.getElementById("canvas");
 	 ctx = canvas.getContext("2d");
 	 
-		//createModule(75,50,"normal",10,0);
-		//createModule(200,200,"conditional",10,0);
+		createModule(75,50,"normal",10,0);
+		createModule(200,200,"conditional",10,0);
 		createModule(150,150,"source",0,1);
 		myModules[0].addOutput("file");
 		createModule(300,300,"sink",1,0);
 		myModules[1].addInput("file");
-		//createModule(400,400,"study",0,10);
+		createModule(400,400,"study",0,10);
 	 return setInterval(draw, 10);
 }
 

@@ -152,8 +152,38 @@ function ctm_paste() {
 			myModules[last].outputsFalse[k]+=previousLength;
 		}*/
 	}
-	
-	for (i=previousLength;i<myModules.length;i++)
+	for (var i = 0;i < myModules.length; i++)
+	{
+		switch (myModules[i].type)
+		{
+		case "sink":
+			if (myModules[i].x < 30)
+				myModules[i].x = 30;
+			if (myModules[i].y < 20)
+				myModules[i].y = 20;
+		break;
+		case "normal":
+		if (myModules[i].x < 50)
+				myModules[i].x = 50;
+			if (myModules[i].y < 50)
+				myModules[i].y = 50;
+		break;
+		case "study":
+		case "source":
+			if (myModules[i].x < 30)
+				myModules[i].x = 30;
+			if (myModules[i].y < 30)
+				myModules[i].y = 30;
+		break;
+		case "conditional":
+			if (myModules[i].x < 50)
+			myModules[i].x = 50;
+			if (myModules[i].y < 40)
+				myModules[i].y = 40;
+			break;
+		}
+	}
+	for (var i=previousLength;i<myModules.length;i++)
 	{
 		myModules[i].selected = true;
 	}
