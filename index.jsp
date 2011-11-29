@@ -61,6 +61,12 @@ enctype="multipart/form-data" method="post" id='SaveXmlForm'>
          This text is displayed if your browser does not support HTML5 Canvas.
         </canvas>
 		</div>
+		<div>
+			<FORM NAME="animForm">
+			<INPUT TYPE=button VALUE=Start NAME="animButton" onClick=buttonCheck()>
+			<INPUT TYPE=button VALUE=Stop NAME="resetButton" onClick=buttonCheck_2()>
+			</FORM>
+		</div>
       <p>&nbsp;</p>
 	  <script type="text/javascript" src="js/connection.js"></script>
       </section>

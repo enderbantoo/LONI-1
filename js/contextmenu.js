@@ -225,10 +225,18 @@ function cutModule() {
 		}
 	}
 	if (lineSelection.selected == true) {
-		
-		lineSelection.fromOutput.inputConnectedTo = null;
-		lineSelection.toInput.outputConnectedTo = null;
-		
+		for (var i = 0; i < lineSelection.fromOutput.inputsConnectedTo.length; i++) {
+			if (lineSelection.toInput == lineSelection.fromOutput.inputsConnectedTo[i]) {
+				lineSelection.fromOutput.inputsConnectedTo.splice(i, 1);
+				break;
+			}
+		}
+		for (var i = 0; i < lineSelection.toInput.outputsConnectedTo.length; i++) {
+			if (lineSelection.fromOutput == lineSelection.toInput.outputsConnectedTo[i]) {
+				lineSelection.toInput.outputsConnectedTo.splice(i, 1);
+				break;
+			}
+		}
 		lineSelection.selected = false;
 		lineSelection.fromOutput = null;
 		lineSelection.toInput = null;
