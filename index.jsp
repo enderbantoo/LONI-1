@@ -72,6 +72,6 @@ enctype="multipart/form-data" method="post" id='SaveXmlForm'>
 <div id="footer">
 Copyright &copy; 2011 UCLA | All rights reserved
 </div>
-<!--#include file="dialogs.html"-->
+<%@ include file="dialogs.html" %>
 </body>
 </html>

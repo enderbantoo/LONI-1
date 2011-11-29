@@ -1,6 +1,21 @@
 // JavaScript Document
 $(document).ready( function() {
 	
+	// dialogs misc
+	$('#AddParaButton').click(function(){
+		$('.module-para2Copy:last').clone().appendTo('#module-paraWrapper');
+	});
+	
+	$('.module-para2Copy').live("click", function(){
+		var index_para = $(this).index(this);
+		$(this).siblings().removeClass("highlight");
+		$(this).toggleClass("highlight");
+	});
+	
+	$('RemoveParaButton').click(function(){
+		$('.module-para2Copy').eq(index_para).detach();
+	});
+	
 	// add dialogs
 	$(".dialog").dialog({
 		autoOpen: false,

@@ -12,7 +12,7 @@
         </ul>
         <div id="module-tab" class="tabs">
               <label>Module creation date:</label> 
-              <span><script>document.write(new Date());</script></span><br />
+              <span></span><br />
               <label> Name:</label><input type="text" id="name" /> <br />
 			  <label> Package:</label><input type="text" id="package" />  <br />
               <label>Package version:</label><input type="text" id="version" /><br />
@@ -43,7 +43,35 @@
     </div>
     
     <div id="parameters-tab">
-    	This section is currently unavailable.
+   	  <div style="float: left; width: 140px;">Parameter Name</div>
+      <div style="float: left; width: 120px;">Type</div>
+      <div style="float: left; width: 80px;">State</div>
+      <div style="float: left; width: 60px;">Required</div>
+      <div style="float: left; width: 40px;">Input</div>
+        <div style="clear: both;"></div>
+      <div id="module-paraWrapper">
+      <div class='module-para2Copy'>
+        <div style='float: left; width: 140px;'><input name="parameterName" type="text" id="parameterName" style='width: 120px;'/></div>
+        <div style='float: left; width: 120px;'><select name="fileTypes" id="fileTypes">
+              <option value="Directory" selected="selected">Directory</option>
+              <option value="Enumerated">Enumerated</option>
+              <option value="File">File</option>
+              <option value="Number">Number</option>
+              <option value="String">String</option>
+              <option value="Flow Control">Flow Control</option>
+        </select></div>
+        <div style='float: left; width: 80px;'><select name="state" id="state">
+              <option value="Enabled" selected="selected">Enabled</option>
+              <option value="Disabled">Disabled</option>  	
+            </select>
+            </div>
+        <div style='float: left; width: 60px;'><input name="required" type="checkbox" value="true" id="required" /></div>
+        <div style='float: left; width: 40px;'><input name="input" type="checkbox" value="true" id="input" /></div>
+			<div style='clear: both;'></div>
+        </div>            
+      </div>
+       <input name="removeParaButton" type="button" id="removeParaButton" value="Remove" />
+       <input name="AddParaButton" type="button" id="AddParaButton" value="Add" />
     </div>
     
     <div id="execution-tab" class="tabs">
@@ -105,7 +133,7 @@
     </ul>
     <div id="info-tab">
       <label>Module creation date:</label> 
-      <span><script>document.write(new Date());</script></span><br />
+      <span></span><br />
       <label> Name:</label><input type="text" id="name" /> <br />
       <label> Package:</label><input type="text" id="package" />  <br />
       <label>Package version:</label><input type="text" id="version" /><br />
@@ -138,7 +166,7 @@
     </ul>
     <div id="info-tab">
       <label>Module creation date:</label> 
-      <span><script>document.write(new Date());</script></span><br />
+      <span></span><br />
       <label> Name:</label><input type="text" id="name" /> <br />
       <label> Package:</label><input type="text" id="package" />  <br />
       <label>Package version:</label><input type="text" id="version" /><br />
@@ -174,7 +202,7 @@
   
     <div id="info-tab">
       <label>Module creation date:</label> 
-      <span><script>document.write(new Date());</script></span><br />
+      <span></span><br />
       <label> Name:</label><input type="text" id="name" /> <br />
       <label> Package:</label><input type="text" id="package" />  <br />
       <label>Package version:</label><input type="text" id="version" /><br />
@@ -216,7 +244,7 @@
 	
      <div id="info-tab">
       <label>Module creation date:</label> 
-      <span><script>document.write(new Date());</script></span><br />
+      <span></span><br />
       <label> Name:</label><input type="text" id="name" /> <br />
       <label> Package:</label><input type="text" id="package" />  <br />
       <label>Package version:</label><input type="text" id="version" /><br />

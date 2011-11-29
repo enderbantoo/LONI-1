@@ -5,6 +5,10 @@ body {
     margin: 0px;
 }
 
+.highlight {
+	background-color: #CCC;
+}
+
 #saveForm, #loadXmlForm {
 	display: none;
 }

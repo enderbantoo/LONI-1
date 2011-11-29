@@ -4,19 +4,19 @@ var openModuleDialog = function(){
 };
 
 var openDataSourceDialog = function() {
-	$('#data-source-dialog').dialog('open');
+	$("#data-source-dialog").dialog("open");
 }
 
 var openDataSinkDialog = function() {
-	$('data-sink-dialog').dialog('open');
+	$("data-sink-dialog").dialog("open");
 }
 
 var openStudyDialog = function() {
-	$('study-dialog').dialog('open');
+	$("study-dialog").dialog("open");
 }
 
 var openConditionalDialog = function() {
-	$('conditional-dialog').dialog('open');
+	$("conditional-dialog").dialog("open");
 }
 
 // context menus
