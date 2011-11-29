@@ -5,23 +5,23 @@
 package pipeline;
 
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-
-import javax.xml.bind.JAXBException;
-import pipeline.xml;
-import pipeline.json;
-import pipeline.jaxb.Pipeline;
 /**
  *
  * @author optix2000
  */
+
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+import javax.xml.bind.JAXBException;
+import pipeline.jaxb.Pipeline;
+
+
 public class parseJSON extends HttpServlet{
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response)
+    
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException
     {
 
@@ -32,17 +32,18 @@ public class parseJSON extends HttpServlet{
         //TODO
         
         
-        java.io.PrintWriter out = response.getWriter();
+        
         OutputStream output;
         try
         {
             output = xml.writeXML(root);
         }
-        catch(javax.xml.bind.JAXBException e)
+        catch(JAXBException e)
         {
             response.sendError(400, e.toString());
             return;
         }
+        java.io.PrintWriter out = response.getWriter();
         out.print(output);
     }
 }
