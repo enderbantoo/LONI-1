@@ -17,7 +17,7 @@ import java.io.IOException;
 public class imaging {
     
     //Decode Base64 encoded JPEG to image.
-    public BufferedImage decodeImage(String jpgBase64) throws IOException
+    public BufferedImage decodeJPG(String jpgBase64) throws IOException
     {
         ByteArrayInputStream istream = new ByteArrayInputStream(DatatypeConverter.parseBase64Binary(jpgBase64));
         return ImageIO.read(istream);
