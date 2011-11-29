@@ -97,7 +97,7 @@ tabsCanvas.onmouseup = tabsMouseUp;
 	this.Authors = new Array();
 	this.Citations = new Array();
 	this.description;
-	this.package;
+	this.packaged;
 	this.URI;
 	this.tags = new Array();
 	this.version;
@@ -121,6 +121,9 @@ tabsCanvas.onmouseup = tabsMouseUp;
 	
 	//animation variables
 	this.animationOrder = -1;
+	
+	//connection information
+	this.conIndex;
  }
  
 function Output(type,parentModule)
@@ -134,6 +137,7 @@ function Output(type,parentModule)
 	
 	//information variables
 	this.outputID;
+	this.outputIndex;
 }
 
 function Input(type,parentModule)
@@ -145,7 +149,8 @@ function Input(type,parentModule)
 	this.parentModule = parentModule;
 	
 	//ifnormation variables
-	this.outputID;
+	this.inputID;
+	this.inputIndex;
 }
 
 function connectOut(input)
@@ -210,7 +215,7 @@ function copy(sourceModule)
 		this.Citations[i] = sourceModule.Citations[i]
 	}
 	this.description = sourceModule.description;
-	this.package = sourceModule.package;
+	this.packaged = sourceModule.packaged;
 	this.URI = sourceModule.URI;
 	
 	for (var i = 0; i < sourceModule.tags;i++)
@@ -817,14 +822,55 @@ function rotateModule()
 }
 
 
-
-function fillConnections()
+function connection(fromIndex,outputIndex,toIndex,inputIndex)
 {
+	this.fromIndex = fromIndex;
+	this.outputIndex = outputIndex;
+	this.toIndex = toIndex;
+	this.inputIndex = inputIndex;
+}
+
+function fillConnectionsArray()
+{
+	for (var i = 0;i < myModules.length;i++)
+	{
+		myModules[i].conIndex = i;
+		for (var j = 0; j < myModules[i].inputs.length;j++)
+		{
+			myModules[i].inputs[j].inputIndex = j;	
+		}
+		for (var j = 0; j < myModules[i].outputs.length;j++)
+		{
+			myModules[i].outputs[j].outputIndex = j;
+		}
+		for (var j = 0; j < myModules[i].outputsTrue.length;j++)
+		{
+			myModules[i].outputsTrue[j].outputIndex = j;
+		}
+		for (var j = 0; j < myModules[i].outputsFalse.length;j++)
+		{
+			myModules[i].outputsFalse[j].outputIndex = j;
+		}
+		
+	}
 	myConnections.splice(0,myConnections.length);
 	for (var i =0; i < myModules.length;i++)
 	{
+		for (var j = 0; j < myModules[i].outputs.length; j++) {
 		
+			for (var k = 0; k < myModules[i].outputs[j].inputsConnectedTo.length; k++) {
+				if (myModules[i].outputs[j].inputsConnectedTo[k] != null) {
+						var newConnection = new connection(i,j,myModules[i].outputs[j].inputsConnectedTo[k].parentModule.conIndex,outputs[j].inputsConnectedTo[k].inputIndex)
+						myConnections.push(newConnection)
+				}
+			}
+		}
 	}
+}
+
+function fillConnections()
+{
+	
 }
 //============================================
 //        Mouse Manipulations

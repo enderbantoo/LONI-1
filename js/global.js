@@ -43,6 +43,8 @@ $(document).ready( function() {
 				$("#message").text('Saving');
 				$('#saveForm').slideToggle();
 			},
+			data: {modulesArray: myModules,
+				   connectionsArray: myConnections},
 			url: "save.jsp",
 			target: "#responseAjax",
 			success: function(data) {		
