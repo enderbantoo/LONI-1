@@ -11,6 +11,8 @@
 <script type="text/javascript" src="js/contextmenu.js"></script>
 <script type="text/javascript" src="js/global.js"></script>
 <script type="text/javascript" src="js/jquery.spinner.min.js"></script>
+<script type="text/javascript" src="js/jquery.form.js"></script>
+<script type="text/javascript" src="js/ajaxfileupload.js"></script>
 <title>LONI 1</title>
 </head>
 <body>
@@ -32,10 +34,14 @@
         <div id="notification"><div id="spinner" style="float: left;"></div>&nbsp;<div id="message"></div></div>
       </div>
       <div style="clear: both;"></div>
+      <div id="responseAjax"></div>
       <div id="saveForm">
+      <form action="save.jsp"
+enctype="multipart/form-data" method="post" id='SaveXmlForm'>
       	<label>File name: </label><input type="text" id="xml_file" />
       .xml 
-       <input name="Save" type="button" id="saveButton" value="Save" />
+       <input name="Save" type="button" id="saveXMLButton" value="Save" />
+       </form>
       </div>
        <div id='loadXmlForm'>
        		You can load a file from the server or on your computer:

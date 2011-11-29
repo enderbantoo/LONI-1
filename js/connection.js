@@ -17,6 +17,7 @@ var HEIGHT = 600;
 var myModules;
 var myModuleArrays = new Array();
 var omw_scrollpane;
+var myConnections= new Array();
 
 //object literals
 makingConnection= {
@@ -815,6 +816,16 @@ function rotateModule()
 	
 }
 
+
+
+function fillConnections()
+{
+	myConnections.splice(0,myConnections.length);
+	for (var i =0; i < myModules.length;i++)
+	{
+		
+	}
+}
 //============================================
 //        Mouse Manipulations
 //============================================
