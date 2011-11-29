@@ -1,6 +1,6 @@
 // dialog	
 var openDialog = function(){
-	$("#module").dialog("open");
+	$("#module-dialog").dialog("open");
 };
 
 // context menus

@@ -1175,7 +1175,7 @@ function setAnimationOrder()
 			continue;
 		}
 		var isRoot = true;
-		for (var j = 0; j < myModules[j].inputs.length; j++)
+		for (var j = 0; j < myModules[i].inputs.length; j++)
 		{
 			if (myModules[i].inputs[j].outputsConnectedTo.length > 0)
 			{
@@ -1221,7 +1221,6 @@ function setChildOrder(input, x)
 		}
 	}
 }
-
 //============================================
 //        Draw Functions
 //============================================
