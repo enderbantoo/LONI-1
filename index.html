@@ -47,7 +47,7 @@ enctype="multipart/form-data" method="post" id='SaveXmlForm'>
        		You can load a file from the server or on your computer:
             <p></p>
             <strong>Server:</strong> <br />
-            <%@ include file="load_xml.jsp" %>
+            <!--#include file="load_xml.jsp"-->
          <p></p>
             Your computer: <input name="xml_file_load" type="file" size="30" /> 
             <input name="loadFileButton" type="button" id="loadFileButton" value="Load file" />
@@ -72,6 +72,6 @@ enctype="multipart/form-data" method="post" id='SaveXmlForm'>
 <div id="footer">
 Copyright &copy; 2011 UCLA | All rights reserved
 </div>
-<%@ include file="dialogs.jsp" %>
+<!--#include file="dialogs.html"-->
 </body>
 </html>
