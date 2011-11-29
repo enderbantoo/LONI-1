@@ -1,17 +1,33 @@
 // dialog	
-var openDialog = function(){
+var openModuleDialog = function(){
 	$("#module-dialog").dialog("open");
 };
+
+var openDataSourceDialog = function() {
+	$('#data-source-dialog').dialog('open');
+}
+
+var openDataSinkDialog = function() {
+	$('data-sink-dialog').dialog('open');
+}
+
+var openStudyDialog = function() {
+	$('study-dialog').dialog('open');
+}
+
+var openConditionalDialog = function() {
+	$('conditional-dialog').dialog('open');
+}
 
 // context menus
 var option = { width: 150, items: [
 				{ text: "New", icon: "", alias: "new", action: menuAction, type: "group", width: 170, items: [
-					{ text: "Modules...", icon: "", alias: "ctm_modules", action: openDialog },
+					{ text: "Modules...", icon: "", alias: "ctm_modules", action: openModuleDialog },
 					{ type: "splitLine" },
-					{ text: "Data source", icon: "", alias: "ctm_data_source", action: ctm_data_source },
-					{ text: "Data sink", icon: "", alias: "ctm_data_sink", action: ctm_data_sink },
-					{ text: "Study...", icon: "", alias: "ctm_study", action: ctm_study },
-					{ text: "Conditional...", icon: "", alias: "ctm_conditional", action: ctm_conditional }
+					{ text: "Data source", icon: "", alias: "ctm_data_source", action: openDataSourceDialog },
+					{ text: "Data sink", icon: "", alias: "ctm_data_sink", action: openDataSinkDialog },
+					{ text: "Study...", icon: "", alias: "ctm_study", action: openStudyDialog },
+					{ text: "Conditional...", icon: "", alias: "ctm_conditional", action: openConditionalDialog }
 				]},
 				{ type: "splitLine" },
 				{ text: "Delete", icon: "", alias: "ctm_cut", action: cutModule },
