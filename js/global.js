@@ -1,5 +1,6 @@
 // JavaScript Document
 $(document).ready( function() {
+	
 	// add dialogs
 	$(".dialog").dialog({
 		autoOpen: false,
@@ -32,9 +33,9 @@ $(document).ready( function() {
 		$('#loadXmlForm').slideToggle();
 	});
 	
-	$('#saveButton').click(function(){	
-		$.ajax({
-			beforeSend: function() {
+	
+	var options = {
+		beforeSubmit: function() {
 				Spinners.create('#spinner', {
 					radii: [4,8],
 					dashWidth: 1
@@ -43,12 +44,15 @@ $(document).ready( function() {
 				$('#saveForm').slideToggle();
 			},
 			url: "save.jsp",
-			data: "xml_file="+$('#xml_file'),
+			target: "#responseAjax",
 			success: function(data) {		
 				Spinners.get("#spinner").remove();
 				$('#message').text(data);
 			}
-		});
+	};
+	
+	$('#saveXMLButton').click(function(){	
+		$('saveXMLForm').ajaxForm(options);
 	});
 	
 	$('#loadFileButton').click(function(){
