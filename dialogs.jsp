@@ -1,5 +1,3 @@
-<%@ page import="java.util.*"  %>
-<% Date date = new Date(); %>
 <div id="module-dialog" title="Module Definition" class="tabs dialog" function="ctm_modules()">
 	<ul>
 		<li><a href="#info-tab">Info</a></li>
@@ -14,7 +12,7 @@
         </ul>
         <div id="module-tab" class="tabs">
               <label>Module creation date:</label> 
-              <span><%= date %></span><br />
+              <span><script>document.write(new Date());</script></span><br />
               <label> Name:</label><input type="text" id="name" /> <br />
 			  <label> Package:</label><input type="text" id="package" />  <br />
               <label>Package version:</label><input type="text" id="version" /><br />
@@ -107,7 +105,7 @@
     </ul>
     <div id="info-tab">
       <label>Module creation date:</label> 
-      <span><%= date %></span><br />
+      <span><script>document.write(new Date());</script></span><br />
       <label> Name:</label><input type="text" id="name" /> <br />
       <label> Package:</label><input type="text" id="package" />  <br />
       <label>Package version:</label><input type="text" id="version" /><br />
@@ -140,7 +138,7 @@
     </ul>
     <div id="info-tab">
       <label>Module creation date:</label> 
-      <span><%= date %></span><br />
+      <span><script>document.write(new Date());</script></span><br />
       <label> Name:</label><input type="text" id="name" /> <br />
       <label> Package:</label><input type="text" id="package" />  <br />
       <label>Package version:</label><input type="text" id="version" /><br />
@@ -176,7 +174,7 @@
   
     <div id="info-tab">
       <label>Module creation date:</label> 
-      <span><%= date %></span><br />
+      <span><script>document.write(new Date());</script></span><br />
       <label> Name:</label><input type="text" id="name" /> <br />
       <label> Package:</label><input type="text" id="package" />  <br />
       <label>Package version:</label><input type="text" id="version" /><br />
@@ -218,7 +216,7 @@
 	
      <div id="info-tab">
       <label>Module creation date:</label> 
-      <span><%= date %></span><br />
+      <span><script>document.write(new Date());</script></span><br />
       <label> Name:</label><input type="text" id="name" /> <br />
       <label> Package:</label><input type="text" id="package" />  <br />
       <label>Package version:</label><input type="text" id="version" /><br />
