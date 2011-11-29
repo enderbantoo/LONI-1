@@ -16,7 +16,7 @@ var WIDTH = 800;
 var HEIGHT = 600;
 var myModules;
 var myModuleArrays = new Array();
-
+var omw_scrollpane;
 
 //object literals
 makingConnection= {
@@ -79,7 +79,6 @@ tabsCanvas.onmouseup = tabsMouseUp;
 	this.formatModule = formatModule;
 	this.addOutput = addOutput;
 	this.addInput = addInput;
-	
 	//outputs
 	this.outputs=new Array();	
 	this.inputs=new Array();
@@ -118,6 +117,9 @@ tabsCanvas.onmouseup = tabsMouseUp;
 	
 	this.variables = new Array();
 	this.inputsToSystem = new Array();
+	
+	//animation variables
+	this.animationOrder = -1;
  }
  
 function Output(type,parentModule)
@@ -361,12 +363,14 @@ function copy(sourceModule)
  {
  	myModules = myModuleArrays[index];
 	tabSelected.index = index;
+	setBoundaries();
  }
  function addTab()
  {
  	tabSelected.index = myModuleArrays.length;
  	myModuleArrays[tabSelected.index] = new Array();
 	myModules = myModuleArrays[tabSelected.index];
+	setBoundaries();
  }
  
  function tabsMouseDown(e)
@@ -384,9 +388,71 @@ function copy(sourceModule)
 		addTab();
  }
  function tabsMouseUp()
+
  {
  	
  }
+
+function setBoundaries()
+{
+	var maxWidth = findMaxX();
+	var maxHeight = findMaxY();
+	
+	canvas.width = maxWidth + 100;
+	if (canvas.width < 700)
+		canvas.width = 700;
+		
+	canvas.height = maxHeight + 100;
+	if (canvas.height < 600)
+		canvas.height = 600;
+		
+}
+
+function fixBoundaries() //make cleaner solution
+{
+	var maxWidth = findMaxX();
+	var maxHeight = findMaxY();
+	
+	if (maxWidth + 100 > canvas.width)
+		canvas.width = canvas.width + 100;
+	else if (maxWidth + 200 < canvas.width && canvas.width > 700)
+		canvas.width = canvas.width - 100;
+	if (canvas.width < 700)
+		canvas.width = 700;
+		
+	if (maxHeight + 50 > canvas.height)
+		canvas.height = canvas.height + 100;
+	else if (maxHeight + 100 < canvas.height && canvas.height > 600)
+		canvas.height = canvas.height - 100;
+	if (canvas.height < 600)
+		canvas.height = 600;
+}
+
+function findMaxX()
+{
+	var maxX = 0;
+	for (var i = 0;i < myModules.length;i++)
+	{
+		if (myModules[i].x > maxX)
+		{
+			maxX = myModules[i].x;
+		}
+	}
+	return maxX;
+}
+function findMaxY()
+{
+	var maxY = 0;
+	for (var i = 0;i < myModules.length;i++)
+	{
+		if (myModules[i].y > maxY)
+		{
+			maxY = myModules[i].y;
+		}
+	}
+	return maxY;
+}
+
  //============================================
  //        Module Manipulations
  //============================================
@@ -568,14 +634,14 @@ function addOutput(type)
 }
 
 function moveModule(e){
-	testMouse.X = e.pageX - canvas.offsetLeft;
-	testMouse.Y = e.pageY - canvas.offsetTop;
+	testMouse.X = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft;
+	testMouse.Y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop;
 	
 	for (var i = 0; i < myModules.length; i++)
 	{
 		if (myModules[i].dragOK == true) {
-			myModules[i].x = e.pageX - canvas.offsetLeft - myModules[i].groupMoveOffsetX;
-			myModules[i].y = e.pageY - canvas.offsetTop - myModules[i].groupMoveOffsetY;
+			myModules[i].x = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft - myModules[i].groupMoveOffsetX;
+			myModules[i].y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop - myModules[i].groupMoveOffsetY;
 			
 			switch (myModules[i].type)
 			{
@@ -612,8 +678,8 @@ function moveModule(e){
 				{
 					if (k != i && myModules[k].selected == true)
 					{
-						myModules[k].x = e.pageX - canvas.offsetLeft - myModules[k].groupMoveOffsetX;
-						myModules[k].y = e.pageY - canvas.offsetTop - myModules[k].groupMoveOffsetY;
+						myModules[k].x = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft - myModules[k].groupMoveOffsetX;
+						myModules[k].y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop - myModules[k].groupMoveOffsetY;
 						
 						switch (myModules[k].type)
 						{
@@ -645,6 +711,7 @@ function moveModule(e){
 						}
 					}
 				}
+				fixBoundaries();
 			}
 		return;
 		}
@@ -653,23 +720,23 @@ function moveModule(e){
  
 function moveLine(e)
 {
-	testMouse.X = e.pageX - canvas.offsetLeft;
-	testMouse.Y = e.pageY - canvas.offsetTop;
+	testMouse.X = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft;
+	testMouse.Y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop;
 	
 	
-	makingConnection.x = e.pageX - canvas.offsetLeft;
-	makingConnection.y = e.pageY - canvas.offsetTop;
+	makingConnection.x = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft;
+	makingConnection.y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop;
 
 }
 
 function selectBox(e)
 {
-	testMouse.X = e.pageX - canvas.offsetLeft;
-	testMouse.Y = e.pageY - canvas.offsetTop;
+	testMouse.X = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft;
+	testMouse.Y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop;
 	
 	
-	selectionBox.x = e.pageX - canvas.offsetLeft;
-	selectionBox.y = e.pageY - canvas.offsetTop;
+	selectionBox.x = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft;
+	selectionBox.y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop;
 }
 
 function checkSelected()
@@ -756,7 +823,7 @@ function moduleMouseDown(e){
 	{
 		//check if right click selecting
 		for (var i = 0; i < myModules.length; i++) {
-			if (myModules[i].checkMoving(e.pageX, e.pageY, canvas.offsetLeft, canvas.offsetTop)) {
+			if (myModules[i].checkMoving(e.pageX + omw_scrollpane.scrollLeft, e.pageY + omw_scrollpane.scrollTop, canvas.offsetLeft, canvas.offsetTop)) {
 				if (myModules[i].selected == true) 
 					break;
 				else {
@@ -773,14 +840,14 @@ function moduleMouseDown(e){
 				}
 			}
 		}
-		testMouse.X = e.pageX - canvas.offsetLeft;
-		testMouse.Y = e.pageY - canvas.offsetTop;
+		testMouse.X = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft;
+		testMouse.Y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop;
 		return;
 	}
 
 	//check if moving module
 	for (var i = 0; i < myModules.length; i++) {
-		if (myModules[i].checkMoving(e.pageX, e.pageY, canvas.offsetLeft, canvas.offsetTop)) {
+		if (myModules[i].checkMoving(e.pageX + omw_scrollpane.scrollLeft, e.pageY + omw_scrollpane.scrollTop, canvas.offsetLeft, canvas.offsetTop)) {
 			
 			//if not selected reset selection
 			if (myModules[i].selected == false)
@@ -798,13 +865,13 @@ function moduleMouseDown(e){
 				{
 					if (i != k && myModules[k].selected == true)
 					{
-						myModules[k].groupMoveOffsetX = e.pageX - canvas.offsetLeft - myModules[k].x;
-						myModules[k].groupMoveOffsetY = e.pageY - canvas.offsetTop- myModules[k].y;
+						myModules[k].groupMoveOffsetX = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft - myModules[k].x;
+						myModules[k].groupMoveOffsetY = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop- myModules[k].y;
 					}
 				}
 			}
-			myModules[i].groupMoveOffsetX = e.pageX - canvas.offsetLeft - myModules[i].x;
-			myModules[i].groupMoveOffsetY = e.pageY - canvas.offsetTop- myModules[i].y;
+			myModules[i].groupMoveOffsetX = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft - myModules[i].x;
+			myModules[i].groupMoveOffsetY = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop- myModules[i].y;
 			//myModules[i].x = e.pageX - canvas.offsetLeft;
 			//myModules[i].y = e.pageY - canvas.offsetTop;
 			myModules[i].dragOK = true;
@@ -824,13 +891,13 @@ function moduleMouseDown(e){
 	
 	//check if connecting
 	for (var i = 0; i < myModules.length; i++) {		
-		var connectionStart = myModules[i].checkConnection (e.pageX,e.pageY,canvas.offsetLeft,canvas.offsetTop);
+		var connectionStart = myModules[i].checkConnection (e.pageX + omw_scrollpane.scrollLeft,e.pageY + omw_scrollpane.scrollTop,canvas.offsetLeft,canvas.offsetTop);
 
 		if (connectionStart != null) {
 			makingConnection.connecting = true;
 			makingConnection.output = connectionStart;
-			makingConnection.x = e.pageX - canvas.offsetLeft;
-			makingConnection.y = e.pageY - canvas.offsetTop;
+			makingConnection.x = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft;
+			makingConnection.y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop;
 			canvas.onmousemove = moveLine;
 			return;
 		}
@@ -857,7 +924,7 @@ function moduleMouseDown(e){
 					var endY = myModules[i].outputs[j].inputsConnectedTo[k].parentModule.y + myModules[i].outputs[j].inputsConnectedTo[k].offsetY;
 					var endRotate = myModules[i].outputs[j].inputsConnectedTo[k].parentModule.rotate;
 					
-					if (clickConnection(startX, startY, endX, endY, startRotate, endRotate,e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop)) {
+					if (clickConnection(startX, startY, endX, endY, startRotate, endRotate,e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft,e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop)) {
 						lineSelection.selected = true;
 						lineSelection.fromOutput = myModules[i].outputs[j];
 						lineSelection.toInput = myModules[i].outputs[j].inputsConnectedTo[k];
@@ -917,12 +984,18 @@ function moduleMouseDown(e){
 	
 	
 	//otherwise start dragging selection box.
-	selectionBox.startX = e.pageX - canvas.offsetLeft;
-	selectionBox.startY = e.pageY - canvas.offsetTop;
-	selectionBox.x = e.pageX - canvas.offsetLeft;
-	selectionBox.y = e.pageY - canvas.offsetTop;
+	selectionBox.startX = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft;
+	selectionBox.startY = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop;
+	selectionBox.x = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft;
+	selectionBox.y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop;
 	canvas.onmousemove = selectBox;
 	selectionBox.selecting = true;
+	
+	
+	
+	
+	setAnimationOrder();
+	var twelve = 12;
 }
 
 function moduleMouseUp(e){
@@ -930,7 +1003,7 @@ function moduleMouseUp(e){
 		return;
 	if (makingConnection.connecting == true) {
 		for (var i = 0; i < myModules.length; i++) {
-			var checkConnect = myModules[i].checkConnected(e.pageX, e.pageY, canvas.offsetLeft, canvas.offsetTop)
+			var checkConnect = myModules[i].checkConnected(e.pageX + omw_scrollpane.scrollLeft, e.pageY + omw_scrollpane.scrollTop, canvas.offsetLeft, canvas.offsetTop)
 			/*if (checkConnect != null) {
 				var doubleFlag = false;
 				switch (makingConnection.output.parentModule.type) {
@@ -994,8 +1067,8 @@ function moduleMouseUp(e){
  
 function captureMousePosition(e)
 {
-	testMouse.X = e.pageX - canvas.offsetLeft;
-	testMouse.Y = e.pageY - canvas.offsetTop;
+	testMouse.X = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft;
+	testMouse.Y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop;
 }
  
 //=============================================== 
@@ -1008,16 +1081,88 @@ function init()
 	 ctx = canvas.getContext("2d");
      tabsCanvas = document.getElementById("tabsCanvas");
 	 tabsCtx = tabsCanvas.getContext("2d");  
+	 omw_scrollpane = document.getElementById("omw_scrollpane");
 	 
 		addTab();
-		createModule(75,50,"normal",10,0);
-		createModule(200,200,"conditional",10,0);
+		createModule(75,50,"normal",1,1);
+		createModule(75,50,"normal",5,5);
+		createModule(75,50,"normal",1,1);
+		//createModule(500,200,"conditional",10,0);
 		createModule(150,150,"source",0,1);
-		myModules[0].addOutput("file");
+		//myModules[0].addOutput("file");
 		createModule(300,300,"sink",1,0);
 		myModules[1].addInput("file");
-		createModule(400,400,"study",0,10);
 	 return setInterval(draw, 10);
+}
+
+//============================================
+//        Animation Functions
+//============================================
+function setAnimationOrder()
+{
+	//initialize to -1
+	for (var i = 0; i < myModules.length; i++)
+	{
+		myModules[i].animationOrder = -1;
+	}
+	//find roots
+	for (var i = 0; i < myModules.length; i++)
+	{
+		if (myModules[i].type == "source" || myModules[i].type == "study")
+		{
+			myModules[i].animationOrder = 0;
+			continue;
+		}
+		else if (myModules[i].type == "sink")
+		{
+			continue;
+		}
+		var isRoot = true;
+		for (var j = 0; j < myModules[j].inputs.length; j++)
+		{
+			if (myModules[i].inputs[j].outputsConnectedTo.length > 0)
+			{
+				isRoot = false;
+				break;
+			}
+		}
+		if (isRoot)
+			myModules[i].animationOrder = 0;
+	}
+	
+	//recursively follow each root's children
+	for (var i = 0; i < myModules.length; i++) {
+		if (myModules[i].animationOrder == 0) {
+			for (var j = 0; j < myModules[i].outputs.length; j++) {
+				for (var k = 0; k < myModules[i].outputs[j].inputsConnectedTo.length; k++) {
+					setChildOrder(myModules[i].outputs[j].inputsConnectedTo[k], 0);
+				}
+			}
+		}
+		else 
+			continue;	
+	}
+}
+
+function setChildOrder(input, x)
+{
+	if (input == null)
+		return;
+	x++;		
+	if (x > input.parentModule.animationOrder)
+		input.parentModule.animationOrder = x;
+	
+	//recursively call on all the input's parent's children
+	for (var i = 0; i < input.parentModule.outputs.length; i++)
+	{
+		for (var j = 0; j < input.parentModule.outputs[i].inputsConnectedTo.length; j++)
+		{
+			if (input.parentModule.outputs[i].inputsConnectedTo[j] != null)
+			{
+				setChildOrder(input.parentModule.outputs[i].inputsConnectedTo[j], x);
+			}
+		}
+	}
 }
 
 //============================================
@@ -1025,7 +1170,7 @@ function init()
 //============================================
 function clear() 
 {
- 	ctx.clearRect(0, 0, WIDTH, HEIGHT);
+ 	ctx.clearRect(0, 0, canvas.width,canvas.height);
 }
 function draw(){
 	clear();

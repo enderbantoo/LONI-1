@@ -125,3 +125,10 @@ select, textarea {
 	border: dotted 1px black;
 	background-color:#FAF7F8;
 }
+
+#omw_scrollpane
+{
+	width:705px;
+	height: 605px;
+	overflow:auto;
+}

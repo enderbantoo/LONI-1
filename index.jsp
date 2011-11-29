@@ -50,10 +50,11 @@
        	<canvas id="tabsCanvas" width="700" height="25">
          This text is displayed if your browser does not support HTML5 Canvas.
         </canvas>
-		
+		<div id = "omw_scrollpane">
 		<canvas id="canvas" width="700" height="600">
          This text is displayed if your browser does not support HTML5 Canvas.
         </canvas>
+		</div>
       <p>&nbsp;</p>
 	  <script type="text/javascript" src="js/connection.js"></script>
       </section>
