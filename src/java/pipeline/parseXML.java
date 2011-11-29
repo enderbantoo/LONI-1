@@ -4,22 +4,21 @@
  */
 package pipeline;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-
-import pipeline.xml;
-import pipeline.json;
-import pipeline.jaxb.Pipeline;
 /**
  *
  * @author optix2000
  */
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+import pipeline.jaxb.Pipeline;
+
+
 public class parseXML extends HttpServlet {
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response)
+    
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException
     {
         Pipeline root;
