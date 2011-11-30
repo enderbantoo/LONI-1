@@ -489,6 +489,10 @@ function copy(sourceModule)
 	return null; 
  }
  
+  //============================================
+ //        Button Manipulations
+ //============================================
+ 
  
  //============================================
  //        Tab Manipulations
@@ -1907,6 +1911,159 @@ function draw(){
 	//============================================================
 	//BUTTON DRAW CODE
 	buttonsCtx.clearRect(700,100);
+	
+	//PLAY-PAUSE
+	
+	//Size of outer play triangle
+    var height = 40;
+    var width = 80;
+	
+	//Size of inner play triangle
+	var innerPh = height/2;
+	var innerPw = height/2;
+	
+	//Size of pause ticks
+	var pauseH = innerPh;
+	var pauseW = innerPw/4;
+	
+	//Create outer play triangle gradient
+	var playOLG = buttonsCtx.createLinearGradient(-width/2,-height/2,width/2,height/2);
+    playOLG.addColorStop(0, "#AEB3DA"); 
+    playOLG.addColorStop(1,"#2F388B");
+	
+	//Create inner play traingle gradient
+    var playILG = buttonsCtx.createLinearGradient(-innerPw/2.2,-innerPh/2.2,innerPw/2.2,innerPh/2.2);
+    playILG.addColorStop(0, "#8491C8"); 
+    playILG.addColorStop(0.50, "#98A1D0"); 
+    playILG.addColorStop(1,"#AEB3DA");
+	
+	//Create inner pause gradient
+	var pauseILG = buttonsCtx.createLinearGradient(-pauseW/2.2,-pauseH/2.2,pauseW/2.2,pauseH/2.2);
+    playILG.addColorStop(0, "#8491C8"); 
+    playILG.addColorStop(0.50, "#98A1D0"); 
+    playILG.addColorStop(1,"#AEB3DA");
+    
+    //outer Arc radius
+    var r = height/6.5;
+	//inner arc radius
+	var innerRad = innerPh/6.5;
+	//pause arc radius
+	var pauseRad = pauseH/6.5;
+    
+	//Offset of outer play button
+    var playOffset = 360 + width/2;
+	//Offset of inner play button
+	var innerPO = 370 + innerPw/2;
+	var innerOY = (height-innerPh)/2;
+	//Offset of pause ticks
+	var pauseOff = 370 + pauseW/2;
+	var pauseOY = (height-pauseH);
+	var pause2Off = pauseOff + 1.5*pauseW;
+	
+	//Draw outer play button
+    buttonsCtx.beginPath();
+    buttonsCtx.moveTo(playOffset-width/2,r);
+    buttonsCtx.arcTo(playOffset-width/2,0,playOffset+width/2-r,0,r);
+    buttonsCtx.arcTo(playOffset+width/2,height/2,playOffset-width/2+r,height,r);
+    buttonsCtx.arcTo(playOffset-width/2,height,playOffset-width/2,r,r);
+    buttonsCtx.fillStyle = playOLG;
+    buttonsCtx.fill();
+	
+	//Draw inner shapes depending on run status
+	//TODO: How do you check if the animation is playing?
+	var isPlaying = false;
+	if (!isPlaying){
+		//Draw inner play button
+		buttonsCtx.beginPath();
+		buttonsCtx.moveTo(innerPO-innerPw/2,innerRad+innerOY);
+		buttonsCtx.arcTo(innerPO-innerPw/2,innerOY,innerPO+innerPw/2-innerRad,innerOY,innerRad);
+		buttonsCtx.arcTo(innerPO+innerPw/2,innerPh/2+innerOY,innerPO-innerPw/2+innerRad,innerPh+innerOY,innerRad);
+		buttonsCtx.arcTo(innerPO-innerPw/2,innerPh+innerOY,innerPO-innerPw/2,innerRad+innerOY,innerRad);
+		buttonsCtx.fillStyle = playILG;
+		buttonsCtx.fill();
+	}
+	else {
+		//draw pause tick 1
+		buttonsCtx.beginPath();                        
+		buttonsCtx.moveTo(pauseOff-pauseW/2,pauseOY-pauseH/2+pauseRad);
+		buttonsCtx.arcTo(pauseOff-pauseW/2,pauseOY-pauseH/2,pauseOff+pauseW/2-pauseRad,pauseOY-pauseH/2,pauseRad);
+		buttonsCtx.arcTo(pauseOff+pauseW/2,pauseOY-pauseH/2,pauseOff+pauseW/2,pauseOY+pauseH/2-pauseRad,pauseRad); 
+		buttonsCtx.arcTo(pauseOff+pauseW/2,pauseOY+pauseH/2,pauseOff-pauseW/2+pauseRad,pauseOY+pauseH/2,pauseRad);
+		buttonsCtx.arcTo(pauseOff-pauseW/2,pauseOY+pauseH/2,pauseOff-pauseW/2,pauseOY-pauseH/2+pauseRad,pauseRad);
+		buttonsCtx.fillStyle = playILG;
+		buttonsCtx.fill();	
+	
+		//draw pause tick 2
+		buttonsCtx.beginPath();                        
+		buttonsCtx.moveTo(pause2Off-pauseW/2,pauseOY-pauseH/2+pauseRad);
+		buttonsCtx.arcTo(pause2Off-pauseW/2,pauseOY-pauseH/2,pause2Off+pauseW/2-pauseRad,pauseOY-pauseH/2,pauseRad);
+		buttonsCtx.arcTo(pause2Off+pauseW/2,pauseOY-pauseH/2,pause2Off+pauseW/2,pauseOY+pauseH/2-pauseRad,pauseRad); 
+		buttonsCtx.arcTo(pause2Off+pauseW/2,pauseOY+pauseH/2,pause2Off-pauseW/2+pauseRad,pauseOY+pauseH/2,pauseRad);
+		buttonsCtx.arcTo(pause2Off-pauseW/2,pauseOY+pauseH/2,pause2Off-pauseW/2,pauseOY-pauseH/2+pauseRad,pauseRad);
+		buttonsCtx.fillStyle = playILG;
+		buttonsCtx.fill();
+	}
+
+	//STOP/RESET button
+   
+	//Size of outer stop triangle
+    var sh = 40;
+    var sw = 80;
+	//Size of inner stop rect
+	var innerSh = sh/2;
+	var innerSw = sh/2;
+	
+	//Create outer stop triangle gradient
+	var stopOLG = buttonsCtx.createLinearGradient(-sw/2,-sh/2,sw/2,sh/2);
+    stopOLG.addColorStop(0, "#AEB3DA"); 
+    stopOLG.addColorStop(1,"#2F388B");
+	
+	//Create inner stop rect gradient
+    var stopILG = buttonsCtx.createLinearGradient(-innerSw/2.2,-innerSh/2.2,innerSw/2.2,innerSh/2.2);
+    stopILG.addColorStop(0, "#8491C8"); 
+    stopILG.addColorStop(0.50, "#98A1D0"); 
+    stopILG.addColorStop(1,"#AEB3DA");
+    
+    //outer Arc radius
+    var sr = sh/6.5;
+	//inner arc radius
+	var innerSRad = innerSh/6.5;
+    
+	//Offset of outer stop button
+    var playSOffset = 340 - sw/2;
+	//Offset of inner stop button
+	var innerSO = 330 - innerSw/2; //x offset
+	var innerSOY = (sh-innerSh);   //y offset
+	
+	//Draw outer stop button
+	buttonsCtx.beginPath();
+    buttonsCtx.moveTo(playSOffset+width/2,r);
+    buttonsCtx.arcTo(playSOffset+width/2,0,playSOffset-width/2-r,0,r);
+    buttonsCtx.arcTo(playSOffset-width/2,height/2,playSOffset+width/2+r,height,r);
+    buttonsCtx.arcTo(playSOffset+width/2,height,playSOffset+width/2,r,r);
+    buttonsCtx.fillStyle = stopOLG;
+    buttonsCtx.fill();
+	
+	//Draw inner stop button
+	buttonsCtx.beginPath();                        
+	buttonsCtx.moveTo(innerSO-innerSw/2,innerSOY-innerSh/2+innerSRad);
+	buttonsCtx.arcTo(innerSO-innerSw/2,innerSOY-innerSh/2,innerSO+innerSw/2-innerSRad,innerSOY-innerSh/2,innerSRad);
+	buttonsCtx.arcTo(innerSO+innerSw/2,innerSOY-innerSh/2,innerSO+innerSw/2,innerSOY+innerSh/2-innerSRad,innerSRad); 
+	buttonsCtx.arcTo(innerSO+innerSw/2,innerSOY+innerSh/2,innerSO-innerSw/2+innerSRad,innerSOY+innerSh/2,innerSRad);
+	buttonsCtx.arcTo(innerSO-innerSw/2,innerSOY+innerSh/2,innerSO-innerSw/2,innerSOY-innerSh/2+innerSRad,innerSRad);
+	buttonsCtx.fillStyle = stopILG;
+	buttonsCtx.fill();
+	
+	//Draw reset
+	buttonsCtx.beginPath();
+	buttonsCtx.arc(innerSO,innerSOY,innerSh/2,0,7*Math.PI/4,false); //outer arc 
+	buttonsCtx.lineTo(innerSO+innerSh/2,innerSOY-innerSh/2); //line to point 1
+	buttonsCtx.lineTo(innerSO+innerSh/2-2,innerSOY-innerSh/4+2); //line to point 2
+	buttonsCtx.lineTo(innerSO+2,innerSOY-2); //line to point 3
+	buttonsCtx.arc(innerSO,innerSOY,7.07,7*Math.PI/4,0,true);
+	buttonsCtx.lineTo(innerSO,innerSOY);
+	buttonsCtx.fillStyle = "black";
+	buttonsCtx.fill();
 	
 }
 
