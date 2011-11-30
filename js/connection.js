@@ -12,6 +12,9 @@ var canvas;
 var ctx;
 var tabsCanvas;
 var tabsCtx;
+var buttonsCanvas;
+var buttonsCtx;
+
 var WIDTH = 800;
 var HEIGHT = 600;
 var myModules;
@@ -125,6 +128,9 @@ canvas.onmousemove = captureMousePosition; //'capture mouse saves mouse position
 tabsCanvas.onmousemove = tabsMouseHover;
 tabsCanvas.onmousedown = tabsMouseDown;
 tabsCanvas.onmouseup = tabsMouseUp;
+buttonsCanvas.onmouseMove = buttonHover;
+buttonsCanvas.onmouseDown = buttonMouseDown;
+buttonsCanvas.onmouseMove = buttonMouseUp;
 //class variables
 function module(x,y,type,input,output)
  {
@@ -229,6 +235,7 @@ function Output(type,parentModule)
 	this.type = type;
 	this.inputsConnectedTo = new Array();
 	this.connectOut = connectOut;
+	this.outputToInput = outputToInput;
 	this.parentModule = parentModule;
 	
 	parentModule.parameterIndex++;
@@ -236,6 +243,28 @@ function Output(type,parentModule)
 	//information variables
 	//this.outputID;
 	this.outputIndex;
+}
+function outputToInput()
+{
+	for (var i = this.outputIndex + 1; i < myModules[this.parentModule].outputs.length;i++)
+	{
+			myModules[this.parentModule].outputs[i].outputIndex--;
+	}
+	
+	for (var i = 0; i < this.inputsConnectedTo.length;i++)
+	{
+		var toDelete = this.inputsConnectedTo[i];
+		for (var j = 0;j < toDelete.outputsConnectedTo.length;j++)
+		{
+			if (toDelete.outputsConnectedTo[j] == this)
+			{
+				toDelete.outputsConnectedTo.splice(j,1);
+				j--;
+			}
+		}
+	}
+	this.inputsConnectedTo.splice(0,this.inputsConnectedTo.length);
+	parentModule.formatModule();
 }
 
 function Input(type,parentModule)
@@ -1471,6 +1500,8 @@ function init()
      tabsCanvas = document.getElementById("tabsCanvas");
 	 tabsCtx = tabsCanvas.getContext("2d");  
 	 omw_scrollpane = document.getElementById("omw_scrollpane");
+	 buttonsCanvas = document.getElementById("buttonsCanvas");
+	 buttonsCtx = buttonsCanvas.getContext("2d");
 	 
 		addTab();
 		createModule(75,50,"normal",1,1);
@@ -1783,8 +1814,9 @@ function draw(){
 	ctx.lineWidth = "3";
 	
 	
-	
+	//============================================================
 	tabsCtx.clearRect(0,0,700,25);
+	
 	//drawTabs
 	var i;
 	
@@ -1870,6 +1902,12 @@ function draw(){
 	tabsCtx.restore();
 	tabsCtx.fillRect(7.5 +100*i,12.5,10,3);
 	tabsCtx.fillRect(11 +100*i,9,3,10);
+	
+	
+	//============================================================
+	//BUTTON DRAW CODE
+	buttonsCtx.clearRect(700,100);
+	
 }
 
 function drawNormal(drawModule){
