@@ -19,6 +19,71 @@ var myModuleArrays = new Array();
 var omw_scrollpane;
 var myConnections= new Array();
 
+var Status = {      Preparing    :0,
+   					validationPassed:1,
+   					validationFailed:2,
+   					Waiting      :3,
+   					
+   					waitingToSubmit:4,
+   					Submitting   :5,   					
+					Queued      :6,
+					Running     :7,
+					Complete    :8,
+					Paused      :9,
+					
+					Stop        :10,
+					Play        :11,
+					
+				    Stationary  :12,
+					
+					m_Error     :13,
+					Backlogged  :14,
+					Staging     :15,
+					Incomplete  :16,
+					Cancelled   :17,
+										
+					m_Reset       :18
+					
+						}
+var buttonEvent = Status.m_Reset;
+//var totalState  = Status.Stationary;
+var totalTime  =0;
+var processingLevel =0;
+var isValid = true;
+var isIncremented = false;
+		 
+function buttonCheck() {
+    if(document.animForm.animButton.value == "Start") {
+		setAnimationOrder();
+        document.animForm.animButton.value = "Pause";
+        buttonEvent = Status.Play;
+
+    } else {
+        document.animForm.animButton.value = "Start";
+        buttonEvent = Status.Paused;
+    }
+}
+
+function buttonCheck_2() {
+    if(document.animForm.resetButton.value == "Stop") {
+        document.animForm.resetButton.value = "Reset";
+        buttonEvent = Status.Stop;
+
+    } else {
+		//resetting
+		document.animForm.animButton.value = "Start";
+		for (var i = 0; i < myModules.length;i++)
+		{
+			myModules[i].status = Status.Stationary;
+			var processingLevel =0;
+			var isValid = true;
+			var isIncremented = false;
+		 
+		}
+        document.animForm.resetButton.value = "Stop";
+        buttonEvent = Status.m_Reset;
+    }
+}		 
 //object literals
 makingConnection= {
 	x : 0,
@@ -41,8 +106,12 @@ lineSelection = {
 	fromOutput : null,
 	toInput : null
 }
-
-
+hoverPlus= {
+	selected : false,
+	hoverIndex : -1,
+	hoveringIndex : false,
+	hoverClose : false
+}
 testMouse = {
 	X : -1,
 	Y : -1
@@ -53,11 +122,11 @@ init()
 canvas.onmousedown = moduleMouseDown;
 canvas.onmouseup = moduleMouseUp;
 canvas.onmousemove = captureMousePosition; //'capture mouse saves mouse position
-
+tabsCanvas.onmousemove = tabsMouseHover;
 tabsCanvas.onmousedown = tabsMouseDown;
 tabsCanvas.onmouseup = tabsMouseUp;
 //class variables
- function module(x,y,type,input,output)
+function module(x,y,type,input,output)
  {
  	//basic variables
  	this.x=x;
@@ -85,11 +154,41 @@ tabsCanvas.onmouseup = tabsMouseUp;
 	this.inputs=new Array();
 	this.outputsTrue=new Array();
 	this.outputsFalse=new Array();
+	this.parameterIndex = 0;
+	
 	
 	//selection and group move
 	this.selected=false;
 	this.groupMoveOffsetX = 0;
 	this.groupMoveOffsetY = 0;
+	
+	//Youran Stuff
+	this.status = Status.Stationary;
+	this.message = "";
+	this.jobNum = 2;
+	this.sequence = -1;
+	this.isComplete = false;
+	this.lock = false;
+	
+	//radius
+	switch(this.type)
+	{
+	case "normal":
+		this.radius=56;
+		break;
+	case "conditional":
+		this.radius=56;
+		this.connectingTrue=false;
+		this.connectingFalse=false;
+		break;
+	case "source":
+	case "study":
+		this.radius=28;
+		break;
+	case "sink":
+		this.radius=35;
+		break;
+	}
 	
 	//information variables
 	this.idNumber; //string
@@ -119,9 +218,6 @@ tabsCanvas.onmouseup = tabsMouseUp;
 	this.variables = new Array();
 	this.inputsToSystem = new Array();
 	
-	//animation variables
-	this.animationOrder = -1;
-	
 	//connection information
 	this.conIndex;
  }
@@ -135,8 +231,10 @@ function Output(type,parentModule)
 	this.connectOut = connectOut;
 	this.parentModule = parentModule;
 	
+	parentModule.parameterIndex++;
+	this.name = "Parameter " + parentModule.parameterIndex;
 	//information variables
-	this.outputID;
+	//this.outputID;
 	this.outputIndex;
 }
 
@@ -148,6 +246,8 @@ function Input(type,parentModule)
 	this.outputsConnectedTo = new Array();
 	this.parentModule = parentModule;
 	
+	parentModule.parameterIndex++;
+	this.name = "Parameter " + parentModule.parameterIndex;
 	//ifnormation variables
 	this.inputID;
 	this.inputIndex;
@@ -384,13 +484,26 @@ function copy(sourceModule)
  	var i;
 	for (i = 0; i < myModuleArrays.length;i++)
 	{
-	if (e.pageX < 100 +100*i + tabsCanvas.offsetLeft &&
-	    e.pageX > 25 + 100*i + tabsCanvas.offsetLeft )
-		selectTab(i);
+	if (e.pageX < 100 + 100 * i + tabsCanvas.offsetLeft &&
+	e.pageX > 100 * i + tabsCanvas.offsetLeft) {
+		if (e.pageX < 30 + 100 * i + tabsCanvas.offsetLeft &&
+		e.pageX > 20 + 100 * i + tabsCanvas.offsetLeft &&
+		e.pageY < 19 + tabsCanvas.offsetTop &&
+		e.pageY > 9 + tabsCanvas.offsetTop) {
+			myModuleArrays.splice(i,1);
+			
+			if (myModuleArrays.length == 0)
+				addTab();
+			else if (i == tabSelected.index)
+				selectTab(0);
+		}
+		else
+			selectTab(i);
+	}
 		
 	}
-	if (e.pageX < 100 +100*i + tabsCanvas.offsetLeft &&
-	    e.pageX > 25 + 100*i + tabsCanvas.offsetLeft )
+	if (e.pageX < 25 + 100*i + tabsCanvas.offsetLeft &&
+	    e.pageX > 100*i + tabsCanvas.offsetLeft )
 		addTab();
  }
  function tabsMouseUp()
@@ -398,6 +511,36 @@ function copy(sourceModule)
  {
  	
  }
+
+function tabsMouseHover(e)
+{
+	var i = 0;
+	for (i = 0; i < myModuleArrays.length;i++)
+	{
+		if (e.pageX < 100 +100*i + tabsCanvas.offsetLeft &&
+	    e.pageX >100*i + tabsCanvas.offsetLeft )
+		{
+			hoverPlus.hoverIndex = i;
+			hoverPlus.hoveringIndex = true;
+			hoverPlus.selected = false;
+			
+			if (e.pageX < 30+100*i + tabsCanvas.offsetLeft &&
+	    		e.pageX > 20+100*i + tabsCanvas.offsetLeft &&
+				e.pageY < 19 + tabsCanvas.offsetTop &&
+	    		e.pageY > 9 + tabsCanvas.offsetTop)
+					hoverPlus.hoverClose = true;	
+			else
+					hoverPlus.hoverClose = false;
+			return;
+		}
+			
+	}
+	if (e.pageX < 25 +100*i + tabsCanvas.offsetLeft &&
+	    e.pageX > 100*i + tabsCanvas.offsetLeft )
+		hoverPlus.selected = true;
+	else
+		hoverPlus.selected = false;
+}
 
 function setBoundaries()
 {
@@ -822,12 +965,14 @@ function rotateModule()
 }
 
 
-function connection(fromIndex,outputIndex,toIndex,inputIndex)
+function connection(fromIndex,outputIndex,toIndex,inputIndex, isTrue, isFalse)
 {
 	this.fromIndex = fromIndex;
 	this.outputIndex = outputIndex;
 	this.toIndex = toIndex;
 	this.inputIndex = inputIndex;
+	this.isTrue = isTrue;
+	this.isFalse = isFalse;
 }
 
 function fillConnectionsArray()
@@ -839,29 +984,52 @@ function fillConnectionsArray()
 		{
 			myModules[i].inputs[j].inputIndex = j;	
 		}
-		for (var j = 0; j < myModules[i].outputs.length;j++)
-		{
-			myModules[i].outputs[j].outputIndex = j;
+		if (myModules[i].type != "conditional") {
+			for (var j = 0; j < myModules[i].outputs.length; j++) {
+				myModules[i].outputs[j].outputIndex = j;
+			}
 		}
-		for (var j = 0; j < myModules[i].outputsTrue.length;j++)
-		{
-			myModules[i].outputsTrue[j].outputIndex = j;
-		}
-		for (var j = 0; j < myModules[i].outputsFalse.length;j++)
-		{
-			myModules[i].outputsFalse[j].outputIndex = j;
+		else {
+			for (var j = 0; j < myModules[i].outputsTrue.length; j++) {
+				myModules[i].outputsTrue[j].outputIndex = j;
+			}
+			for (var j = 0; j < myModules[i].outputsFalse.length; j++) {
+				myModules[i].outputsFalse[j].outputIndex = j;
+			}
 		}
 		
 	}
 	myConnections.splice(0,myConnections.length);
 	for (var i =0; i < myModules.length;i++)
 	{
-		for (var j = 0; j < myModules[i].outputs.length; j++) {
-		
-			for (var k = 0; k < myModules[i].outputs[j].inputsConnectedTo.length; k++) {
-				if (myModules[i].outputs[j].inputsConnectedTo[k] != null) {
-						var newConnection = new connection(i,j,myModules[i].outputs[j].inputsConnectedTo[k].parentModule.conIndex,outputs[j].inputsConnectedTo[k].inputIndex)
+		if (myModules[i].type != "conditional") {
+			for (var j = 0; j < myModules[i].outputs.length; j++) {
+			
+				for (var k = 0; k < myModules[i].outputs[j].inputsConnectedTo.length; k++) {
+					if (myModules[i].outputs[j].inputsConnectedTo[k] != null) {
+						var newConnection = new connection(i, j, myModules[i].outputs[j].inputsConnectedTo[k].parentModule.conIndex, myModules[i].outputs[j].inputsConnectedTo[k].inputIndex, false, false)
 						myConnections.push(newConnection)
+					}
+				}
+			}
+		}
+		else {
+			for (var j = 0; j < myModules[i].outputsTrue.length; j++) {
+			
+				for (var k = 0; k < myModules[i].outputsTrue[j].inputsConnectedTo.length; k++) {
+					if (myModules[i].outputsTrue[j].inputsConnectedTo[k] != null) {
+						var newConnection = new connection(i, j, myModules[i].outputsTrue[j].inputsConnectedTo[k].parentModule.conIndex, myModules[i].outputsTrue[j].inputsConnectedTo[k].inputIndex, true, false)
+						myConnections.push(newConnection)
+					}
+				}
+			}
+			for (var j = 0; j < myModules[i].outputsFalse.length; j++) {
+			
+				for (var k = 0; k < myModules[i].outputsFalse[j].inputsConnectedTo.length; k++) {
+					if (myModules[i].outputsFalse[j].inputsConnectedTo[k] != null) {
+						var newConnection = new connection(i, j, myModules[i].outputsFalse[j].inputsConnectedTo[k].parentModule.conIndex, myModules[i].outputsFalse[j].inputsConnectedTo[k].inputIndex, false, true)
+						myConnections.push(newConnection)
+					}
 				}
 			}
 		}
@@ -870,8 +1038,178 @@ function fillConnectionsArray()
 
 function fillConnections()
 {
-	
+	for (var i = 0; i < myConnections.length; i++)
+	{
+		if (myConnections[i].isTrue == false && myConnections[i].isFalse == false) {
+			myModules[fromIndex].outputs[outputIndex].connectOut(myModules[toIndex].inputs[inputIndex]);
+		}
+		else if (myConnections[i].isTrue == true) {
+			myModules[fromIndex].outputsTrue[outputIndex].connectOut(myModules[toIndex].inputs[inputIndex]);
+
+		}
+		else //myConnections[i].isfalse == true
+		{
+			myModules[fromIndex].outputsFalse[outputIndex].connectOut(myModules[toIndex].inputs[inputIndex]);
+
+		}
+	}
+	return;
 }
+
+function fixModules()
+{
+	for (var i = 0; i < myModules.length;i++)
+	{
+		
+	
+		//connection + moving + copying
+		myModules[i].dragOK = false;
+		myModules[i].connecting=false;
+		myModules[i].copiedIndex = -1;
+		
+		myModules[i].checkConnection=checkConnection;
+		myModules[i].checkConnected=checkConnected;
+		myModules[i].checkMoving=checkMoving;
+		myModules[i].rotateModule=rotateModule;
+		myModules[i].copy=copy;
+		myModules[i].formatModule = formatModule;
+		myModules[i].addOutput = addOutput;
+		myModules[i].addInput = addInput;
+		//outputs
+		myModules[i].outputs=new Array();	
+		myModules[i].inputs=new Array();
+		myModules[i].outputsTrue=new Array();
+		myModules[i].outputsFalse=new Array();
+		myModules[i].parameterIndex = 0;
+		
+		
+		//selection and group move
+		myModules[i].selected=false;
+		myModules[i].groupMoveOffsetX = 0;
+		myModules[i].groupMoveOffsetY = 0;
+		
+		//Youran Stuff
+		myModules[i].status = Status.Stationary;
+		myModules[i].message = "";
+		myModules[i].jobNum = 2;
+		myModules[i].sequence = -1;
+		myModules[i].isComplete = false;
+		myModules[i].lock = false;
+		
+	
+		
+		switch(myModules[i].type)
+		{
+		case "normal":
+			myModules[i].radius=56;
+			for (var j = 0; j < myModules[i].outputs.length;j++)
+			{
+				myModules[i].outputs[j].offsetX;
+				myModules[i].outputs[j].offsetY;
+				
+				myModules[i].outputs[j].inputsConnectedTo = new Array();
+				
+				myModules[i].outputs[j].connectOut = connectOut;
+				myModules[i].outputs[j].parentModule = myModules[i];
+				
+				myModules[i].parameterIndex++;
+				myModules[i].outputs[j].outputIndex = j;
+			}
+			
+			for (var j = 0; j < myModules[i].inputs.length;j++)
+			{
+				myModules[i].inputs[j].offsetX;
+				myModules[i].inputs[j].offsetY;
+	
+				myModules[i].inputs[j].outputsConnectedTo = new Array();
+				myModules[i].inputs[j].parentModule = myModules[i];
+				
+				parentModule.parameterIndex++;
+	
+				myModules[i].inputs[j].inputIndex = j;
+			}
+			break;
+		case "conditional":
+			myModules[i].radius=56;
+			for (var j = 0; j < myModules[i].outputsTrue.length;j++)
+			{
+				myModules[i].outputsTrue[j].offsetX;
+				myModules[i].outputsTrue[j].offsetY;
+				
+				myModules[i].outputsTrue[j].inputsConnectedTo = new Array();
+				
+				myModules[i].outputsTrue[j].connectOut = connectOut;
+				myModules[i].outputsTrue[j].parentModule = myModules[i];
+				
+				myModules[i].parameterIndex++;
+				myModules[i].outputsTrue[j].outputIndex = j;
+			}
+			for (var j = 0; j < myModules[i].outputsFalse.length;j++)
+			{
+				myModules[i].outputsFalse[j].offsetX;
+				myModules[i].outputsFalse[j].offsetY;
+				
+				myModules[i].outputsFalse[j].inputsConnectedTo = new Array();
+				
+				myModules[i].outputsFalse[j].connectOut = connectOut;
+				myModules[i].outputsFalse[j].parentModule = myModules[i];
+				
+				myModules[i].parameterIndex++;
+				myModules[i].outputsFalse[j].outputIndex = j;
+			}
+			
+			for (var j = 0; j < myModules[i].inputs.length;j++)
+			{
+				myModules[i].inputs[j].offsetX;
+				myModules[i].inputs[j].offsetY;
+	
+				myModules[i].inputs[j].outputsConnectedTo = new Array();
+				myModules[i].inputs[j].parentModule = myModules[i];
+				
+				parentModule.parameterIndex++;
+	
+				myModules[i].inputs[j].inputIndex = j;
+			}
+			break;
+		case "source":
+		case "study":
+			myModules[i].radius=28;
+			for (var j = 0; j < myModules[i].outputs.length;j++)
+			{
+				myModules[i].outputs[j].offsetX;
+				myModules[i].outputs[j].offsetY;
+				
+				myModules[i].outputs[j].inputsConnectedTo = new Array();
+				
+				myModules[i].outputs[j].connectOut = connectOut;
+				myModules[i].outputs[j].parentModule = myModules[i];
+				
+				myModules[i].parameterIndex++;
+				myModules[i].outputs[j].outputIndex = j;
+			}
+			break;
+		case "sink":
+			myModules[i].radius=35;
+			for (var j = 0; j < myModules[i].inputs.length;j++)
+			{
+				myModules[i].inputs[j].offsetX;
+				myModules[i].inputs[j].offsetY;
+	
+				myModules[i].inputs[j].outputsConnectedTo = new Array();
+				myModules[i].inputs[j].parentModule = myModules[i];
+				
+				parentModule.parameterIndex++;
+	
+				myModules[i].inputs[j].inputIndex = j;
+			}
+			break;
+		}
+	myModules[i].formatModule();
+	//connection information
+	myModules.conIndex;
+	}
+}
+
 //============================================
 //        Mouse Manipulations
 //============================================
@@ -985,7 +1323,7 @@ function moduleMouseDown(e){
 						lineSelection.selected = true;
 						lineSelection.fromOutput = myModules[i].outputs[j];
 						lineSelection.toInput = myModules[i].outputs[j].inputsConnectedTo[k];
-					}
+						}
 				}
 			}
 			break;
@@ -1047,12 +1385,6 @@ function moduleMouseDown(e){
 	selectionBox.y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop;
 	canvas.onmousemove = selectBox;
 	selectionBox.selecting = true;
-	
-	
-	
-	
-	setAnimationOrder();
-	var twelve = 12;
 }
 
 function moduleMouseUp(e){
@@ -1160,14 +1492,14 @@ function setAnimationOrder()
 	//initialize to -1
 	for (var i = 0; i < myModules.length; i++)
 	{
-		myModules[i].animationOrder = -1;
+		myModules[i].sequence = -1;
 	}
 	//find roots
 	for (var i = 0; i < myModules.length; i++)
 	{
 		if (myModules[i].type == "source" || myModules[i].type == "study")
 		{
-			myModules[i].animationOrder = 0;
+			myModules[i].sequence = 0;
 			continue;
 		}
 		else if (myModules[i].type == "sink")
@@ -1175,30 +1507,43 @@ function setAnimationOrder()
 			continue;
 		}
 		var isRoot = true;
+		var hasInputs = false;
 		for (var j = 0; j < myModules[i].inputs.length; j++)
 		{
+			hasInputs = true;
 			if (myModules[i].inputs[j].outputsConnectedTo.length > 0)
 			{
 				isRoot = false;
 				break;
 			}
 		}
-		if (isRoot)
-			myModules[i].animationOrder = 0;
+		if (isRoot == true && hasInputs == false)
+			myModules[i].sequence = 0;
 	}
 	
 	//recursively follow each root's children
 	for (var i = 0; i < myModules.length; i++) {
-		if (myModules[i].animationOrder == 0) {
+		if (myModules[i].sequence == 0) {
 			for (var j = 0; j < myModules[i].outputs.length; j++) {
 				for (var k = 0; k < myModules[i].outputs[j].inputsConnectedTo.length; k++) {
 					setChildOrder(myModules[i].outputs[j].inputsConnectedTo[k], 0);
+				}
+			}
+			for (var j = 0; j < myModules[i].outputsTrue.length; j++) {
+				for (var k = 0; k < myModules[i].outputsTrue[j].inputsConnectedTo.length; k++) {
+					setChildOrder(myModules[i].outputsTrue[j].inputsConnectedTo[k], 0);
+				}
+			}
+			for (var j = 0; j < myModules[i].outputsFalse.length; j++) {
+				for (var k = 0; k < myModules[i].outputsFalse[j].inputsConnectedTo.length; k++) {
+					setChildOrder(myModules[i].outputsFalse[j].inputsConnectedTo[k], 0);
 				}
 			}
 		}
 		else 
 			continue;	
 	}
+	
 }
 
 function setChildOrder(input, x)
@@ -1206,8 +1551,8 @@ function setChildOrder(input, x)
 	if (input == null)
 		return;
 	x++;		
-	if (x > input.parentModule.animationOrder)
-		input.parentModule.animationOrder = x;
+	if (x > input.parentModule.sequence)
+		input.parentModule.sequence = x;
 	
 	//recursively call on all the input's parent's children
 	for (var i = 0; i < input.parentModule.outputs.length; i++)
@@ -1217,6 +1562,26 @@ function setChildOrder(input, x)
 			if (input.parentModule.outputs[i].inputsConnectedTo[j] != null)
 			{
 				setChildOrder(input.parentModule.outputs[i].inputsConnectedTo[j], x);
+			}
+		}
+	}
+	for (var i = 0; i < input.parentModule.outputsTrue.length; i++)
+	{
+		for (var j = 0; j < input.parentModule.outputsTrue[i].inputsConnectedTo.length; j++)
+		{
+			if (input.parentModule.outputsTrue[i].inputsConnectedTo[j] != null)
+			{
+				setChildOrder(input.parentModule.outputsTrue[i].inputsConnectedTo[j], x);
+			}
+		}
+	}
+	for (var i = 0; i < input.parentModule.outputsFalse.length; i++)
+	{
+		for (var j = 0; j < input.parentModule.outputsFalse[i].inputsConnectedTo.length; j++)
+		{
+			if (input.parentModule.outputsFalse[i].inputsConnectedTo[j] != null)
+			{
+				setChildOrder(input.parentModule.outputsFalse[i].inputsConnectedTo[j], x);
 			}
 		}
 	}
@@ -1321,6 +1686,8 @@ function draw(){
 	//Draw the Modules
 	for (var i = 0; i < myModules.length; i++)
 	{
+		isIncremented = false;
+		animate(myModules[i]);
 		var drawModule=myModules[i];
 		switch(drawModule.type)
 		{
@@ -1408,7 +1775,7 @@ function draw(){
 				else
 					ctx.strokeStyle = "red";
 				ctx.lineWidth = "1";
-				ctx.strokeText(hoverInput.type,hoverInput.parentModule.x+hoverInput.offsetX+7,hoverInput.parentModule.y+hoverInput.offsetY);
+				ctx.fillText(hoverInput.type,hoverInput.parentModule.x+hoverInput.offsetX+7,hoverInput.parentModule.y+hoverInput.offsetY);
 				break;
 			}
 		}
@@ -1420,30 +1787,89 @@ function draw(){
 	tabsCtx.clearRect(0,0,700,25);
 	//drawTabs
 	var i;
+	
+	
+	var linGrd = tabsCtx.createLinearGradient(0,3,0,22);
+		linGrd.addColorStop(0, "#F2F2F2"); // start with red at 0
+		linGrd.addColorStop(1,"#CFCFCF"); // finish with green
+	
+		var linGrdBlue = tabsCtx.createLinearGradient(0,3,0,22);
+		linGrdBlue.addColorStop(0, "#EAF6ED"); // start with red at 0
+		linGrdBlue.addColorStop(1,"#ACDCF7"); // finish with green
+	
 	for (i = 0; i < myModuleArrays.length;i++)
 	{
-		if (i == tabSelected.index)
-			tabsCtx.strokeStyle = "blue";
+		var isSelected = false;
+		var z;
+		if (i == tabSelected.index) {
+			var isSelected = true;
+			tabsCtx.fillStyle = "white";
+			z = 0;
+		}
+		else {
+			var isSelected = false;
+			if (hoverPlus.hoveringIndex) {
+				if (hoverPlus.hoverIndex == i)
+					tabsCtx.fillStyle = linGrdBlue;
+				else
+					tabsCtx.fillStyle = linGrd;
+			}
+			else 
+				tabsCtx.fillStyle = linGrd;
+			
+			z = 3;
+		}
+		
+		
+		tabsCtx.strokeStyle = "black"	
+		tabsCtx.lineWidth = "1";
+		tabsCtx.fillRect(100*i,z,100,25-z);
+		tabsCtx.strokeRect(100*i,z,100,25-z);
+		tabsCtx.lineWidth = "2";
+		tabsCtx.fillStyle = "black";
+		tabsCtx.fillText("Tab",50+100*i,17)
+		tabsCtx.fillText(i+1,70+100*i,17)
+		tabsCtx.lineWidth = "1";
+		
+		if (hoverPlus.hoverIndex == i && hoverPlus.hoverClose == true)
+			tabsCtx.strokeStyle = "red";
 		else
 			tabsCtx.strokeStyle = "black";
-			
+		
+		tabsCtx.strokeRect(20+100*i,9,10,10);
 		tabsCtx.lineWidth = "2";
 		tabsCtx.beginPath();
-		tabsCtx.moveTo(50+100*i,2);
-		tabsCtx.lineTo(75+100*i,2);
-		tabsCtx.lineTo(100+100*i,23);
-		tabsCtx.lineTo(25+100*i,23);
-		tabsCtx.closePath();
+		tabsCtx.moveTo(22+100*i,11);
+		tabsCtx.lineTo(28+100*i,17);
 		tabsCtx.stroke();
-		tabsCtx.lineWidth = "0.5";
-		tabsCtx.strokeText("Tab",50+100*i,17)
-		tabsCtx.strokeText(i+1,70+100*i,17)
+		
+		tabsCtx.beginPath();
+		tabsCtx.moveTo(22+100*i,17);
+		tabsCtx.lineTo(28+100*i,11);
+		tabsCtx.stroke();
+		
+		
+	}
+	if (hoverPlus.selected == true) {
+		tabsCtx.strokeStyle = "blue";
+		tabsCtx.fillStyle = "blue";
+	}
+	else {
+		tabsCtx.strokeStyle = "black";
+		tabsCtx.fillStyle = "black";
 	}
 	tabsCtx.lineWidth = "2";
-	tabsCtx.strokeStyle = "black";
-	tabsCtx.strokeRect(50+100*i,0,25,25);
-	tabsCtx.strokeRect(55+100*i,13,15,1);
-	tabsCtx.strokeRect(62+100*i,5,1,15);
+	tabsCtx.save();
+	if (hoverPlus.selected == true)
+		tabsCtx.fillStyle = linGrdBlue;
+	else 
+		tabsCtx.fillStyle = linGrd;
+		
+	tabsCtx.fillRect(100*i,3,25,22);
+	tabsCtx.strokeRect(100*i,3,25,22);
+	tabsCtx.restore();
+	tabsCtx.fillRect(7.5 +100*i,12.5,10,3);
+	tabsCtx.fillRect(11 +100*i,9,3,10);
 }
 
 function drawNormal(drawModule){
@@ -1984,6 +2410,244 @@ function drawStudy (drawModule)
 	}	
 }
 
+
+function animate(module){
+	Preparing = function(){
+		if (module.lock == false) {
+			setTimeout(function(){
+				module.lock = false;
+				module.status = Status.Preparing;
+				module.message = "Prepare to validate";
+			}, 2000);
+			module.lock = true;
+		}
+		
+	}
+	
+	
+	
+	Validate = function(){
+		//placeholder for validation
+		if (module.lock == false) {
+			module.lock = false;
+			if (isValid == true) 
+				return validationPassed();
+			else 
+				return validationFailed();
+			
+			module.lock = true;
+			
+		}
+	}
+	validationPassed = function(){
+		if (module.lock == false) {
+			setTimeout(function(){
+				module.lock = false;
+				module.status = Status.validationPassed;
+				module.message = "Validation Passed";
+			}, 2000);
+			module.lock = true;
+			
+		}
+	}
+	validationFailed = function(){
+		if (module.lock == false) {
+			setTimeout(function(){
+				module.lock = false;
+				module.status = Status.validationFailed;
+				module.message = "Validation Failed";
+			}, 2000);
+			module.lock = true;
+			
+		}
+	}
+	Waiting = function(){
+		if (module.lock == false) {
+			setTimeout(function(){
+				module.lock = false;
+				module.status = Status.Waiting;
+				module.message = "Waiting";
+			}, 2000);
+			module.lock = true;
+		}
+	}
+	
+	waitingToSubmit = function(){
+		if (module.lock == false) {
+			setTimeout(function(){
+				module.lock = false;
+				module.status = Status.waitingToSubmit;
+				module.message = "Waiting to submit";
+			}, 2000);
+			module.lock = true;
+		}
+	}
+	
+	Submitting = function(){
+		if (module.lock == false) {
+			setTimeout(function(){
+				module.lock = false;
+				module.status = Status.Submitting;
+				module.message = "Submitting";
+			}, 2000);
+			module.lock = true;
+		}
+	}
+	Queued = function(){
+		if (module.lock == false) {
+			setTimeout(function(){
+				module.lock = false;
+				module.status = Status.Queued;
+				module.message = "Queued";
+			}, 2000);
+			module.lock = true;
+			
+		}
+	}
+	Running = function(){
+		if (module.lock == false) {
+			setTimeout(function(){
+				module.lock = false;
+				module.status = Status.Running;
+				module.message = "Running";
+			}, 2000);
+			module.lock = true;
+			
+		}
+	}
+	Complete = function(){
+		if (module.lock == false) {
+			setTimeout(function(){
+			module.lock = false;
+			module.status = Status.Complete;
+			module.message = "Complete";
+			//watch for parallel
+				if (isIncremented == false) {
+					processingLevel++;
+					isIncremented = true;
+				}
+			}, 2000);
+			module.lock = true;
+		}
+	}
+	Paused = function(){
+		module.status = Status.Paused;
+		module.message = "Paused";
+	}
+	Stop = function(){
+		module.status = Status.Stop;
+		module.message = "Stop";
+	}
+	Play = function(){
+		module.status = Status.Play;
+		module.message = "";
+	}
+	
+	Stationary = function(){
+		module.status = Status.Stationary;
+		module.message = "";
+		
+		totalTime = 0;
+		processingLevel = 0;
+		
+		buttonEvent = Status.m_Reset;
+	}
+	
+	switch (buttonEvent) {
+		case Status.Play:
+			switch (module.status) {
+				case Status.Stationary:
+					Preparing();
+					break;
+				case Status.Preparing:
+					Validate();
+					break;
+				case Status.validationPassed:
+					Waiting();
+					break;
+				case Status.validationFailed:
+					Stationary();
+					break;
+				case Status.Waiting:
+					if (module.sequence == processingLevel) {
+						waitingToSubmit();
+					}
+					break;
+				case Status.waitingToSubmit:
+					//if(module.sequence==processingLevel)
+					Submitting();
+					break;
+				case Status.Submitting:
+					Queued();
+					break;
+				case Status.Queued:
+					Running();
+					break;
+				case Status.Running:
+					Complete();
+					break;
+				case Status.Complete:
+					module.isComplete = true;
+					
+					break;
+				default:
+					break;
+			}
+			
+			break;
+		case Status.Paused:
+			Paused();
+			break;
+		case Status.Stop:
+			Stop();
+			break;
+		case Status.m_Reset:
+			Stationary();
+			break;
+			
+		default:
+			break;
+	}
+	
+	ctx.save();
+	ctx.strokeStyle = "gray";
+	ctx.lineWidth = 5;
+	var n = module.radius / 7;
+	var r = 1.2 * module.radius;
+	var rotateR = (Math.PI / 180) * 360 / n;
+	var archRadian = (Math.PI / 180) * (360 / n - 15);
+	var interval = (Math.PI / 180) * 15;
+	
+	//var timer =0;
+	
+	ctx.translate(module.x, module.y);
+	
+	var time = new Date();
+	var sec = time.getSeconds();
+	if (buttonEvent != Status.m_Reset) {
+		for (var rad = 0; rad < 2 * Math.PI; rad += rotateR) {
+			var counter = rad / rotateR;
+			ctx.rotate(rotateR);
+			ctx.beginPath();
+			ctx.arc(0, 0, r, 0, archRadian);
+			if (module.status == Status.Running) {
+				if (sec % n == counter) {
+					ctx.strokeStyle = "blue";
+				}
+			}
+		
+			ctx.stroke();
+			ctx.strokeStyle = "gray";
+		}
+		
+		
+	}
+	ctx.restore();
+	
+	
+	
+	ctx.fillText(module.message, module.x + r, module.y + r);
+}
 
 function clickConnection(x1,y1,x2,y2, fromRotate, toRotate,mouseX,mouseY) {
     var delta_x = x2 - x1;

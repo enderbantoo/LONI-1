@@ -45,7 +45,7 @@
        		You can load a file from the server or on your computer:
             <p></p>
             <strong>Server:</strong> <br />
-            <!--#include file="load_xml.jsp"-->
+            <%@ include file="load_xml.jsp" %>
          <p></p>
             Your computer: <input name="xml_file_load" type="file" size="30" /> 
             <input type="submit" value="Load file" />
@@ -61,6 +61,12 @@
          This text is displayed if your browser does not support HTML5 Canvas.
         </canvas>
 		</div>
+		<div>
+			<FORM NAME="animForm">
+			<INPUT TYPE=button VALUE=Start NAME="animButton" onClick=buttonCheck()>
+			<INPUT TYPE=button VALUE=Stop NAME="resetButton" onClick=buttonCheck_2()>
+			</FORM>
+		</div>
       <p>&nbsp;</p>
 	  <script type="text/javascript" src="js/connection.js"></script>
       </section>
@@ -72,6 +78,6 @@
 <div id="footer">
 Copyright &copy; 2011 UCLA | All rights reserved
 </div>
-<%@ include file="dialogs.html" %>
+<%@ include file="dialogs.jsp" %>
 </body>
 </html>
