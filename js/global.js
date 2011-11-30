@@ -84,9 +84,7 @@ $(document).ready( function() {
 		$('#loadFormDiv').slideToggle();
 	});	
 	
-	
 	var optionsSaveXML = {
-		url: 'test.jsp',
 		beforeSubmit: function() {
 				Spinners.create('#spinner', {
 					radii: [4,8],
@@ -104,7 +102,7 @@ $(document).ready( function() {
 			}
 	};
 	
-	var optionsLoadXML = {
+	var optionsLoadXml = {
 		beforeSubmit: function() {
 		  Spinners.create('#spinner', {
 			  radii: [4,8],
@@ -121,8 +119,9 @@ $(document).ready( function() {
 		}
 	};
 	
-	$('#SaveXmlForm').ajaxForm(optionsSaveXML);
-	$('#LoadXMLForm').ajaxForm(function(){});
+	$('#SaveXmlForm').ajaxForm(function(){});
+	$('#LoadXmlForm').ajaxForm(function(){});
+	
 	
 	// buttons
 	//$("input:button").button();
