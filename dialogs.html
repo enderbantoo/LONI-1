@@ -43,14 +43,14 @@
     </div>
     
     <div id="parameters-tab">
-   	  <div style="float: left; width: 140px;">Parameter Name</div>
-      <div style="float: left; width: 120px;">Type</div>
-      <div style="float: left; width: 80px;">State</div>
-      <div style="float: left; width: 60px;">Required</div>
-      <div style="float: left; width: 40px;">Input</div>
+   	  <div style="width: 140px;" class="para-title">Parameter Name</div>
+      <div style=" width: 120px;" class="para-title">Type</div>
+      <div style="width: 80px;" class="para-title">State</div>
+      <div style="width: 60px;" class="para-title">Required</div>
+      <div style="width: 40px;" class="para-title">Input</div>
         <div style="clear: both;"></div>
       <div id="module-paraWrapper">
-      <div class='module-para2Copy'>
+      <div class='para2Copy' style="padding: 2px; text-align: center;">
         <div style='float: left; width: 140px;'><input name="parameterName" type="text" id="parameterName" style='width: 120px;'/></div>
         <div style='float: left; width: 120px;'><select name="fileTypes" id="fileTypes">
               <option value="Directory" selected="selected">Directory</option>
@@ -61,17 +61,17 @@
               <option value="Flow Control">Flow Control</option>
         </select></div>
         <div style='float: left; width: 80px;'><select name="state" id="state">
-              <option value="Enabled" selected="selected">Enabled</option>
-              <option value="Disabled">Disabled</option>  	
-            </select>
+              <option value="Enabled">Enabled</option>
+              <option value="Exported">Exported</option>
+        </select>
             </div>
         <div style='float: left; width: 60px;'><input name="required" type="checkbox" value="true" id="required" /></div>
         <div style='float: left; width: 40px;'><input name="input" type="checkbox" value="true" id="input" /></div>
-			<div style='clear: both;'></div>
-        </div>            
+		<div style='clear: both;'></div>
+      </div>            
       </div>
        <input name="removeParaButton" type="button" id="removeParaButton" value="Remove" />
-       <input name="AddParaButton" type="button" id="AddParaButton" value="Add" />
+       <input name="addParaButton" type="button" id="addParaButton" value="Add" />
     </div>
     
     <div id="execution-tab" class="tabs">
@@ -258,7 +258,35 @@
       </fieldset>
     </div>
     <div id="parameters-tab">
-    	This section is currenly unavailable.
+    	<div style="width: 140px;" class="para-title">Parameter Name</div>
+      <div style=" width: 120px;" class="para-title">Type</div>
+      <div style="width: 80px;" class="para-title">State</div>
+      <div style="width: 60px;" class="para-title">Required</div>
+      <div style="width: 40px;" class="para-title">Input</div>
+        <div style="clear: both;"></div>
+      <div id="conditional-paraWrapper">
+      <div class='para2Copy' style="padding: 2px; text-align: center;">
+        <div style='float: left; width: 140px;'><input name="parameterName" type="text" id="parameterName" style='width: 120px;'/></div>
+        <div style='float: left; width: 120px;'><select name="fileTypes" id="fileTypes">
+              <option value="Directory" selected="selected">Directory</option>
+              <option value="Enumerated">Enumerated</option>
+              <option value="File">File</option>
+              <option value="Number">Number</option>
+              <option value="String">String</option>
+              <option value="Flow Control">Flow Control</option>
+        </select></div>
+        <div style='float: left; width: 80px;'><select name="state" id="state">
+              <option value="Enabled">Enabled</option>
+              <option value="Exported">Exported</option>
+        </select>
+            </div>
+        <div style='float: left; width: 60px;'><input name="required" type="checkbox" value="true" id="required" /></div>
+        <div style='float: left; width: 40px;'><input name="input" type="checkbox" value="true" id="input" /></div>
+		<div style='clear: both;'></div>
+      </div>            
+      </div>
+       <input name="conditional-removeParaButton" type="button" id="conditional-removeParaButton" value="Remove" />
+       <input name="conditional-addParaButton" type="button" id="conditional-addParaButton" value="Add" />
     </div>
     <div id="conditions-tab">
     	<fieldset>

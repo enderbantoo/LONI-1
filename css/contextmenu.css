@@ -1,4 +1,12 @@
-﻿.b-m-mpanel {
+﻿.para-title {
+	text-align: center;
+	font-weight: bold;
+	float: left;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.b-m-mpanel {
 	cursor: default;
 	background: #F0F0F0;
 	border: 1px solid #718BB7;

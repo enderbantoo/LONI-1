@@ -22,12 +22,10 @@
         <div style="clear: both;"></div>
     </div>    
 	<p>&nbsp;</p>
-    
-
     <div style="width: 700px; margin: auto">
       <span class="page-title">Canvas</span><br />
       <div>
-      	<div style="float: left">
+      	<div style="float: left;">
           <img src="img/save.png" alt="Save" width="16" height="16" align="absmiddle" /> <span id="save" class="link">Save</span> | <img src="img/load.png" alt="Load a file" width="16" height="16" align="absmiddle" />
           <span id="load-xml" class="link">Load an XML file</span>
         </div>
@@ -35,23 +33,25 @@
       </div>
       <div style="clear: both;"></div>
       <div id="responseAjax"></div>
-      <div id="saveForm">
-      <form action="save.jsp"
-enctype="multipart/form-data" method="post" id='SaveXmlForm'>
+      <div id="saveFormDiv" class='yellowWrapper'>
+      <form id="SaveXmlForm" method="post">
       	<label>File name: </label><input type="text" id="xml_file" />
       .xml 
-       <input name="Save" type="button" id="saveXMLButton" value="Save" />
+       <input type="submit" value="Save" />
        </form>
       </div>
-       <div id='loadXmlForm'>
+       <div id="loadFormDiv" class="yellowWrapper">
+       	<form id="LoadXmlForm" method="post">
        		You can load a file from the server or on your computer:
             <p></p>
             <strong>Server:</strong> <br />
             <!--#include file="load_xml.jsp"-->
          <p></p>
             Your computer: <input name="xml_file_load" type="file" size="30" /> 
-            <input name="loadFileButton" type="button" id="loadFileButton" value="Load file" />
-       </div>       
+            <input type="submit" value="Load file" />
+          </form>
+       </div> 
+       <div style="clear: both; height: 30px;"></div>   
        <section>
        	<canvas id="tabsCanvas" width="700" height="25">
          This text is displayed if your browser does not support HTML5 Canvas.

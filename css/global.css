@@ -5,11 +5,17 @@ body {
     margin: 0px;
 }
 
-.highlight {
-	background-color: #CCC;
+.yellowWrapper {
+	background-color: #FFFFE6;
+	padding: 10px;
+	border: solid #FC0;
 }
 
-#saveForm, #loadXmlForm {
+.highlight {
+	background-color: #EFEFEF;
+}
+
+#saveFormDiv, #loadFormDiv {
 	display: none;
 }
 
