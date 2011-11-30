@@ -965,12 +965,14 @@ function rotateModule()
 }
 
 
-function connection(fromIndex,outputIndex,toIndex,inputIndex)
+function connection(fromIndex,outputIndex,toIndex,inputIndex, isTrue, isFalse)
 {
 	this.fromIndex = fromIndex;
 	this.outputIndex = outputIndex;
 	this.toIndex = toIndex;
 	this.inputIndex = inputIndex;
+	this.isTrue = isTrue;
+	this.isFalse = isFalse;
 }
 
 function fillConnectionsArray()
@@ -982,29 +984,52 @@ function fillConnectionsArray()
 		{
 			myModules[i].inputs[j].inputIndex = j;	
 		}
-		for (var j = 0; j < myModules[i].outputs.length;j++)
-		{
-			myModules[i].outputs[j].outputIndex = j;
+		if (myModules[i].type != "conditional") {
+			for (var j = 0; j < myModules[i].outputs.length; j++) {
+				myModules[i].outputs[j].outputIndex = j;
+			}
 		}
-		for (var j = 0; j < myModules[i].outputsTrue.length;j++)
-		{
-			myModules[i].outputsTrue[j].outputIndex = j;
-		}
-		for (var j = 0; j < myModules[i].outputsFalse.length;j++)
-		{
-			myModules[i].outputsFalse[j].outputIndex = j;
+		else {
+			for (var j = 0; j < myModules[i].outputsTrue.length; j++) {
+				myModules[i].outputsTrue[j].outputIndex = j;
+			}
+			for (var j = 0; j < myModules[i].outputsFalse.length; j++) {
+				myModules[i].outputsFalse[j].outputIndex = j;
+			}
 		}
 		
 	}
 	myConnections.splice(0,myConnections.length);
 	for (var i =0; i < myModules.length;i++)
 	{
-		for (var j = 0; j < myModules[i].outputs.length; j++) {
-		
-			for (var k = 0; k < myModules[i].outputs[j].inputsConnectedTo.length; k++) {
-				if (myModules[i].outputs[j].inputsConnectedTo[k] != null) {
-						var newConnection = new connection(i,j,myModules[i].outputs[j].inputsConnectedTo[k].parentModule.conIndex,outputs[j].inputsConnectedTo[k].inputIndex)
+		if (myModules[i].type != "conditional") {
+			for (var j = 0; j < myModules[i].outputs.length; j++) {
+			
+				for (var k = 0; k < myModules[i].outputs[j].inputsConnectedTo.length; k++) {
+					if (myModules[i].outputs[j].inputsConnectedTo[k] != null) {
+						var newConnection = new connection(i, j, myModules[i].outputs[j].inputsConnectedTo[k].parentModule.conIndex, myModules[i].outputs[j].inputsConnectedTo[k].inputIndex, false, false)
 						myConnections.push(newConnection)
+					}
+				}
+			}
+		}
+		else {
+			for (var j = 0; j < myModules[i].outputsTrue.length; j++) {
+			
+				for (var k = 0; k < myModules[i].outputsTrue[j].inputsConnectedTo.length; k++) {
+					if (myModules[i].outputsTrue[j].inputsConnectedTo[k] != null) {
+						var newConnection = new connection(i, j, myModules[i].outputsTrue[j].inputsConnectedTo[k].parentModule.conIndex, myModules[i].outputsTrue[j].inputsConnectedTo[k].inputIndex, true, false)
+						myConnections.push(newConnection)
+					}
+				}
+			}
+			for (var j = 0; j < myModules[i].outputsFalse.length; j++) {
+			
+				for (var k = 0; k < myModules[i].outputsFalse[j].inputsConnectedTo.length; k++) {
+					if (myModules[i].outputsFalse[j].inputsConnectedTo[k] != null) {
+						var newConnection = new connection(i, j, myModules[i].outputsFalse[j].inputsConnectedTo[k].parentModule.conIndex, myModules[i].outputsFalse[j].inputsConnectedTo[k].inputIndex, false, true)
+						myConnections.push(newConnection)
+					}
 				}
 			}
 		}
@@ -1013,7 +1038,7 @@ function fillConnectionsArray()
 
 function fillConnections()
 {
-	
+	return;
 }
 //============================================
 //        Mouse Manipulations

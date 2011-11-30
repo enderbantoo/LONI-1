@@ -1,33 +1,17 @@
 // dialog	
-var openModuleDialog = function(){
+var openDialog = function(){
 	$("#module-dialog").dialog("open");
 };
-
-var openDataSourceDialog = function() {
-	$('#data-source-dialog').dialog('open');
-}
-
-var openDataSinkDialog = function() {
-	$('data-sink-dialog').dialog('open');
-}
-
-var openStudyDialog = function() {
-	$('study-dialog').dialog('open');
-}
-
-var openConditionalDialog = function() {
-	$('conditional-dialog').dialog('open');
-}
 
 // context menus
 var option = { width: 150, items: [
 				{ text: "New", icon: "", alias: "new", action: menuAction, type: "group", width: 170, items: [
-					{ text: "Modules...", icon: "", alias: "ctm_modules", action: openModuleDialog },
+					{ text: "Modules...", icon: "", alias: "ctm_modules", action: openDialog },
 					{ type: "splitLine" },
-					{ text: "Data source", icon: "", alias: "ctm_data_source", action: openDataSourceDialog },
-					{ text: "Data sink", icon: "", alias: "ctm_data_sink", action: openDataSinkDialog },
-					{ text: "Study...", icon: "", alias: "ctm_study", action: openStudyDialog },
-					{ text: "Conditional...", icon: "", alias: "ctm_conditional", action: openConditionalDialog }
+					{ text: "Data source", icon: "", alias: "ctm_data_source", action: ctm_data_source },
+					{ text: "Data sink", icon: "", alias: "ctm_data_sink", action: ctm_data_sink },
+					{ text: "Study...", icon: "", alias: "ctm_study", action: ctm_study },
+					{ text: "Conditional...", icon: "", alias: "ctm_conditional", action: ctm_conditional }
 				]},
 				{ type: "splitLine" },
 				{ text: "Delete", icon: "", alias: "ctm_cut", action: cutModule },
@@ -39,134 +23,76 @@ var option = { width: 150, items: [
 			]
 };
 
-function ctm_copy() {
-	copyModules.splice(0,copyModules.length);
+function ctm_copy(){
+	copyModules.splice(0, copyModules.length);
+	//copy connections
+	fillConnectionsArray();
 	
-	
-	for (i=0;i<myModules.length;i++)
-	{
+	for (var i = 0; i < myModules.length; i++) {
 		if (myModules[i].selected == true) {
-			
+		
 			myModules[i].groupMoveOffsetX = testMouse.X - myModules[i].x;
 			myModules[i].groupMoveOffsetY = testMouse.Y - myModules[i].y;
 			
 			var last = copyModules.length;
-			copyModules[last]=new module;
-			copyModules[last].copy(myModules[i]);	
+			copyModules[last] = new module;
+			copyModules[last].copy(myModules[i]);
 			
-			copyModules[last].outputs.splice(0,copyModules[last].outputs.length);
-			copyModules[last].outputsTrue.splice(0,copyModules[last].outputsTrue.length);
-			copyModules[last].outputsFalse.splice(0,copyModules[last].outputsFalse.length);
-			copyModules[last].copiedIndex = i;
-			
-			//copy connections
-			/*switch(myModules[i].type)
-			{
-			case "normal":
-			case "source":
-			case "study":
-				for (k=0;k<myModules[i].outputs.length;k++)
-				{
-					if (myModules[myModules[i].outputs[k]].selected == true)
-					{
-						copyModules[last].outputs[copyModules[last].outputs.length] = myModules[i].outputs[k];
-					}
-				}
-				break;
-				
-			case "conditional":
-				for (k=0;k<myModules[i].outputsTrue.length;k++)
-				{
-					if (myModules[myModules[i].outputsTrue[k]].selected == true)
-					{
-						copyModules[last].outputsTrue[copyModules[last].outputsTrue.length] = myModules[i].outputsTrue[k];
-					}
-				}				
-				
-				for (k=0;k<myModules[i].outputsFalse.length;k++)
-				{
-					if (myModules[myModules[i].outputsFalse[k]].selected == true)
-					{
-						copyModules[last].outputsFalse[copyModules[last].outputsFalse.length] = myModules[i].outputsFalse[k];
-					}
-				}
-				break;
-			}*/
+			myModules[i].copiedIndex = last;
 		}
 	}
-	
-	//fix outputs
-	/*for (i=0;i<copyModules.length;i++)
+	/*function connection(fromIndex,outputIndex,toIndex,inputIndex, isTrue, isFalse)
+{
+	this.fromIndex = fromIndex;
+	this.outputIndex = outputIndex;
+	this.toIndex = toIndex;
+	this.inputIndex = inputIndex;
+	this.isTrue = isTrue;
+	this.isFalse = isFalse;
+}*/
+	for (var i = 0; i < myConnections.length; i++)
 	{
-		for (k=0;k<copyModules[i].outputs.length;k++)
-		{
-			for (j=0;j<copyModules.length;j++)
-			{
-				if (copyModules[i].outputs[k] == copyModules[j].copiedIndex)
-					copyModules[i].outputs[k]=j;
+		if (myConnections[i].isTrue == false && myConnections[i].isFalse == false) {
+			if (myModules[myConnections[i].fromIndex].selected == true && myModules[myConnections[i].toIndex].selected == true) {
+				copyModules[myModules[myConnections[i].fromIndex].copiedIndex].outputs[myConnections[i].outputIndex].connectOut(copyModules[myModules[myConnections[i].toIndex].copiedIndex].inputs[myConnections[i].inputIndex]);
 			}
 		}
-		
-		for (k=0;k<copyModules[i].outputsTrue.length;k++)
-		{
-			for (j=0;j<copyModules.length;j++)
-			{
-				if (copyModules[i].outputsTrue[k] == copyModules[j].copiedIndex)
-					copyModules[i].outputsTrue[k]=j;
+		else if (myConnections[i].isTrue == true) {
+			if (myModules[myConnections[i].fromIndex].selected == true && myModules[myConnections[i].toIndex].selected == true) {
+				copyModules[myModules[myConnections[i].fromIndex].copiedIndex].outputsTrue[myConnections[i].outputIndex].connectOut(copyModules[myModules[myConnections[i].toIndex].copiedIndex].inputs[myConnections[i].inputIndex]);
 			}
 		}
-		
-		for (k=0;k<copyModules[i].outputsFalse.length;k++)
+		else //myConnections[i].isfalse == true
 		{
-			for (j=0;j<copyModules.length;j++)
-			{
-				if (copyModules[i].outputsFalse[k] == copyModules[j].copiedIndex)
-					copyModules[i].outputsFalse[k]=j;
+			if (myModules[myConnections[i].fromIndex].selected == true && myModules[myConnections[i].toIndex].selected == true) {
+				copyModules[myModules[myConnections[i].fromIndex].copiedIndex].outputsFalse[myConnections[i].outputIndex].connectOut(copyModules[myModules[myConnections[i].toIndex].copiedIndex].inputs[myConnections[i].inputIndex]);
 			}
 		}
-	}*/
-	
-	
-		
+	}
 }
 
 function ctm_select_all()
 {
-	for (i=0;i<myModules.length;i++)
+	for (var i=0;i<myModules.length;i++)
 	{
 		myModules[i].selected = true;
 	}
 }
 
 function ctm_paste() {
-	for (i = 0; i < myModules.length; i++) {
+	for (var i = 0; i < myModules.length; i++) {
 		myModules[i].selected = false;
 	}
 	
 	var previousLength = myModules.length;
 	
-	for(i=0;i<copyModules.length;i++)
+	
+	for(var i=0;i<copyModules.length;i++)
 	{
 		var last = myModules.length;
-		myModules[last] = new module;
-		myModules[last].copy(copyModules[i]);
+		myModules.push(copyModules[i]);
 		myModules[last].x=testMouse.X-copyModules[i].groupMoveOffsetX;
 		myModules[last].y=testMouse.Y-copyModules[i].groupMoveOffsetY;
-		
-		/*for(k=0;k<copyModules[i].outputs.length;k++)
-		{
-			myModules[last].outputs[k]+= previousLength;
-		}
-		
-		for(k=0;k<copyModules[i].outputsTrue.length;k++)
-		{
-			myModules[last].outputsTrue[k]+=previousLength;
-		}
-		
-		for(k=0;k<copyModules[i].outputsFalse.length;k++)
-		{
-			myModules[last].outputsFalse[k]+=previousLength;
-		}*/
 	}
 	for (var i = 0;i < myModules.length; i++)
 	{
@@ -203,6 +129,7 @@ function ctm_paste() {
 	{
 		myModules[i].selected = true;
 	}
+	fixBoundaries();
 	
 }
 
@@ -233,7 +160,7 @@ function ctm_conditional() {
 }		
 
 function cutModule() {
-	for (c=0;c<myModules.length;c++)
+	for (var c=0;c<myModules.length;c++)
 	{
 		if (myModules[c].selected == true) {
 			deleteModule(c);
@@ -260,7 +187,7 @@ function cutModule() {
 }
 
 function ctm_rotate() {
-	for (c = 0; c < myModules.length;c++)
+	for (var c = 0; c < myModules.length;c++)
 	{
 		if (myModules[c].selected == true) {
 			myModules[c].rotateModule();
