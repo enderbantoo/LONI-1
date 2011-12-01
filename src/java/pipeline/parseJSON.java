@@ -16,7 +16,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import javax.xml.bind.JAXBException;
-import pipeline.jaxb.Pipeline;
+import pipeline.client.Package;
 
 
 public class parseJSON extends HttpServlet{
@@ -25,25 +25,25 @@ public class parseJSON extends HttpServlet{
         throws IOException, ServletException
     {
 
-        Pipeline root = json.decodeJSON(request.getInputStream().toString());
+        Package root = json.decodeJSON(request.getInputStream().toString());
 
         
         
         //TODO
-        
+        response.sendError(404, "SERVER NOT COMPLETE");
         
         
         OutputStream output;
-        try
+        //try
         {
-            output = xml.writeXML(root);
+            //output = xml.writeXML(root);
         }
-        catch(JAXBException e)
+        //catch(JAXBException e)
         {
-            response.sendError(400, e.toString());
-            return;
+            //response.sendError(400, e.toString());
+            //return;
         }
         java.io.PrintWriter out = response.getWriter();
-        out.print(output);
+        //out.print(output);
     }
 }

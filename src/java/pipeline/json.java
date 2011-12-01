@@ -11,23 +11,30 @@ package pipeline;
 import org.codehaus.jackson.map.ObjectMapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import org.codehaus.jackson.map.AnnotationIntrospector;
 
-import pipeline.jaxb.Pipeline;
+import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
+import pipeline.client.Package;
 
 public class json {
     
-    public static String encodeJSON(Pipeline pipe) throws IOException
+    public static String encodeJSON(Package pipe) throws IOException
     {
         ObjectMapper mapper = new ObjectMapper();
         ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+        mapper.configure(org.codehaus.jackson.map.SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+        //Use JAXB introspector for JSON.
+        AnnotationIntrospector intro = new JaxbAnnotationIntrospector();
+        mapper = mapper.setAnnotationIntrospector(intro);
         mapper.writeValue(ostream, pipe);
+        
         return ostream.toString();
     }
     
-    public static Pipeline decodeJSON(String jsonString) throws IOException
+    public static Package decodeJSON(String jsonString) throws IOException
     {
         
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(jsonString, Pipeline.class);
+        return mapper.readValue(jsonString, Package.class);
     }
 }

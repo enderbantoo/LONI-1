@@ -37,6 +37,7 @@ public class xml {
         
         JAXBContext context = JAXBContext.newInstance("pipeline.jaxb");
         Marshaller marshal = context.createMarshaller();
+        marshal.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshal.marshal(infile, ostream);
         
         return ostream;
