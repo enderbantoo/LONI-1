@@ -86,15 +86,22 @@ public class Module {
         
         //Authors init
         this.Authors = new ArrayList<Author>();
-        for (pipeline.jaxb.Authors author : mod.getAuthors())
+        for (pipeline.jaxb.Authors authors : mod.getAuthors())
         {
-            this.Authors.add(new Author(author));
+            for (pipeline.jaxb.Author author : authors.getAuthor())
+            {
+                this.Authors.add(new Author(author));
+            }
+            
         }
 
         this.executableAuthors = new ArrayList<Author>();
-        for (pipeline.jaxb.Authors author : mod.getExecutableAuthors())
+        for (pipeline.jaxb.Authors authors : mod.getExecutableAuthors())
         {
-            this.Authors.add(new Author(author));
+            for (pipeline.jaxb.Author author : authors.getAuthor())
+            {
+                this.executableAuthors.add(new Author(author));
+            }
         }
         
         //Inputs
@@ -153,11 +160,14 @@ public class Module {
         
         //Authors init
         this.Authors = new ArrayList<Author>();
-        for (pipeline.jaxb.Authors author : mod.getAuthors())
+        for (pipeline.jaxb.Authors authors : mod.getAuthors())
         {
-            this.Authors.add(new Author(author));
+            for (pipeline.jaxb.Author author : authors.getAuthor())
+            {
+                this.Authors.add(new Author(author));
+            }
+            
         }
-        
         //Everything else
         
         //TODO COMMENTED OUT CODE DUN EXIST IN DATAMODULE
@@ -190,15 +200,22 @@ public class Module {
         
         //Authors init
         this.Authors = new ArrayList<Author>();
-        for (pipeline.jaxb.Authors author : mod.getAuthors())
+        for (pipeline.jaxb.Authors authors : mod.getAuthors())
         {
-            this.Authors.add(new Author(author));
+            for (pipeline.jaxb.Author author : authors.getAuthor())
+            {
+                this.Authors.add(new Author(author));
+            }
+            
         }
 
         this.executableAuthors = new ArrayList<Author>();
-        for (pipeline.jaxb.Authors author : mod.getExecutableAuthors())
+        for (pipeline.jaxb.Authors authors : mod.getExecutableAuthors())
         {
-            this.Authors.add(new Author(author));
+            for (pipeline.jaxb.Author author : authors.getAuthor())
+            {
+                this.executableAuthors.add(new Author(author));
+            }
         }
         
         //Inputs
@@ -255,9 +272,13 @@ public class Module {
         
         //Authors init
         this.Authors = new ArrayList<Author>();
-        for (pipeline.jaxb.Authors author : mod.getAuthors())
+        for (pipeline.jaxb.Authors authors : mod.getAuthors())
         {
-            this.Authors.add(new Author(author));
+            for (pipeline.jaxb.Author author : authors.getAuthor())
+            {
+                this.Authors.add(new Author(author));
+            }
+            
         }
         
         

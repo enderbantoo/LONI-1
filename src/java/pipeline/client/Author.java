@@ -13,7 +13,7 @@ public class Author {
     protected String email;
     protected String website;
     
-    public Author(pipeline.jaxb.Authors author)
+    public Author(pipeline.jaxb.Author author)
     {
         this.fullName = author.getFullName();
         this.email = author.getEmail();
