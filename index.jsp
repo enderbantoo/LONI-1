@@ -62,7 +62,7 @@
         </canvas>
 		</div>
 		<div>
-			<canvas id="buttonsCanvas" width ="700" height="100">
+			<canvas id="buttonsCanvas" width ="700" height="50">
 				This text is displayed if your browser does not support HTML5 Canvas.
 			</canvas>
 		</div>

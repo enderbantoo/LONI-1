@@ -49,44 +49,11 @@ var Status = {      Preparing    :0,
 					
 						}
 var buttonEvent = Status.m_Reset;
-//var totalState  = Status.Stationary;
 var totalTime  =0;
-var processingLevel =0;
+var processingLevel =1;
 var isValid = true;
 var isIncremented = false;
-		 
-function buttonCheck() {
-    if(buttonDataOne.value == "Start") {
-		setAnimationOrder();
-        buttonDataOne.value = "Pause";
-        buttonEvent = Status.Play;
-
-    } else {
-        buttonDataOne.value = "Start";
-        buttonEvent = Status.Paused;
-    }
-}
-
-function buttonCheck_2() {
-    if(buttonDataTwo.value == "Stop") {
-        buttonDataTwo.value = "Reset";
-        buttonEvent = Status.Stop;
-
-    } else {
-		//resetting
-		buttonDataOne.value = "Start";
-		for (var i = 0; i < myModules.length;i++)
-		{
-			myModules[i].status = Status.Stationary;
-			var processingLevel =0;
-			var isValid = true;
-			var isIncremented = false;
-		 
-		}
-        buttonDataTwo.value = "Stop";
-        buttonEvent = Status.m_Reset;
-    }
-}		 
+		 		 
 //object literals
 
 buttonDataOne = {
@@ -138,9 +105,9 @@ canvas.onmousemove = captureMousePosition; //'capture mouse saves mouse position
 tabsCanvas.onmousemove = tabsMouseHover;
 tabsCanvas.onmousedown = tabsMouseDown;
 tabsCanvas.onmouseup = tabsMouseUp;
-buttonsCanvas.onmouseMove = buttonHover;
-buttonsCanvas.onmouseDown = buttonMouseDown;
-buttonsCanvas.onmouseMove = buttonMouseUp;
+buttonsCanvas.onmousemove = buttonHover;
+buttonsCanvas.onmousedown = buttonMouseDown;
+buttonsCanvas.onmouseup = buttonMouseUp;
 //class variables
 function module(x,y,type,input,output)
  {
@@ -651,15 +618,19 @@ function findMaxY()
 //=============================================
 function buttonMouseDown(e)
 {
-	if (e.pageX < 300 + buttonsCanvas.offsetLeft &&
-	    e.pageX > 200 + buttonsCanvas.offsetLeft)
+	if (e.pageX < 420 + buttonsCanvas.offsetLeft &&
+	    e.pageX > 360 + buttonsCanvas.offsetLeft &&
+		e.pageY > 0.2*(e.pageX - 360 - buttonsCanvas.offsetLeft) + buttonsCanvas.offsetTop &&
+		e.pageY < -0.2*(e.pageX - 360 - buttonsCanvas.offsetLeft)+ buttonsCanvas.offsetTop + 40)
 	{
 		buttonCheck();
 	}
-	else if (e.pageX < 400 + buttonsCanvas.offsetLeft &&
-	    e.pageX > 300 + buttonsCanvas.offsetLef)
+	else if (e.pageX < 340 + buttonsCanvas.offsetLeft &&
+	    e.pageX > 280 + buttonsCanvas.offsetLeft &&
+		e.pageY < 0.2*(e.pageX - 280 - buttonsCanvas.offsetLeft) + buttonsCanvas.offsetTop + 26 &&
+		e.pageY > -0.2*(e.pageX - 280 - buttonsCanvas.offsetLeft)+ buttonsCanvas.offsetTop + 14)
 	{
-		buttonCheck2();
+		buttonCheck_2();
 	}
 	return;	
 }
@@ -669,14 +640,14 @@ function buttonMouseUp(e)
 }
 function buttonHover(e)
 {
-	if (e.pageX < 300 + buttonsCanvas.offsetLeft &&
-	    e.pageX > 200 + buttonsCanvas.offsetLeft)
+	if (e.pageX < 440 + buttonsCanvas.offsetLeft &&
+	    e.pageX > 360 + buttonsCanvas.offsetLeft)
 	{
 		buttonDataOne.hovered = true;
 		buttonDataTwo.hovered = false;
 	}
-	else if (e.pageX < 400 + buttonsCanvas.offsetLeft &&
-	    e.pageX > 300 + buttonsCanvas.offsetLeft)
+	else if (e.pageX < 340 + buttonsCanvas.offsetLeft &&
+	    e.pageX > 260 + buttonsCanvas.offsetLeft)
 	{
 		buttonDataOne.hovered = false;
 		buttonDataTwo.hovered = false;
@@ -688,7 +659,40 @@ function buttonHover(e)
 	}
 }
 
+function buttonCheck() {
+    if(buttonDataOne.value == "Start") {
+		setAnimationOrder();
+        buttonDataOne.value = "Pause";
+        buttonEvent = Status.Play;
+		isValid=true;
 
+    } else {
+        buttonDataOne.value = "Start";
+        buttonEvent = Status.Paused;
+    }
+}
+
+function buttonCheck_2() {
+    if(buttonDataTwo.value == "Stop") {
+        buttonDataTwo.value = "Reset";
+        buttonEvent = Status.Stop;
+		buttonDataOne.value = "Start";
+
+    } else {
+		//resetting
+		buttonDataOne.value = "Start";
+		for (var i = 0; i < myModules.length;i++)
+		{
+			myModules[i].status = Status.Stationary;
+			processingLevel =1;
+			isValid = true;
+			isIncremented = false;
+		 
+		}
+        buttonDataTwo.value = "Stop";
+        buttonEvent = Status.m_Reset;
+    }
+}
  //============================================
  //        Module Manipulations
  //============================================
@@ -1987,16 +1991,32 @@ function draw(){
 	
 	//Create inner play traingle gradient
     var playILG = buttonsCtx.createLinearGradient(-innerPw/2.2,-innerPh/2.2,innerPw/2.2,innerPh/2.2);
-    playILG.addColorStop(0, "#8491C8"); 
-    playILG.addColorStop(0.50, "#98A1D0"); 
-    playILG.addColorStop(1,"#AEB3DA");
-	
+    if (buttonDataOne.hovered == false) {
+		playILG.addColorStop(0, "#8491C8");
+		playILG.addColorStop(0.50, "#98A1D0");
+		playILG.addColorStop(1, "#AEB3DA");
+	}
+	else
+	{
+		playILG.addColorStop(0, "#8491C8");
+		playILG.addColorStop(0.50, "#98A1D0");
+		playILG.addColorStop(1, "#AEB3DA");
+	}
 	//Create inner pause gradient
 	var pauseILG = buttonsCtx.createLinearGradient(-pauseW/2.2,-pauseH/2.2,pauseW/2.2,pauseH/2.2);
-    playILG.addColorStop(0, "#8491C8"); 
-    playILG.addColorStop(0.50, "#98A1D0"); 
-    playILG.addColorStop(1,"#AEB3DA");
-    
+   	if (buttonDataOne.hovered == false) {
+		pauseILG.addColorStop(0, "#8491C8");
+		pauseILG.addColorStop(0.50, "#98A1D0");
+		pauseILG.addColorStop(1, "#AEB3DA");
+	}
+	else
+	{
+		pauseILG.addColorStop(0, "#8491C8");
+		pauseILG.addColorStop(0.50, "#98A1D0");
+		pauseILG.addColorStop(1, "#AEB3DA");
+	}
+	
+	
     //outer Arc radius
     var r = height/6.5;
 	//inner arc radius
@@ -2025,8 +2045,8 @@ function draw(){
 	
 	//Draw inner shapes depending on run status
 	//TODO: How do you check if the animation is playing?
-	var isPlaying = false;
-	if (!isPlaying){
+	
+	if (buttonDataOne.value == "Start"){
 		//Draw inner play button
 		buttonsCtx.beginPath();
 		buttonsCtx.moveTo(innerPO-innerPw/2,innerRad+innerOY);
@@ -2074,10 +2094,17 @@ function draw(){
 	
 	//Create inner stop rect gradient
     var stopILG = buttonsCtx.createLinearGradient(-innerSw/2.2,-innerSh/2.2,innerSw/2.2,innerSh/2.2);
-    stopILG.addColorStop(0, "#8491C8"); 
-    stopILG.addColorStop(0.50, "#98A1D0"); 
-    stopILG.addColorStop(1,"#AEB3DA");
-    
+    if (buttonDataTwo.hovered == false) {
+		stopILG.addColorStop(0, "#8491C8");
+		stopILG.addColorStop(0.50, "#98A1D0");
+		stopILG.addColorStop(1, "#AEB3DA");
+	}
+	else
+	{
+		stopILG.addColorStop(0, "#8491C8");
+		stopILG.addColorStop(0.50, "#98A1D0");
+		stopILG.addColorStop(1, "#AEB3DA");
+	}
     //outer Arc radius
     var sr = sh/6.5;
 	//inner arc radius
@@ -2090,35 +2117,37 @@ function draw(){
 	var innerSOY = (sh-innerSh);   //y offset
 	
 	//Draw outer stop button
-	buttonsCtx.beginPath();
-    buttonsCtx.moveTo(playSOffset+width/2,r);
-    buttonsCtx.arcTo(playSOffset+width/2,0,playSOffset-width/2-r,0,r);
-    buttonsCtx.arcTo(playSOffset-width/2,height/2,playSOffset+width/2+r,height,r);
-    buttonsCtx.arcTo(playSOffset+width/2,height,playSOffset+width/2,r,r);
-    buttonsCtx.fillStyle = stopOLG;
-    buttonsCtx.fill();
+		buttonsCtx.beginPath();
+		buttonsCtx.moveTo(playSOffset + width / 2, r);
+		buttonsCtx.arcTo(playSOffset + width / 2, 0, playSOffset - width / 2 - r, 0, r);
+		buttonsCtx.arcTo(playSOffset - width / 2, height / 2, playSOffset + width / 2 + r, height, r);
+		buttonsCtx.arcTo(playSOffset + width / 2, height, playSOffset + width / 2, r, r);
+		buttonsCtx.fillStyle = stopOLG;
+		buttonsCtx.fill();
 	
 	//Draw inner stop button
-	buttonsCtx.beginPath();                        
-	buttonsCtx.moveTo(innerSO-innerSw/2,innerSOY-innerSh/2+innerSRad);
-	buttonsCtx.arcTo(innerSO-innerSw/2,innerSOY-innerSh/2,innerSO+innerSw/2-innerSRad,innerSOY-innerSh/2,innerSRad);
-	buttonsCtx.arcTo(innerSO+innerSw/2,innerSOY-innerSh/2,innerSO+innerSw/2,innerSOY+innerSh/2-innerSRad,innerSRad); 
-	buttonsCtx.arcTo(innerSO+innerSw/2,innerSOY+innerSh/2,innerSO-innerSw/2+innerSRad,innerSOY+innerSh/2,innerSRad);
-	buttonsCtx.arcTo(innerSO-innerSw/2,innerSOY+innerSh/2,innerSO-innerSw/2,innerSOY-innerSh/2+innerSRad,innerSRad);
-	buttonsCtx.fillStyle = stopILG;
-	buttonsCtx.fill();
-	
+	if (buttonDataTwo.value == "Stop") {
+		buttonsCtx.beginPath();
+		buttonsCtx.moveTo(innerSO - innerSw / 2, innerSOY - innerSh / 2 + innerSRad);
+		buttonsCtx.arcTo(innerSO - innerSw / 2, innerSOY - innerSh / 2, innerSO + innerSw / 2 - innerSRad, innerSOY - innerSh / 2, innerSRad);
+		buttonsCtx.arcTo(innerSO + innerSw / 2, innerSOY - innerSh / 2, innerSO + innerSw / 2, innerSOY + innerSh / 2 - innerSRad, innerSRad);
+		buttonsCtx.arcTo(innerSO + innerSw / 2, innerSOY + innerSh / 2, innerSO - innerSw / 2 + innerSRad, innerSOY + innerSh / 2, innerSRad);
+		buttonsCtx.arcTo(innerSO - innerSw / 2, innerSOY + innerSh / 2, innerSO - innerSw / 2, innerSOY - innerSh / 2 + innerSRad, innerSRad);
+		buttonsCtx.fillStyle = stopILG;
+		buttonsCtx.fill();
+	}
 	//Draw reset
-	buttonsCtx.beginPath();
-	buttonsCtx.arc(innerSO,innerSOY,innerSh/2,0,7*Math.PI/4,false); //outer arc 
-	buttonsCtx.lineTo(innerSO+innerSh/2,innerSOY-innerSh/2); //line to point 1
-	buttonsCtx.lineTo(innerSO+innerSh/2-2,innerSOY-innerSh/4+2); //line to point 2
-	buttonsCtx.lineTo(innerSO+2,innerSOY-2); //line to point 3
-	buttonsCtx.arc(innerSO,innerSOY,7.07,7*Math.PI/4,0,true);
-	buttonsCtx.lineTo(innerSO,innerSOY);
-	buttonsCtx.fillStyle = "black";
-	buttonsCtx.fill();
-	
+	else {
+		buttonsCtx.beginPath();
+		buttonsCtx.arc(innerSO, innerSOY, innerSh / 2, 0, 7 * Math.PI / 4, false); //outer arc 
+		buttonsCtx.lineTo(innerSO + innerSh / 2, innerSOY - innerSh / 2); //line to point 1
+		buttonsCtx.lineTo(innerSO + innerSh / 2 - 2, innerSOY - innerSh / 4 + 2); //line to point 2
+		buttonsCtx.lineTo(innerSO + 2, innerSOY - 2); //line to point 3
+		buttonsCtx.arc(innerSO, innerSOY, 7.07, 7 * Math.PI / 4, 0, true);
+		buttonsCtx.lineTo(innerSO, innerSOY);
+		buttonsCtx.fillStyle = "black";
+		buttonsCtx.fill();
+	}
 }
 
 function drawNormal(drawModule){
@@ -2672,25 +2701,26 @@ function animate(module){
 		}
 		
 	}
-	
-	
-	
 	Validate = function(){
 		//placeholder for validation
 		if (module.lock == false) {
+						
 			module.lock = false;
-			if (isValid == true) 
-				return validationPassed();
+			if(module.sequence==-1)
+			{module.valid=false;
+			 isValid = false;
+			 }			
+			if (module.valid == true) 
+				 validationPassed();
 			else 
-				return validationFailed();
-			
-			module.lock = true;
-			
-		}
+				 validationFailed();	
+				}		
+			module.lock = true;			
+		
 	}
 	validationPassed = function(){
 		if (module.lock == false) {
-			setTimeout(function(){
+			setTimeout(function(){            
 				module.lock = false;
 				module.status = Status.validationPassed;
 				module.message = "Validation Passed";
@@ -2702,6 +2732,7 @@ function animate(module){
 	validationFailed = function(){
 		if (module.lock == false) {
 			setTimeout(function(){
+				
 				module.lock = false;
 				module.status = Status.validationFailed;
 				module.message = "Validation Failed";
@@ -2711,7 +2742,9 @@ function animate(module){
 		}
 	}
 	Waiting = function(){
+		if(isValid==true){
 		if (module.lock == false) {
+			
 			setTimeout(function(){
 				module.lock = false;
 				module.status = Status.Waiting;
@@ -2719,6 +2752,7 @@ function animate(module){
 			}, 2000);
 			module.lock = true;
 		}
+	}
 	}
 	
 	waitingToSubmit = function(){
@@ -2765,23 +2799,39 @@ function animate(module){
 		}
 	}
 	Complete = function(){
+		
 		if (module.lock == false) {
 			setTimeout(function(){
-			module.lock = false;
-			module.status = Status.Complete;
-			module.message = "Complete";
-			//watch for parallel
-				if (isIncremented == false) {
-					processingLevel++;
-					isIncremented = true;
+				if(module.isComplete==false)
+			{
+				console.log(module.type);
+				
+				module.lock = false;
+				
+				//watch for parallel
+					if (isIncremented == false) {
+						processingLevel++;
+						isIncremented = true;
+					}
 				}
-			}, 2000);
-			module.lock = true;
+				
+			    module.status = Status.Complete;
+				module.message = "Complete";
+				module.lock = true;
+				module.isComplete = true;
+				},2000);
+			}
 		}
-	}
+		
+	
+	
 	Paused = function(){
+		if(module.status!=Complete)
+		{
 		module.status = Status.Paused;
 		module.message = "Paused";
+		}
+		
 	}
 	Stop = function(){
 		module.status = Status.Stop;
@@ -2793,18 +2843,32 @@ function animate(module){
 	}
 	
 	Stationary = function(){
+	
 		module.status = Status.Stationary;
-		module.message = "";
-		
+		module.message = "";		
 		totalTime = 0;
-		processingLevel = 0;
+		isValid = true;
+		isIncremented = false;		
 		
-		buttonEvent = Status.m_Reset;
+
+		
+		processingLevel = 1;
+	    module.jobNum = 2;
+	    module.sequence = -1;
+	    module.isComplete = false;
+	    module.lock = false;
+	    module.valid = true;
+	    
+	    if(buttonEvent == Status.Play)	
+	    { buttonEvent = Status.Play}
+	    else if (buttonEvent == Status.m_Reset)
+	    {buttonEvent =Status.m_Reset}
+	    	
 	}
 	
 	switch (buttonEvent) {
-		case Status.Play:
-			switch (module.status) {
+		case Status.Play:	 
+			switch (module.status) {			
 				case Status.Stationary:
 					Preparing();
 					break;
@@ -2812,9 +2876,31 @@ function animate(module){
 					Validate();
 					break;
 				case Status.validationPassed:
+				if(isValid != false)				   
 					Waiting();
 					break;
 				case Status.validationFailed:
+					validationFailed();
+					break;
+				case Status.Paused:
+				    
+				    if(module.valid==false)
+				    {
+				    module.lock = false;
+				    validationFailed();
+				    }
+				    else if(module.isComplete==true)
+				    {
+				    module.status = Status.Complete;
+					module.message = "Complete";
+				    }
+				    else if(isValid==true)
+				    {
+				    module.lock = false;
+				    Waiting();
+				    }
+				    break;
+				case Status.Stop:
 					Stationary();
 					break;
 				case Status.Waiting:
@@ -2835,14 +2921,13 @@ function animate(module){
 				case Status.Running:
 					Complete();
 					break;
-				case Status.Complete:
-					module.isComplete = true;
-					
+				case Status.Complete:	
+				    module.isComplete = true;		
 					break;
+				
 				default:
-					break;
-			}
-			
+					break;		
+			}			
 			break;
 		case Status.Paused:
 			Paused();
@@ -2859,7 +2944,7 @@ function animate(module){
 	}
 	
 	ctx.save();
-	ctx.strokeStyle = "gray";
+	ctx.strokeStyle = "#D9D9D9";
 	ctx.lineWidth = 5;
 	var n = module.radius / 7;
 	var r = 1.2 * module.radius;
@@ -2879,14 +2964,28 @@ function animate(module){
 			ctx.rotate(rotateR);
 			ctx.beginPath();
 			ctx.arc(0, 0, r, 0, archRadian);
+			if(module.type != "source")
+			{
 			if (module.status == Status.Running) {
 				if (sec % n == counter) {
-					ctx.strokeStyle = "blue";
+					ctx.strokeStyle = "#3B71E4";
 				}
 			}
-		
+			else if (module.status == Status.Queued)
+		    {
+		    	ctx.strokeStyle = "#3B71E4";
+		    }
+		    else if (module.status == Status.Complete)
+		    {
+		    	ctx.strokeStyle = "#82B782";
+		    }
+		    else if (module.status == Status.validationFailed)
+		    {
+		    	ctx.strokeStyle = "#EC5353";
+		    }
 			ctx.stroke();
-			ctx.strokeStyle = "gray";
+			ctx.strokeStyle = "#D9D9D9";
+		}
 		}
 		
 		
@@ -2894,8 +2993,14 @@ function animate(module){
 	ctx.restore();
 	
 	
-	
+	if(module.type != "source"&& module.type!="study"&& module.status!=Status.validationFailed)
 	ctx.fillText(module.message, module.x + r, module.y + r);
+	else if (module.status==Status.validationFailed)
+	{   
+		ctx.fillStyle = "#EC5353";
+		ctx.fillText(module.message, module.x + r, module.y + r);
+	}
+	
 }
 
 function clickConnection(x1,y1,x2,y2, fromRotate, toRotate,mouseX,mouseY) {
