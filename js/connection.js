@@ -251,7 +251,7 @@ function Input(type,parentModule)
 	this.type = type;
 	this.outputsConnectedTo = new Array();
 	this.parentModule = parentModule;
-	this.inputToOutput = inputToOutput();
+	this.inputToOutput = inputToOutput;
 	parentModule.parameterIndex++;
 	this.name = "Parameter " + parentModule.parameterIndex;
 	//ifnormation variables
@@ -663,17 +663,21 @@ function buttonMouseUp(e)
 }
 function buttonHover(e)
 {
-	if (e.pageX < 440 + buttonsCanvas.offsetLeft &&
-	    e.pageX > 360 + buttonsCanvas.offsetLeft)
+	if (e.pageX < 420 + buttonsCanvas.offsetLeft &&
+	    e.pageX > 360 + buttonsCanvas.offsetLeft &&
+		e.pageY > 0.2*(e.pageX - 360 - buttonsCanvas.offsetLeft) + buttonsCanvas.offsetTop &&
+		e.pageY < -0.2*(e.pageX - 360 - buttonsCanvas.offsetLeft)+ buttonsCanvas.offsetTop + 40)
 	{
 		buttonDataOne.hovered = true;
 		buttonDataTwo.hovered = false;
 	}
 	else if (e.pageX < 340 + buttonsCanvas.offsetLeft &&
-	    e.pageX > 260 + buttonsCanvas.offsetLeft)
+	    e.pageX > 280 + buttonsCanvas.offsetLeft &&
+		e.pageY < 0.2*(e.pageX - 280 - buttonsCanvas.offsetLeft) + buttonsCanvas.offsetTop + 26 &&
+		e.pageY > -0.2*(e.pageX - 280 - buttonsCanvas.offsetLeft)+ buttonsCanvas.offsetTop + 14)
 	{
 		buttonDataOne.hovered = false;
-		buttonDataTwo.hovered = false;
+		buttonDataTwo.hovered = true;
 	}
 	else
 	{
@@ -2011,35 +2015,25 @@ function draw(){
 	var pauseW = innerPw/4;
 	
 	//Create outer play triangle gradient
-	var playOLG = buttonsCtx.createLinearGradient(-width/2,-height/2,width/2,height/2);
-    playOLG.addColorStop(0, "#AEB3DA"); 
-    playOLG.addColorStop(1,"#2F388B");
+	var playOLG = buttonsCtx.createLinearGradient(360,0,420,50);
+    playOLG.addColorStop(0, "#F8F8F8");
+	playOLG.addColorStop(0.65, "#B1B0B0"); 
+    playOLG.addColorStop(1,"#C6C5C5");
+	
+	buttonsCtx.shadowColor = "A6A5A5";
+	buttonsCtx.shadowOffsetY = 1;
+	buttonsCtx.shadowOffsetX = -0.5;
 	
 	//Create inner play traingle gradient
-    var playILG = buttonsCtx.createLinearGradient(-innerPw/2.2,-innerPh/2.2,innerPw/2.2,innerPh/2.2);
+    var playILG = buttonsCtx.createLinearGradient(-innerPw/2.2+380,-innerPh/2.2+20,innerPw/2.2+380,innerPh/2.2+20);
     if (buttonDataOne.hovered == false) {
-		playILG.addColorStop(0, "#8491C8");
-		playILG.addColorStop(0.50, "#98A1D0");
-		playILG.addColorStop(1, "#AEB3DA");
+		playILG.addColorStop(0, "#505E45");
+		playILG.addColorStop(1, "#90BC79");
 	}
 	else
 	{
-		playILG.addColorStop(0, "#8491C8");
-		playILG.addColorStop(0.50, "#98A1D0");
-		playILG.addColorStop(1, "#AEB3DA");
-	}
-	//Create inner pause gradient
-	var pauseILG = buttonsCtx.createLinearGradient(-pauseW/2.2,-pauseH/2.2,pauseW/2.2,pauseH/2.2);
-   	if (buttonDataOne.hovered == false) {
-		pauseILG.addColorStop(0, "#8491C8");
-		pauseILG.addColorStop(0.50, "#98A1D0");
-		pauseILG.addColorStop(1, "#AEB3DA");
-	}
-	else
-	{
-		pauseILG.addColorStop(0, "#8491C8");
-		pauseILG.addColorStop(0.50, "#98A1D0");
-		pauseILG.addColorStop(1, "#AEB3DA");
+		playILG.addColorStop(0, "#1D3615");
+		playILG.addColorStop(1, "#558F37");
 	}
 	
 	
@@ -2105,7 +2099,7 @@ function draw(){
 	}
 
 	//STOP/RESET button
-   
+   buttonsCtx.shadowOffsetX = 1;
 	//Size of outer stop triangle
     var sh = 40;
     var sw = 80;
@@ -2114,22 +2108,23 @@ function draw(){
 	var innerSw = sh/2;
 	
 	//Create outer stop triangle gradient
-	var stopOLG = buttonsCtx.createLinearGradient(-sw/2,-sh/2,sw/2,sh/2);
-    stopOLG.addColorStop(0, "#AEB3DA"); 
-    stopOLG.addColorStop(1,"#2F388B");
+	var stopOLG = buttonsCtx.createLinearGradient(280,0,340,50);
+    stopOLG.addColorStop(0, "#F8F8F8");
+	stopOLG.addColorStop(0.75, "#B1B0B0")
+    stopOLG.addColorStop(1,"#C6C5C5");
 	
 	//Create inner stop rect gradient
-    var stopILG = buttonsCtx.createLinearGradient(-innerSw/2.2,-innerSh/2.2,innerSw/2.2,innerSh/2.2);
+    var stopILG = buttonsCtx.createLinearGradient(-innerSw/2.2+320,-innerSh/2.2+20,innerSw/2.2+320,innerSh/2.2+20);
     if (buttonDataTwo.hovered == false) {
-		stopILG.addColorStop(0, "#8491C8");
-		stopILG.addColorStop(0.50, "#98A1D0");
-		stopILG.addColorStop(1, "#AEB3DA");
+		stopILG.addColorStop(0, "#5F3938");
+		//stopILG.addColorStop(0.50, "#98A1D0");
+		stopILG.addColorStop(1, "#D4746E");
 	}
 	else
 	{
-		stopILG.addColorStop(0, "#8491C8");
-		stopILG.addColorStop(0.50, "#98A1D0");
-		stopILG.addColorStop(1, "#AEB3DA");
+		stopILG.addColorStop(0, "#321213");
+		//stopILG.addColorStop(0.50, "#98A1D0");
+		stopILG.addColorStop(1, "#9E302F");
 	}
     //outer Arc radius
     var sr = sh/6.5;
