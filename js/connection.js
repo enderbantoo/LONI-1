@@ -56,25 +56,25 @@ var isValid = true;
 var isIncremented = false;
 		 
 function buttonCheck() {
-    if(document.animForm.animButton.value == "Start") {
+    if(buttonDataOne.value == "Start") {
 		setAnimationOrder();
-        document.animForm.animButton.value = "Pause";
+        buttonDataOne.value = "Pause";
         buttonEvent = Status.Play;
 
     } else {
-        document.animForm.animButton.value = "Start";
+        buttonDataOne.value = "Start";
         buttonEvent = Status.Paused;
     }
 }
 
 function buttonCheck_2() {
-    if(document.animForm.resetButton.value == "Stop") {
-        document.animForm.resetButton.value = "Reset";
+    if(buttonDataTwo.value == "Stop") {
+        buttonDataTwo.value = "Reset";
         buttonEvent = Status.Stop;
 
     } else {
 		//resetting
-		document.animForm.animButton.value = "Start";
+		buttonDataOne.value = "Start";
 		for (var i = 0; i < myModules.length;i++)
 		{
 			myModules[i].status = Status.Stationary;
@@ -83,11 +83,21 @@ function buttonCheck_2() {
 			var isIncremented = false;
 		 
 		}
-        document.animForm.resetButton.value = "Stop";
+        buttonDataTwo.value = "Stop";
         buttonEvent = Status.m_Reset;
     }
 }		 
 //object literals
+
+buttonDataOne = {
+	value : "Start",
+	hovered : false
+}
+
+buttonDataTwo = {
+	value : "Stop",
+	hovered : false
+}
 makingConnection= {
 	x : 0,
 	y : 0,
@@ -630,6 +640,50 @@ function findMaxY()
 	}
 	return maxY;
 }
+
+
+//=============================================
+//         Button Manipulations
+//=============================================
+function buttonMouseDown(e)
+{
+	if (e.pageX < 300 + buttonsCanvas.offsetLeft &&
+	    e.pageX > 200 + buttonsCanvas.offsetLeft)
+	{
+		buttonCheck();
+	}
+	else if (e.pageX < 400 + buttonsCanvas.offsetLeft &&
+	    e.pageX > 300 + buttonsCanvas.offsetLef)
+	{
+		buttonCheck2();
+	}
+	return;	
+}
+function buttonMouseUp(e)
+{
+	//dunno
+}
+function buttonHover(e)
+{
+	if (e.pageX < 300 + buttonsCanvas.offsetLeft &&
+	    e.pageX > 200 + buttonsCanvas.offsetLeft)
+	{
+		buttonDataOne.hovered = true;
+		buttonDataTwo.hovered = false;
+	}
+	else if (e.pageX < 400 + buttonsCanvas.offsetLeft &&
+	    e.pageX > 300 + buttonsCanvas.offsetLeft)
+	{
+		buttonDataOne.hovered = false;
+		buttonDataTwo.hovered = false;
+	}
+	else
+	{
+		buttonDataOne.hovered = false;
+		buttonDataTwo.hovered = false;
+	}
+}
+
 
  //============================================
  //        Module Manipulations
