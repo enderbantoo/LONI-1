@@ -12,6 +12,10 @@ public class Author {
     protected String fullName;
     protected String email;
     protected String website;
+
+    public Author() {
+    }
+    
     
     public Author(pipeline.jaxb.Author author)
     {

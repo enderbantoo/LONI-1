@@ -18,6 +18,9 @@ public class Output {
     //protected int offsetX;
     //protected int offsetY;
     //protected List<String>outputsConnectedTo;
+
+    public Output() {
+    }
     
     
     public Output(pipeline.jaxb.Parameter param)

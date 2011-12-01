@@ -19,6 +19,9 @@ public class Input {
     //protected int offsetX;
     //protected int offsetY;
     //protected List<String>outputsConnectedTo;
+
+    public Input() {
+    }
     
     
     public Input(pipeline.jaxb.Parameter param)

@@ -15,6 +15,9 @@ public class Package {
     
     protected List<Module> myModules;
     protected List<Connection> myConnections;
+
+    public Package() {
+    }
     
     
     public Package(pipeline.jaxb.Pipeline pipe)

@@ -17,6 +17,9 @@ public class Connection {
     
     protected boolean isTrue;
     protected boolean isFalse;
+
+    public Connection() {
+    }
     
     public Connection(int fIndex, int tIndex, int iIndex, int oIndex)
     {

@@ -14,6 +14,8 @@ public class Module {
     //BASIC VARIABLES
     protected int x;
     protected int y;
+    //Possible types: normal, conditional, source, sink, study
+    //TODO convert to constants.
     protected String type;
     protected int rotate;
     //CONNECTINGMOVINGCOPYING
@@ -64,10 +66,9 @@ public class Module {
     
     protected int animationOrder;
     protected int conIndex;
-    
-    
-    //
-    
+
+    public Module() {
+    }
     
     
     public Module(pipeline.jaxb.Module mod)
