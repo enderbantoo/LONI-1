@@ -35,6 +35,9 @@ public class json {
     {
         
         ObjectMapper mapper = new ObjectMapper();
+        //Use JAXB introspector for JSON.
+        AnnotationIntrospector intro = new JaxbAnnotationIntrospector();
+        mapper = mapper.setAnnotationIntrospector(intro);
         return mapper.readValue(jsonString, Package.class);
     }
 }

@@ -30,10 +30,10 @@ public class xml {
         return (Pipeline) um.unmarshal(infile);
     }
     
-    public static OutputStream writeXML(Pipeline infile)
+    public static ByteArrayOutputStream writeXML(Pipeline infile)
             throws IOException, JAXBException
     {
-        OutputStream ostream = new ByteArrayOutputStream();
+        ByteArrayOutputStream ostream = new ByteArrayOutputStream();
         
         JAXBContext context = JAXBContext.newInstance("pipeline.jaxb");
         Marshaller marshal = context.createMarshaller();
