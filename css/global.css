@@ -5,6 +5,10 @@ body {
     margin: 0px;
 }
 
+input[type='button']{
+	cursor: pointer;
+}
+
 .yellowWrapper {
 	background-color: #FFFFE6;
 	padding: 10px;

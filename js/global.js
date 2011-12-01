@@ -84,7 +84,8 @@ $(document).ready( function() {
 		$('#loadFormDiv').slideToggle();
 	});	
 	
-	var optionsSaveXML = {
+	var optionsSaveXml = {
+		url: 'test.php',
 		beforeSubmit: function() {
 				Spinners.create('#spinner', {
 					radii: [4,8],
@@ -119,8 +120,8 @@ $(document).ready( function() {
 		}
 	};
 	
-	$('#SaveXmlForm').ajaxForm(function(){});
-	$('#LoadXmlForm').ajaxForm(function(){});
+	$('#SaveXmlForm').ajaxForm(optionsSaveXml);
+	$('#LoadXmlForm').ajaxForm(optionsLoadXml);
 	
 	
 	// buttons
