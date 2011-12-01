@@ -1675,7 +1675,7 @@ function setChildOrder(input, x)
 		input.parentModule.sequence = x;
 	
 	//recursively call on all the input's parent's children
-	if (input.parentModule.type != "conditional") {
+	if (input.parentModule.type != "conditional" && input.parentModule.type != "sink") {
 		for (var i = 0; i < input.parentModule.outputs.length; i++) {
 			for (var j = 0; j < input.parentModule.outputs[i].inputsConnectedTo.length; j++) {
 				if (input.parentModule.outputs[i].inputsConnectedTo[j] != null) {
@@ -1684,7 +1684,7 @@ function setChildOrder(input, x)
 			}
 		}
 	}
-	else {
+	else if (input.parentModule.type == "conditional"){
 		for (var i = 0; i < input.parentModule.outputsTrue.length; i++) {
 			for (var j = 0; j < input.parentModule.outputsTrue[i].inputsConnectedTo.length; j++) {
 				if (input.parentModule.outputsTrue[i].inputsConnectedTo[j] != null) {

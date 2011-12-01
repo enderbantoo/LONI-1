@@ -41,7 +41,7 @@
        </form>
       </div>
        <div id="loadFormDiv" class="yellowWrapper">
-       	<form id="LoadXmlForm" action="derp" method="post" enctype="multipart/form-data">
+       	<form id="LoadXmlForm" action="parseXML" method="post" enctype="multipart/form-data">
        		You can load a file from the server or on your computer:
             <p></p>
             <strong>Server:</strong> <br />
