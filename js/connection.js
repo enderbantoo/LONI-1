@@ -241,7 +241,7 @@ function outputToInput()
 		}
 	}
 	this.inputsConnectedTo.splice(0,this.inputsConnectedTo.length);
-	parentModule.formatModule();
+	this.parentModule.formatModule();
 }
 
 function Input(type,parentModule)
@@ -251,12 +251,35 @@ function Input(type,parentModule)
 	this.type = type;
 	this.outputsConnectedTo = new Array();
 	this.parentModule = parentModule;
-	
+	this.inputToOutput = inputToOutput();
 	parentModule.parameterIndex++;
 	this.name = "Parameter " + parentModule.parameterIndex;
 	//ifnormation variables
 	this.inputID;
 	this.inputIndex;
+}
+
+function inputToOutput()
+{
+	for (var i = this.inputIndex + 1; i < myModules[this.parentModule].inputs.length;i++)
+	{
+			myModules[this.parentModule].inputs[i].inputIndex--;
+	}
+	
+	for (var i = 0; i < this.outputsConnectedTo.length;i++)
+	{
+		var toDelete = this.outputsConnectedTo[i];
+		for (var j = 0;j < toDelete.inputsConnectedTo.length;j++)
+		{
+			if (toDelete.inputsConnectedTo[j] == this)
+			{
+				toDelete.inputsConnectedTo.splice(j,1);
+				j--;
+			}
+		}
+	}
+	this.outputsConnectedTo.splice(0,this.inputsConnectedTo.length);
+	this.parentModule.formatModule();
 }
 
 function connectOut(input)
@@ -1199,7 +1222,7 @@ function fixModules()
 				myModules[i].outputs[j].offsetY;
 				
 				myModules[i].outputs[j].inputsConnectedTo = new Array();
-				
+				myModules[i].outputs[j].outputToInput = outputToInput;
 				myModules[i].outputs[j].connectOut = connectOut;
 				myModules[i].outputs[j].parentModule = myModules[i];
 				
@@ -1211,7 +1234,8 @@ function fixModules()
 			{
 				myModules[i].inputs[j].offsetX;
 				myModules[i].inputs[j].offsetY;
-	
+				
+				myModules[i].inputs[j].inputToOutput = inputToOutput;
 				myModules[i].inputs[j].outputsConnectedTo = new Array();
 				myModules[i].inputs[j].parentModule = myModules[i];
 				
@@ -1272,6 +1296,7 @@ function fixModules()
 				
 				myModules[i].outputs[j].inputsConnectedTo = new Array();
 				
+				myModules[i].outputs[j].outputToInput = outputToInput;
 				myModules[i].outputs[j].connectOut = connectOut;
 				myModules[i].outputs[j].parentModule = myModules[i];
 				
@@ -1285,7 +1310,8 @@ function fixModules()
 			{
 				myModules[i].inputs[j].offsetX;
 				myModules[i].inputs[j].offsetY;
-	
+				myModules[i].inputs[j].inputToOutput = inputToOutput;
+
 				myModules[i].inputs[j].outputsConnectedTo = new Array();
 				myModules[i].inputs[j].parentModule = myModules[i];
 				
