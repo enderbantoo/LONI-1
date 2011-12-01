@@ -51,6 +51,47 @@ public class Pipeline {
     @XmlAttribute(name = "version")
     protected String version;
 
+    public Pipeline() {
+    }
+    
+    
+    
+    public Pipeline(pipeline.client.Package pack)
+    {
+        this.moduleGroup = new ArrayList<ModuleGroup>();
+        
+        ModuleGroup initGroup = new ModuleGroup();
+        initGroup.module = new ArrayList<Module>();
+        initGroup.conditionalModule = new ArrayList<ConditionalModule>();
+        initGroup.dataModule = new ArrayList<DataModule>();
+        initGroup.studyModule = new ArrayList<StudyModule>();
+        for (int i=0; i<pack.getMyModules().size(); i++)//pipeline.client.Module mod : pack.getMyModules())
+        {
+            pipeline.client.Module mod = pack.getMyModules().get(i);
+            if (mod.getType().equals("normal"))
+            {
+                initGroup.module.add(new Module(mod,i));
+            }
+            else if (mod.getType().equals("conditional"))
+            {
+                initGroup.conditionalModule.add(new ConditionalModule(mod, i));
+            }
+            else if (mod.getType().equals("source") || mod.getType().equals("sink"))
+            {
+                initGroup.dataModule.add(new DataModule(mod, i));
+            }
+            else if (mod.getType().equals("study"))
+            {
+                initGroup.studyModule.add(new StudyModule(mod, i));
+            }
+           //TODO CONNECTIONS
+            
+        }
+       
+        //Root module group
+        this.moduleGroup.add(initGroup);
+    }
+
     /**
      * Gets the value of the connections property.
      * 

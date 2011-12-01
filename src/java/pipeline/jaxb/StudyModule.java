@@ -122,6 +122,30 @@ public class StudyModule {
     @XmlAttribute(name = "recursive")
     protected Boolean recursive;
 
+    public StudyModule() {
+    }
+
+    public StudyModule(pipeline.client.Module module, int i)
+    {
+        //Basic
+        this.posX = BigInteger.valueOf(module.getX());
+        this.posY = BigInteger.valueOf(module.getY());
+        this.rotation = BigInteger.valueOf(module.getRotate());
+        this.id = module.getName() + "_" + i;
+        this.name = module.getName();
+        this.description = module.getDescriptions();
+        this.uri = module.getURI();
+        
+        this.authors = new ArrayList<Authors>();
+        Authors authList = new Authors();
+        for (pipeline.client.Author auth : module.getAuthors())
+        {
+            authList.author.add(new Author(auth));
+        }
+        this.authors.add(authList);
+        
+        this.output = new Parameter(module.getOutputs().get(0));
+    }
     /**
      * Gets the value of the authors property.
      * 

@@ -40,6 +40,14 @@ public class Metadata {
 
     protected String data;
 
+    public Metadata() {
+    }
+    
+    public Metadata(String data)
+    {
+        this.data = data;
+    }
+
     /**
      * Gets the value of the data property.
      * 

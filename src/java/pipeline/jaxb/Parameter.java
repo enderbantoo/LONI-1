@@ -104,6 +104,24 @@ public class Parameter {
     @XmlAttribute(name = "prefixAllArgs")
     protected Boolean prefixAllArgs;
 
+    public Parameter() {
+    }
+    
+    //TODO add support for more vars
+    
+    public Parameter(pipeline.client.Input in)
+    {
+        this.id = in.getInputID();
+        this.name = in.getName();
+        this.format = new Format(in.getType());
+    }
+    
+    public Parameter(pipeline.client.Output out)
+    {
+        this.id = out.getOutputID();
+        this.name = out.getName();
+        this.format = new Format(out.getType());
+    }
     /**
      * Gets the value of the format property.
      * 

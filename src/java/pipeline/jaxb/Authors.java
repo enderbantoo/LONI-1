@@ -42,6 +42,12 @@ public class Authors {
 
     protected List<Author> author;
 
+    
+    public Authors()
+    {
+        this.author = new ArrayList<Author>();
+    }
+    
     /**
      * Gets the value of the author property.
      * 

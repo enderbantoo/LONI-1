@@ -48,6 +48,15 @@ public class Format {
     @XmlAttribute(name = "transformationBase")
     protected String transformationBase;
 
+    public Format() {
+    }
+
+    
+    //TODO support more types
+    public Format(String type)
+    {
+        this.type = type;
+    }
     /**
      * Gets the value of the type property.
      * 

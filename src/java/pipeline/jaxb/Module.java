@@ -137,6 +137,61 @@ public class Module {
     @XmlAttribute(name = "preserveInputFilename")
     protected Boolean preserveInputFilename;
 
+    public Module() {
+    }
+
+    public Module(pipeline.client.Module module, int i)
+    {
+        
+        //Basic
+        this.posX = BigInteger.valueOf(module.getX());
+        this.posY = BigInteger.valueOf(module.getY());
+        this.rotation = BigInteger.valueOf(module.getRotate());
+        this.id = module.getName() + "_" + i;
+        this.name = module.getName();
+        this.description = module.getDescriptions();
+        this.uri = module.getURI();
+        
+        this.advancedOptions = module.getAdvancedOptions();
+        this.license = module.getLicense();
+        this.location = module.getLocation();
+        this.metadata = new Metadata(module.getMetadata());
+        
+        
+        
+        
+        this.authors = new ArrayList<Authors>();
+        Authors authList = new Authors();
+        for (pipeline.client.Author auth : module.getAuthors())
+        {
+            authList.author.add(new Author(auth));
+        }
+        this.authors.add(authList);
+        
+        this.executableAuthors = new ArrayList<Authors>();
+        authList = new Authors();
+        for (pipeline.client.Author auth : module.getAuthors())
+        {
+            authList.author.add(new Author(auth));
+        }
+        this.executableAuthors.add(authList);
+        
+        
+        this.input = new ArrayList<Parameter>();
+        for (pipeline.client.Input in : module.getInputs())
+        {
+            this.input.add(new Parameter(in));
+        }
+        
+        this.output = new ArrayList<Parameter>();
+        for (pipeline.client.Output out : module.getOutputs())
+        {
+            this.output.add(new Parameter(out));
+        }
+        
+    }
+    
+    
     /**
      * Gets the value of the authors property.
      * 

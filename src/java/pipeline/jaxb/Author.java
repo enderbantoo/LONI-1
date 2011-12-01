@@ -44,6 +44,17 @@ public class Author {
     @XmlAttribute(name = "website")
     protected String website;
 
+    public Author() {
+    }
+
+    
+    public Author(pipeline.client.Author auth)
+    {
+        this.fullName = auth.getFullName();
+        this.email = auth.getEmail();
+        this.website = auth.getWebsite();
+    }
+    
     /**
      * Gets the value of the fullName property.
      * 
