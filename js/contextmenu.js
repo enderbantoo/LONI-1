@@ -1,4 +1,6 @@
 var openModuleDialog = function(){
+	//if (moduleId == -1) // new
+		//$('#masterFormContainer').clearForm();
 	$("#module-dialog").dialog("open");
 };
 
@@ -33,6 +35,125 @@ var option = { width: 150, items: [
 				{ text: "Copy", icon: "", alias: "ctm_copy", action: ctm_copy },
 				{ text: "Paste", icon: "", alias: "ctm_paste", action: ctm_paste }, 
 				{ text: "Select all", icon: "", alias: "ctm_select_all", action: ctm_select_all },
+				{ text: "Rotate", icon: "", alias: "ctm_rotate", action: ctm_rotate }
+				
+			]
+};
+
+	
+	
+var para2copy_helper = function(name, type, input){
+	console.log('here');
+	var para2copy = '<div class="para2Copy" style="padding: 2px; text-align: center;">'+
+		'<div style="float: left; width: 140px;"><input name="parameterName" type="text" id="parameterName" style="width: 120px;" value="'+name+'"/></div>'+
+        '<div style="float: left; width: 120px;"><select name="fileTypes" id="fileTypes">'+
+              '<option value="Directory"';
+		if (type == 'Directory') para2copy += ' selected="selected"';	
+		para2copy += '>Directory</option><option value="Enumerated"';
+		if (type == 'Enumerated') para2copy += ' selected="selected"';	
+		para2copy += '>Enumerated</option><option value="File"';
+		if (type == 'File') para2copy += ' selected="selected"';	
+		para2copy +='>File</option><option value="Number"';
+		if (type == 'Number') para2copy += ' selected="selected"';	
+		para2copy+='>Number</option><option value="String"';
+		if (type == 'String') para2copy += ' selected="selected"';	
+		para2copy += '>String</option><option value="Flow Control"';
+		if (type == 'Flow Control') para2copy += ' selected="selected"';	
+		para2copy +='>Flow Control</option>'+
+        '</select></div>'+
+        '<div style="float: left; width: 80px;"><select name="state" id="state">'+
+              '<option value="Enabled">Enabled</option>'+
+              '<option value="Exported">Exported</option>'+
+        '</select>'+
+            '</div>'+
+        '<div style="float: left; width: 60px;"><input name="required" type="checkbox" value="true" id="required" /></div>'+
+        '<div style="float: left; width: 40px;"><input name="input" type="checkbox" value="true" id="input" ';
+		if(input) para2copy += 'checked="checked"';
+		para2copy +='/></div>'+
+		'<div style="clear: both;"></div></div>';
+	
+	return para2copy;
+}
+
+var fillModuleDialog = function(fillModule)
+{
+	$('#module-dialog #name').attr('value', fillModule.name);
+	
+	for (var i = 0; i < fillModule.inputs.length;i++)
+	{
+		$('#module-paraWrapper').append(para2copy_helper(fillModule.inputs[i].name, fillModule.inputs[i].type, true));
+	}
+	for (var i = 0; i < fillModule.outputs.length;i++)
+	{
+		$('#module-paraWrapper').append(para2copy_helper(fillModule.outputs[i].name, fillModule.outputs[i].type, false));
+	}
+	
+}
+
+var saveParameters = function(fillModule, type){
+	$('#' + type + '-dialog input[type!="checkbox"],textarea').each(function(){
+		fillModule[$(this).attr('id')] = $(this).attr('value');
+	})
+	
+	//insert new
+	if (type == 'normal' || type == 'conditional') {
+		$('#' + type + '-dialog .para2copy input[type="checkbox"]').each(function(){
+			addInputOutput(fillModule, $(this).is(':checked'), $(this).parent().childrens('input[id="parameterName"]'), $(this).parent().childrens('input[id="filesType"]'));
+		})
+	}
+}
+
+addInputOutput(checkModule, checked, name, type)
+{
+	if (checked == true)
+	{
+		checkModule.addInput(type,checkModule)
+		{
+			checkModule.inputs[checkModule.inputs.length].name = name;
+			if (checkModule.type == "conditional") {
+				checkModule.outputsTrue[checkModule.outputsTrue.length].name = name;
+				checkModule.outputsFalse[checkModule.outputsFalse.length].name = name;
+			}
+		}
+		checkModule.addOutput(type,checkModule)
+		{
+			checkModule.outputs[checkModule.inputs.length].name = name;
+		}
+	}
+}
+
+
+var editDialog = function() {
+	for (var i = 0; i < myModules.length; i++) {
+		if (myModules[i].selected = true) {
+			switch (myModules[i].type)
+			{
+				case "normal":
+				fillModuleDialog(myModules[i]);
+				openModuleDialog();
+				break;
+				case "conditional":
+				openConditionalDialog();
+				break;
+				case "source":
+				openDataSourceDialog();
+				break;
+				case "sink":
+				openDataSinkDialog();
+				break;
+				case "study":
+				openStudyDialog();
+				break;
+			}
+		}
+	}
+}
+
+
+var option_edit = { width: 150, items: [
+				{ text: "Edit", icon: "", alias: "edit", action: editDialog },
+				{ text: "Delete", icon: "", alias: "ctm_cut", action: cutModule },
+				{ text: "Copy", icon: "", alias: "ctm_copy", action: ctm_copy },
 				{ text: "Rotate", icon: "", alias: "ctm_rotate", action: ctm_rotate }
 				
 			]
@@ -155,6 +276,8 @@ function menuAction() {
 
 function ctm_modules() {
 	createModule(testMouse.X,testMouse.Y,"normal",1,1);
+	//saving parameters
+	
 }
 
 function ctm_data_source() {

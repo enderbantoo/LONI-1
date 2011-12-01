@@ -1,6 +1,11 @@
 // JavaScript Document
+// global
+var moduleId = -1;
+
 $(document).ready( function() {
 	
+
+
 	var index_para = 0;
 	
 	var para2copy = '<div class="para2Copy" style="padding: 2px; text-align: center;">'+
@@ -103,6 +108,7 @@ $(document).ready( function() {
 	};
 	
 	var optionsLoadXml = {
+		dataType: 'json',
 		beforeSubmit: function() {
 		  Spinners.create('#spinner', {
 			  radii: [4,8],
@@ -111,16 +117,23 @@ $(document).ready( function() {
 		  $("#message").text('Loading the file');
 		  $('#loadFormDiv').slideToggle();
 		},
-		data: {modulesArray: myModules,
-				   connectionsArray: myConnections},
+		/*data: {sentModules: myModules,
+				   sentConnections: myConnections},*/
 		success: function(data){
+			//console.log(data.myModules);
+			//$('#module-dialog #name').attr('value', )
+			myConnections=data.myConnections;
+			myModuleArrays[tabSelected.index]=data.myModules;
+			selectTab(tabSelected.index);
+			fixModules();
+			fillConnections();
 			Spinners.get("#spinner").remove();
-			$('#message').text(data);
+			$('#message').text('');
 		}
 	};
 	
 	$('#SaveXmlForm').ajaxForm(function(){});
-	$('#LoadXmlForm').ajaxForm(function(){});
+	$('#LoadXmlForm').ajaxForm(optionsLoadXml);
 	
 	
 	// buttons
@@ -128,6 +141,8 @@ $(document).ready( function() {
 	
 	
 	$("#canvas").contextmenu(option);
+	
+	
 	/*
 	$("body").keydown(function(e){
 		if (e.keyCode === 46)
@@ -157,4 +172,5 @@ $(document).ready( function() {
 	})	
 		
 	*/
+
 });

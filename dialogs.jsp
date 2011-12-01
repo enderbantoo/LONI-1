@@ -1,3 +1,6 @@
+<%@page contentType="text/html" import="java.util.*" %>
+<% Date date = new java.util.Date(); %>
+<form id="masterFormContainer" method="post">
 <div id="module-dialog" title="Module Definition" class="tabs dialog" function="ctm_modules()">
 	<ul>
 		<li><a href="#info-tab">Info</a></li>
@@ -12,7 +15,7 @@
         </ul>
         <div id="module-tab" class="tabs">
               <label>Module creation date:</label> 
-              <span></span><br />
+              <span><%= date %></span><br />
               <label> Name:</label><input type="text" id="name" /> <br />
 			  <label> Package:</label><input type="text" id="package" />  <br />
               <label>Package version:</label><input type="text" id="version" /><br />
@@ -50,25 +53,7 @@
       <div style="width: 40px;" class="para-title">Input</div>
         <div style="clear: both;"></div>
       <div id="module-paraWrapper">
-      <div class='para2Copy' style="padding: 2px; text-align: center;">
-        <div style='float: left; width: 140px;'><input name="parameterName" type="text" id="parameterName" style='width: 120px;'/></div>
-        <div style='float: left; width: 120px;'><select name="fileTypes" id="fileTypes">
-              <option value="Directory" selected="selected">Directory</option>
-              <option value="Enumerated">Enumerated</option>
-              <option value="File">File</option>
-              <option value="Number">Number</option>
-              <option value="String">String</option>
-              <option value="Flow Control">Flow Control</option>
-        </select></div>
-        <div style='float: left; width: 80px;'><select name="state" id="state">
-              <option value="Enabled">Enabled</option>
-              <option value="Exported">Exported</option>
-        </select>
-            </div>
-        <div style='float: left; width: 60px;'><input name="required" type="checkbox" value="true" id="required" /></div>
-        <div style='float: left; width: 40px;'><input name="input" type="checkbox" value="true" id="input" /></div>
-		<div style='clear: both;'></div>
-      </div>            
+            
       </div>
        <input name="removeParaButton" type="button" id="removeParaButton" value="Remove" />
        <input name="addParaButton" type="button" id="addParaButton" value="Add" />
@@ -132,8 +117,7 @@
         <li><a href="#inputs-tab">Inputs</a></li>
     </ul>
     <div id="info-tab">
-      <label>Module creation date:</label> 
-      <span></span><br />
+      <label>Module creation date:</label> <span><%= date %></span><br />
       <label> Name:</label><input type="text" id="name" /> <br />
       <label> Package:</label><input type="text" id="package" />  <br />
       <label>Package version:</label><input type="text" id="version" /><br />
@@ -165,8 +149,7 @@
         <li><a href="#outputs-tab">Inputs</a></li>
     </ul>
     <div id="info-tab">
-      <label>Module creation date:</label> 
-      <span></span><br />
+      <label>Module creation date:</label> <span><%= date %></span><br />
       <label> Name:</label><input type="text" id="name" /> <br />
       <label> Package:</label><input type="text" id="package" />  <br />
       <label>Package version:</label><input type="text" id="version" /><br />
@@ -201,8 +184,7 @@
     </ul>
   
     <div id="info-tab">
-      <label>Module creation date:</label> 
-      <span></span><br />
+      <label>Module creation date:</label> <span><%= date %></span><br />
       <label> Name:</label><input type="text" id="name" /> <br />
       <label> Package:</label><input type="text" id="package" />  <br />
       <label>Package version:</label><input type="text" id="version" /><br />
@@ -243,8 +225,7 @@
     </ul>
 	
      <div id="info-tab">
-      <label>Module creation date:</label> 
-      <span></span><br />
+      <label>Module creation date:</label> <span><%= date %></span><br />
       <label> Name:</label><input type="text" id="name" /> <br />
       <label> Package:</label><input type="text" id="package" />  <br />
       <label>Package version:</label><input type="text" id="version" /><br />
@@ -265,25 +246,7 @@
       <div style="width: 40px;" class="para-title">Input</div>
         <div style="clear: both;"></div>
       <div id="conditional-paraWrapper">
-      <div class='para2Copy' style="padding: 2px; text-align: center;">
-        <div style='float: left; width: 140px;'><input name="parameterName" type="text" id="parameterName" style='width: 120px;'/></div>
-        <div style='float: left; width: 120px;'><select name="fileTypes" id="fileTypes">
-              <option value="Directory" selected="selected">Directory</option>
-              <option value="Enumerated">Enumerated</option>
-              <option value="File">File</option>
-              <option value="Number">Number</option>
-              <option value="String">String</option>
-              <option value="Flow Control">Flow Control</option>
-        </select></div>
-        <div style='float: left; width: 80px;'><select name="state" id="state">
-              <option value="Enabled">Enabled</option>
-              <option value="Exported">Exported</option>
-        </select>
-            </div>
-        <div style='float: left; width: 60px;'><input name="required" type="checkbox" value="true" id="required" /></div>
-        <div style='float: left; width: 40px;'><input name="input" type="checkbox" value="true" id="input" /></div>
-		<div style='clear: both;'></div>
-      </div>            
+                
       </div>
        <input name="conditional-removeParaButton" type="button" id="conditional-removeParaButton" value="Remove" />
        <input name="conditional-addParaButton" type="button" id="conditional-addParaButton" value="Add" />
@@ -295,3 +258,4 @@
         </fieldset>
     </div>
 </div>
+</form>

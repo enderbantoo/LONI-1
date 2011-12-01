@@ -137,7 +137,6 @@ function module(x,y,type,input,output)
 	this.inputs=new Array();
 	this.outputsTrue=new Array();
 	this.outputsFalse=new Array();
-	this.parameterIndex = 0;
 	
 	
 	//selection and group move
@@ -215,8 +214,7 @@ function Output(type,parentModule)
 	this.outputToInput = outputToInput;
 	this.parentModule = parentModule;
 	
-	parentModule.parameterIndex++;
-	this.name = "Parameter " + parentModule.parameterIndex;
+	this.name = "";
 	//information variables
 	//this.outputID;
 	this.outputIndex;
@@ -252,8 +250,7 @@ function Input(type,parentModule)
 	this.outputsConnectedTo = new Array();
 	this.parentModule = parentModule;
 	this.inputToOutput = inputToOutput;
-	parentModule.parameterIndex++;
-	this.name = "Parameter " + parentModule.parameterIndex;
+	this.name = "";
 	//ifnormation variables
 	this.inputID;
 	this.inputIndex;
@@ -1158,16 +1155,17 @@ function fillConnections()
 {
 	for (var i = 0; i < myConnections.length; i++)
 	{
+		
 		if (myConnections[i].isTrue == false && myConnections[i].isFalse == false) {
-			myModules[fromIndex].outputs[outputIndex].connectOut(myModules[toIndex].inputs[inputIndex]);
+			myModules[myConnections[i].fromIndex].outputs[myConnections[i].outputIndex].connectOut(myModules[myConnections[i].toIndex].inputs[myConnections[i].inputIndex]);
 		}
 		else if (myConnections[i].isTrue == true) {
-			myModules[fromIndex].outputsTrue[outputIndex].connectOut(myModules[toIndex].inputs[inputIndex]);
+			myModules[myConnections[i].fromIndex].outputsTrue[myConnections[i].outputIndex].connectOut(myModules[myConnections[i].toIndex].inputs[myConnections[i].inputIndex]);
 
 		}
 		else //myConnections[i].isfalse == true
 		{
-			myModules[fromIndex].outputsFalse[outputIndex].connectOut(myModules[toIndex].inputs[inputIndex]);
+			myModules[myConnections[i].fromIndex].outputsFalse[myConnections[i].outputIndex].connectOut(myModules[myConnections[i].toIndex].inputs[myConnections[i].inputIndex]);
 
 		}
 	}
@@ -1193,13 +1191,7 @@ function fixModules()
 		myModules[i].formatModule = formatModule;
 		myModules[i].addOutput = addOutput;
 		myModules[i].addInput = addInput;
-		//outputs
-		myModules[i].outputs=new Array();	
-		myModules[i].inputs=new Array();
-		myModules[i].outputsTrue=new Array();
-		myModules[i].outputsFalse=new Array();
-		myModules[i].parameterIndex = 0;
-		
+		//outputs		
 		
 		//selection and group move
 		myModules[i].selected=false;
@@ -1230,7 +1222,6 @@ function fixModules()
 				myModules[i].outputs[j].connectOut = connectOut;
 				myModules[i].outputs[j].parentModule = myModules[i];
 				
-				myModules[i].parameterIndex++;
 				myModules[i].outputs[j].outputIndex = j;
 			}
 			
@@ -1243,7 +1234,6 @@ function fixModules()
 				myModules[i].inputs[j].outputsConnectedTo = new Array();
 				myModules[i].inputs[j].parentModule = myModules[i];
 				
-				parentModule.parameterIndex++;
 	
 				myModules[i].inputs[j].inputIndex = j;
 			}
@@ -1260,7 +1250,6 @@ function fixModules()
 				myModules[i].outputsTrue[j].connectOut = connectOut;
 				myModules[i].outputsTrue[j].parentModule = myModules[i];
 				
-				myModules[i].parameterIndex++;
 				myModules[i].outputsTrue[j].outputIndex = j;
 			}
 			for (var j = 0; j < myModules[i].outputsFalse.length;j++)
@@ -1273,7 +1262,6 @@ function fixModules()
 				myModules[i].outputsFalse[j].connectOut = connectOut;
 				myModules[i].outputsFalse[j].parentModule = myModules[i];
 				
-				myModules[i].parameterIndex++;
 				myModules[i].outputsFalse[j].outputIndex = j;
 			}
 			
@@ -1285,7 +1273,6 @@ function fixModules()
 				myModules[i].inputs[j].outputsConnectedTo = new Array();
 				myModules[i].inputs[j].parentModule = myModules[i];
 				
-				parentModule.parameterIndex++;
 	
 				myModules[i].inputs[j].inputIndex = j;
 			}
@@ -1304,7 +1291,6 @@ function fixModules()
 				myModules[i].outputs[j].connectOut = connectOut;
 				myModules[i].outputs[j].parentModule = myModules[i];
 				
-				myModules[i].parameterIndex++;
 				myModules[i].outputs[j].outputIndex = j;
 			}
 			break;
@@ -1319,7 +1305,6 @@ function fixModules()
 				myModules[i].inputs[j].outputsConnectedTo = new Array();
 				myModules[i].inputs[j].parentModule = myModules[i];
 				
-				parentModule.parameterIndex++;
 	
 				myModules[i].inputs[j].inputIndex = j;
 			}
@@ -1352,6 +1337,14 @@ function moduleMouseDown(e){
 					lineSelection.toInput = null;
 					
 					myModules[i].selected = true;
+					
+					
+					
+					
+					
+					
+					
+					
 					break;
 				}
 			}
@@ -1647,19 +1640,23 @@ function setAnimationOrder()
 	//recursively follow each root's children
 	for (var i = 0; i < myModules.length; i++) {
 		if (myModules[i].sequence == 0) {
-			for (var j = 0; j < myModules[i].outputs.length; j++) {
-				for (var k = 0; k < myModules[i].outputs[j].inputsConnectedTo.length; k++) {
-					setChildOrder(myModules[i].outputs[j].inputsConnectedTo[k], 0);
+			if (myModules[i].type != "conditional") {
+				for (var j = 0; j < myModules[i].outputs.length; j++) {
+					for (var k = 0; k < myModules[i].outputs[j].inputsConnectedTo.length; k++) {
+						setChildOrder(myModules[i].outputs[j].inputsConnectedTo[k], 0);
+					}
 				}
 			}
-			for (var j = 0; j < myModules[i].outputsTrue.length; j++) {
-				for (var k = 0; k < myModules[i].outputsTrue[j].inputsConnectedTo.length; k++) {
-					setChildOrder(myModules[i].outputsTrue[j].inputsConnectedTo[k], 0);
+			if (myModules[i].type == "conditional") {
+				for (var j = 0; j < myModules[i].outputsTrue.length; j++) {
+					for (var k = 0; k < myModules[i].outputsTrue[j].inputsConnectedTo.length; k++) {
+						setChildOrder(myModules[i].outputsTrue[j].inputsConnectedTo[k], 0);
+					}
 				}
-			}
-			for (var j = 0; j < myModules[i].outputsFalse.length; j++) {
-				for (var k = 0; k < myModules[i].outputsFalse[j].inputsConnectedTo.length; k++) {
-					setChildOrder(myModules[i].outputsFalse[j].inputsConnectedTo[k], 0);
+				for (var j = 0; j < myModules[i].outputsFalse.length; j++) {
+					for (var k = 0; k < myModules[i].outputsFalse[j].inputsConnectedTo.length; k++) {
+						setChildOrder(myModules[i].outputsFalse[j].inputsConnectedTo[k], 0);
+					}
 				}
 			}
 		}
@@ -1678,33 +1675,28 @@ function setChildOrder(input, x)
 		input.parentModule.sequence = x;
 	
 	//recursively call on all the input's parent's children
-	for (var i = 0; i < input.parentModule.outputs.length; i++)
-	{
-		for (var j = 0; j < input.parentModule.outputs[i].inputsConnectedTo.length; j++)
-		{
-			if (input.parentModule.outputs[i].inputsConnectedTo[j] != null)
-			{
-				setChildOrder(input.parentModule.outputs[i].inputsConnectedTo[j], x);
+	if (input.parentModule.type != "conditional") {
+		for (var i = 0; i < input.parentModule.outputs.length; i++) {
+			for (var j = 0; j < input.parentModule.outputs[i].inputsConnectedTo.length; j++) {
+				if (input.parentModule.outputs[i].inputsConnectedTo[j] != null) {
+					setChildOrder(input.parentModule.outputs[i].inputsConnectedTo[j], x);
+				}
 			}
 		}
 	}
-	for (var i = 0; i < input.parentModule.outputsTrue.length; i++)
-	{
-		for (var j = 0; j < input.parentModule.outputsTrue[i].inputsConnectedTo.length; j++)
-		{
-			if (input.parentModule.outputsTrue[i].inputsConnectedTo[j] != null)
-			{
-				setChildOrder(input.parentModule.outputsTrue[i].inputsConnectedTo[j], x);
+	else {
+		for (var i = 0; i < input.parentModule.outputsTrue.length; i++) {
+			for (var j = 0; j < input.parentModule.outputsTrue[i].inputsConnectedTo.length; j++) {
+				if (input.parentModule.outputsTrue[i].inputsConnectedTo[j] != null) {
+					setChildOrder(input.parentModule.outputsTrue[i].inputsConnectedTo[j], x);
+				}
 			}
 		}
-	}
-	for (var i = 0; i < input.parentModule.outputsFalse.length; i++)
-	{
-		for (var j = 0; j < input.parentModule.outputsFalse[i].inputsConnectedTo.length; j++)
-		{
-			if (input.parentModule.outputsFalse[i].inputsConnectedTo[j] != null)
-			{
-				setChildOrder(input.parentModule.outputsFalse[i].inputsConnectedTo[j], x);
+		for (var i = 0; i < input.parentModule.outputsFalse.length; i++) {
+			for (var j = 0; j < input.parentModule.outputsFalse[i].inputsConnectedTo.length; j++) {
+				if (input.parentModule.outputsFalse[i].inputsConnectedTo[j] != null) {
+					setChildOrder(input.parentModule.outputsFalse[i].inputsConnectedTo[j], x);
+				}
 			}
 		}
 	}
@@ -1894,11 +1886,11 @@ function draw(){
 			if (hoverInput != null)
 			{
 				if (makingConnection.output.type == hoverInput.type)
-					ctx.strokeStyle = "blue";
+					ctx.fillStyle = "blue";
 				else
-					ctx.strokeStyle = "red";
-				ctx.lineWidth = "1";
-				ctx.fillText(hoverInput.type,hoverInput.parentModule.x+hoverInput.offsetX+7,hoverInput.parentModule.y+hoverInput.offsetY);
+					ctx.fillStyle = "red";
+				ctx.lineWidth = "2";
+				ctx.fillText(hoverInput.type,hoverInput.parentModule.x+hoverInput.offsetX+7,hoverInput.parentModule.y+hoverInput.offsetY-10);
 				break;
 			}
 		}
@@ -1998,7 +1990,7 @@ function draw(){
 	
 	//============================================================
 	//BUTTON DRAW CODE
-	buttonsCtx.clearRect(700,100);
+	buttonsCtx.clearRect(0,0,700,100);
 	
 	//PLAY-PAUSE
 	
