@@ -1222,6 +1222,8 @@ function fixModules()
 			{
 				myModules[i].outputs[j].offsetX;
 				myModules[i].outputs[j].offsetY;
+				myModules[i].outputsTrue = new Array();
+				myModules[i].outputsFalse = new Array();
 				
 				myModules[i].outputs[j].inputsConnectedTo = new Array();
 				myModules[i].outputs[j].outputToInput = outputToInput;
@@ -1291,6 +1293,8 @@ function fixModules()
 			{
 				myModules[i].outputs[j].offsetX;
 				myModules[i].outputs[j].offsetY;
+				myModules[i].outputsTrue = new Array();
+				myModules[i].outputsFalse = new Array();
 				
 				myModules[i].outputs[j].inputsConnectedTo = new Array();
 				myModules[i].outputs[j].outputToInput = outputToInput;
@@ -1308,6 +1312,8 @@ function fixModules()
 				myModules[i].inputs[j].offsetX;
 				myModules[i].inputs[j].offsetY;
 				myModules[i].inputs[j].inputToOutput = inputToOutput;
+				myModules[i].outputsTrue = new Array();
+				myModules[i].outputsFalse = new Array();
 				myModules[i].outputs = new Array();
 				myModules[i].inputs[j].outputsConnectedTo = new Array();
 				myModules[i].inputs[j].parentModule = myModules[i];
