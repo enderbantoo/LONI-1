@@ -211,7 +211,7 @@ function Output(type,parentModule)
 	this.type = type;
 	this.inputsConnectedTo = new Array();
 	this.connectOut = connectOut;
-	this.outputToInput = outputToInput;
+	this.deleteOutput = deleteOutput;
 	this.parentModule = parentModule;
 	
 	this.name = "";
@@ -219,9 +219,9 @@ function Output(type,parentModule)
 	//this.outputID;
 	this.outputIndex;
 }
-function outputToInput()
+function deleteOutput(deleteOrSwap) //0: delete
 {
-	for (var i = this.outputIndex + 1; i < myModules[this.parentModule].outputs.length;i++)
+	for (var i = this.outputIndex + 1; i < this.parentModule.outputs.length;i++)
 	{
 			myModules[this.parentModule].outputs[i].outputIndex--;
 	}
@@ -239,6 +239,12 @@ function outputToInput()
 		}
 	}
 	this.inputsConnectedTo.splice(0,this.inputsConnectedTo.length);
+	if (deleteOrSwap == 1) //convert to Output
+	{
+		this.parentModule.addInput(this.type,this.parentModule)
+		this.parentModule.inputs[this.parentModule.inputs.length-1].name=this.name;
+	}
+	this.parentModule.outputs.splice(this.outputIndex,1);
 	this.parentModule.formatModule();
 }
 
@@ -249,16 +255,18 @@ function Input(type,parentModule)
 	this.type = type;
 	this.outputsConnectedTo = new Array();
 	this.parentModule = parentModule;
-	this.inputToOutput = inputToOutput;
+	this.deleteInput = deleteInput;
 	this.name = "";
 	//ifnormation variables
 	this.inputID;
 	this.inputIndex;
 }
 
-function inputToOutput()
+function deleteInput(deleteorSwap) // 0: delete
 {
-	for (var i = this.inputIndex + 1; i < myModules[this.parentModule].inputs.length;i++)
+	
+	
+	for (var i = this.inputIndex + 1; i < this.parentModule.inputs.length;i++)
 	{
 			myModules[this.parentModule].inputs[i].inputIndex--;
 	}
@@ -275,9 +283,21 @@ function inputToOutput()
 			}
 		}
 	}
-	this.outputsConnectedTo.splice(0,this.inputsConnectedTo.length);
+	this.outputsConnectedTo.splice(0,this.outputsConnectedTo.length);
+	if (deleteorSwap == 1) //convert to Output
+	{
+		this.parentModule.addOutput(this.type,this.parentModule)
+		this.parentModule.outputs[this.parentModule.outputs.length-1].name=this.name;
+	}
+	this.parentModule.inputs.splice(this.inputIndex,1);
 	this.parentModule.formatModule();
+
+	
+
 }
+
+
+
 
 function connectOut(input)
 {
@@ -731,9 +751,30 @@ function buttonCheck_2() {
  	var index=myModules.length;
 	if(fillModuleId != -1){ // not creating a new module
 		var module1 = myModules[fillModuleId];
-		if (IO2Delete.length != 0) {
-			//TODO: delete input/output
+		for (var i = 0; i < id2Delete.length; ++i) {
+			//delete input/output
+			if (type2Delete[i] == 'input') {
+				module1.inputs[i].deleteInput(0);
+				var paraInput = $('.para2Copy[type="input"][ioid!="-1"]');
+				for (var j = 0; j < paraInput.length; ++j) {
+					$(paraInput).each(function(){
+						$(this).attr('ioid', j);
+					});
+				}
+			}
+			else {
+				var paraOutput = $('.para2Copy[type="output"][ioid!="-1"]');
+				for (var j = 0; j < paraOutput.length; ++j) {
+					$(paraOutput).each(function(){
+						$(this).attr('ioid', j);
+					});
+				}
+				module1.outputs[i].deleteOutput(0);
+			}	
 		}
+		type2Delete = [];
+		id2Delete = [];
+		
 	}
 	else 
 		var module1=new module(x,y,type,input,output);
@@ -741,13 +782,27 @@ function buttonCheck_2() {
 	switch (type) {
 		case "normal":
 			$('.para2Copy').each(function(index, element) {
-                if ($(this).attr('IOId') != -1) { // modifying
-					//TODY: modifying input/output
+				var id = $(this).attr('IOId');
+				var IOtype = $(this).attr('type');
+				var fileType = $(this).children().find("#fileTypes").attr('value');
+				var checkbox = $(this).children().find("#input");
+				
+                if (id != -1) { // modifying
+                	if (IOtype == 'input')
+						module1.inputs[id].type = fileType;
+					else 
+						module1.outputs[id].type = fileType;
+					
+					// converting if any
+					if (IOtype == 'input' && !checkbox.is(':checked'))
+						module1.inputs[id].deleteInput(1);
+					if (IOtype == 'output' && checkbox.is(':checked'))
+						module1.outputs[id].deleteOutput(1);	
 				} else {
-					if ($(this).children().find("#input").is('checked')) // input
-						module1.addInput($(this).children().find("#fileTypes").attr('value'));
+					if (checkbox.is(':checked')) // input
+						module1.addInput(fileType);
 					else
-						module1.addOutput($(this).children().find("#fileTypes").attr('value'));
+						module1.addOutput(fileType);
 				}
             });
 		break;
@@ -755,21 +810,41 @@ function buttonCheck_2() {
 		case "source":
 		case "sink":
 		case "study":
-			for (var o = 0; o < output; o++) {
-				//placeholder
-				module1.addOutput("untyped");
+			if (type == "sink") {
+				if (module1.inputs.length == 0) 
+					module1.addInput("");
 			}
-			
-			for (var i = 0; i < input; i++) {
-				//placeholder
-				module1.addInput("untyped");
+			else {
+				if (module1.outputs.length == 0) 
+				
+					module1.addOutput("");
 			}
 			break;
 		case "conditional":
-			for (var i = 0; i < input; i++) {
-				//placeholder
-				module1.addInput("untyped");
-			}
+			$('.para2Copy').each(function(index, element) {
+				var id = $(this).attr('IOId');
+				var IOtype = $(this).attr('type');
+				var fileType = $(this).children().find("#fileTypes").attr('value');
+				var checkbox = $(this).children().find("#input");
+				
+                if (id != -1) { // modifying
+                	if (IOtype == 'input')
+						module1.inputs[id].type = fileType;
+					else 
+						module1.outputs[id].type = fileType;
+					
+					// converting if any
+					if (IOtype == 'input' && !checkbox.is(':checked'))
+						module1.inputs[id].deleteInput(1);
+					if (type == 'output' && $checkbox.is(':checked'))
+						module1.outputs[id].deleteOutput(1);	
+				} else {
+					if (checkbox.is(':checked')) // input
+						module1.addInput(fileType);
+					else
+						module1.addOutput(fileType);
+				}
+            });			
 			break;
 	}	 
 	 myModules[index]=module1;
@@ -1246,7 +1321,7 @@ function fixModules()
 				myModules[i].outputsFalse = new Array();
 				
 				myModules[i].outputs[j].inputsConnectedTo = new Array();
-				myModules[i].outputs[j].outputToInput = outputToInput;
+				myModules[i].outputs[j].deleteOutput = deleteOutput;
 				myModules[i].outputs[j].connectOut = connectOut;
 				myModules[i].outputs[j].parentModule = myModules[i];
 				
@@ -1258,7 +1333,7 @@ function fixModules()
 				myModules[i].inputs[j].offsetX;
 				myModules[i].inputs[j].offsetY;
 				
-				myModules[i].inputs[j].inputToOutput = inputToOutput;
+				myModules[i].inputs[j].deleteInput = deleteInput;
 				myModules[i].inputs[j].outputsConnectedTo = new Array();
 				myModules[i].inputs[j].parentModule = myModules[i];
 				
@@ -1317,7 +1392,7 @@ function fixModules()
 				myModules[i].outputsFalse = new Array();
 				
 				myModules[i].outputs[j].inputsConnectedTo = new Array();
-				myModules[i].outputs[j].outputToInput = outputToInput;
+				myModules[i].outputs[j].deleteOutput = deleteOutput;
 				myModules[i].outputs[j].connectOut = connectOut;
 				myModules[i].outputs[j].parentModule = myModules[i];
 				
@@ -1331,7 +1406,7 @@ function fixModules()
 			{
 				myModules[i].inputs[j].offsetX;
 				myModules[i].inputs[j].offsetY;
-				myModules[i].inputs[j].inputToOutput = inputToOutput;
+				myModules[i].inputs[j].deleteInput = deleteInput;
 				myModules[i].outputsTrue = new Array();
 				myModules[i].outputsFalse = new Array();
 				myModules[i].outputs = new Array();
@@ -1360,11 +1435,17 @@ function fixModules()
 function moduleMouseDown(e){
 	if (e.button == 2) //right click
 	{
+		var inOutside = true;
 		//check if right click selecting
 		for (var i = 0; i < myModules.length; i++) {
 			if (myModules[i].checkMoving(e.pageX + omw_scrollpane.scrollLeft, e.pageY + omw_scrollpane.scrollTop, canvas.offsetLeft, canvas.offsetTop)) {
-				if (myModules[i].selected == true) 
+				fillModuleId = i;
+				//console.log(fillModuleId);
+				if (myModules[i].selected == true) {
+					inOutside = false;
+					$('#module-context-menu').openContextMenu(this);
 					break;
+				}
 				else {
 					//if not selected reset selection and select
 					for (var k = 0; k < myModules.length; k++) {
@@ -1376,8 +1457,10 @@ function moduleMouseDown(e){
 					
 					myModules[i].selected = true;
 					
-					
-					
+					inOutside = false;
+					//document.bind('contextmenu', function(e) {
+					$('#module-context-menu').openContextMenu(this);
+					//return false;
 					
 					
 					
@@ -1386,6 +1469,10 @@ function moduleMouseDown(e){
 					break;
 				}
 			}
+		}
+		if (inOutside == true)
+		{
+			$('#canvas-context-menu').openContextMenu(this);
 		}
 		testMouse.X = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft;
 		testMouse.Y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop;
@@ -1571,7 +1658,9 @@ function moduleMouseUp(e){
 						
 				}
 				if (doubleFlag == false && checkConnect != null)*/
-				if (checkConnect != null && (checkConnect.parentModule != makingConnection.output.parentModule) && (checkConnect.type == makingConnection.output.type)) {
+				if (checkConnect != null && (checkConnect.parentModule != makingConnection.output.parentModule) && (checkConnect.type == makingConnection.output.type ||
+				    checkConnect.parentModule.type == "study" || checkConnect.parentModule.type == "sink" || checkConnect.parentModule.type == "source" ||
+					 makingConnection.output.parentModule.type == "study" || makingConnection.output.parentModule.type == "sink" ||makingConnection.output.parentModule.type == "source")) {
 					makingConnection.output.connectOut(checkConnect);
 					break;
 				}

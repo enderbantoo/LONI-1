@@ -5,7 +5,7 @@
 <link href="css/global.css" rel="stylesheet" type="text/css" />
 <link href="css/contextmenu.css" rel="stylesheet" type="text/css" />
 <link type="text/css" href="css/Aristo/Aristo.css" rel="stylesheet" />
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="js/global.js"></script>
 <script type="text/javascript" src="js/contextmenu.js"></script>
@@ -33,7 +33,7 @@
       <div style="clear: both;"></div>
       <div id="responseAjax"></div>
       <div id="saveFormDiv" class='yellowWrapper'>
-      <form id="SaveXmlForm" method="post">
+      <form id="SaveXmlForm" action="" method="post">
       	<label>File name: </label><input type="text" id="xml_file" />
       .xml 
        <input type="submit" value="Save" />

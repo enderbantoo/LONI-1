@@ -8,6 +8,7 @@
   <a href="javascript:void(0)" function="openStudyDialog()">Study</a>
   <a href="javascript:void(0)" function="openConditionalDialog()">Conditional</a>
   <hr />
+  <a href="javascript:void(0)" function="cutModule()">Delete</a>
   <a href="javascript:void(0)" function="ctm_paste()">Paste</a>
   <a href="javascript:void(0)" function="ctm_select_all()">Select All</a>
 </div>
@@ -15,6 +16,7 @@
 <div id="module-context-menu">
   <a href="javascript:void(0)" function="editDialog()">Edit parameters</a>
   <a href="javascript:void(0)" function="ctm_copy()">Copy</a>
+  <a href="javascript:void(0)" function="cutModule()">Delete</a>
   <a href="javascript:void(0)" function="ctm_rotate()">Rotate</a>
 </div>
 

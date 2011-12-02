@@ -4,7 +4,7 @@ var openModuleDialog = function(){
 };
 
 var openDataSourceDialog = function() {
-	emptyDialog('#module-dialog');
+	emptyDialog('#data-source-dialog');
 	$("#data-source-dialog").dialog("open");
 }
 
@@ -25,11 +25,12 @@ var openConditionalDialog = function() {
 
 //TODY
 var emptyDialog = function(dialog) {
-	$(dialog).clearForm();
+	$('#module-paraWrapper').empty();
+	id2Delete = [];
+	type2Delete = [];
 }
 	
-var para2copy_helper = function(InputOrOutput, IOid, name, type, input){
-	console.log('here');
+var para2copy_helper = function(InputOrOutput, IOId, name, type, input){
 	var para2copy = '<div class="para2Copy" type="'+InputOrOutput+'" IOId="'+IOId+'" style="padding: 2px; text-align: center;">'+
 		'<div style="float: left; width: 140px;"><input name="parameterName" type="text" id="parameterName" style="width: 120px;" value="'+name+'"/></div>'+
         '<div style="float: left; width: 120px;"><select name="fileTypes" id="fileTypes">'+
@@ -63,16 +64,14 @@ var para2copy_helper = function(InputOrOutput, IOid, name, type, input){
 
 var fillModuleDialog = function(fillModule)
 {
-	$('#module-dialog #name').attr('value', fillModule.name);
+	//$('#module-dialog #name').attr('value', fillModule.name);
 	
 	for (var i = 0; i < fillModule.inputs.length;i++)
 	{
-		$('#module-paraWrapper').empty();
 		$('#module-paraWrapper').append(para2copy_helper('input', i, fillModule.inputs[i].name, fillModule.inputs[i].type, true));	
 	}
 	for (var i = 0; i < fillModule.outputs.length;i++)
 	{
-		$('#module-paraWrapper').empty();
 		$('#module-paraWrapper').append(para2copy_helper('output', i, fillModule.outputs[i].name, fillModule.outputs[i].type, false));
 	}
 }
@@ -113,51 +112,40 @@ function addInputOutput(checkModule, checked, name, type)
 
 
 var editDialog = function() {
-	
-	//TODO
-	//for (var i = 0; i < myModules.length; i++) {
-	for (var i = 0; i < 1; i++) {
-			switch (myModules[i].type)
+			switch (myModules[fillModuleId].type)
 			{
 				case "normal":
-				fillModuleId = i;
-				fillModuleDialog(myModules[i]);
+				emptyDialog('#module-dialog');
+				fillModuleDialog(myModules[fillModuleId]);
 				$("#module-dialog").dialog("open");
 				break;
 				
 				case "conditional":
-				fillModuleId = i;
-				fillModuleDialog(myModules[i]);
+				emptyDialog('#conditional-dialog');
+				fillModuleDialog(myModules[fillModuleId]);
 				$("#conditional-dialog").dialog("open");
 				break;
 				
 				case "source":
-				fillModuleId = i;
+				emptyDialog('#data-source-dialog');
+				fillModuleDialog(myModules[fillModuleId]);
 				$("#data-source-dialog").dialog("open");
 				break;
 				
 				case "sink":
-				fillModuleId = i;
+				emptyDialog('#data-sink-dialog');
+				fillModuleDialog(myModules[fillModuleId]);
 				$("#data-sink-dialog").dialog("open");
 				break;
 				
 				case "study":
-				fillModuleId = i;
+				emptyDialog('#study-dialog');
+				fillModuleDialog(myModules[fillModuleId]);
 				$("#study-dialog").dialog("open");
 				break;
-			}
 	}
 }
 
-
-var option_edit = { width: 150, items: [
-				{ text: "Edit", icon: "", alias: "edit", action: editDialog },
-				{ text: "Delete", icon: "", alias: "ctm_cut", action: cutModule },
-				{ text: "Copy", icon: "", alias: "ctm_copy", action: ctm_copy },
-				{ text: "Rotate", icon: "", alias: "ctm_rotate", action: ctm_rotate }
-				
-			]
-};
 
 function ctm_copy(){
 	copyModules.splice(0, copyModules.length);
@@ -275,7 +263,7 @@ function menuAction() {
 
 
 function ctm_modules() {
-	createModule(testMouse.X,testMouse.Y,"normal");
+	createModule(testMouse.X,testMouse.Y,"normal", 0, 0);
 }
 
 function ctm_data_source() {
@@ -283,7 +271,7 @@ function ctm_data_source() {
 }
 
 function ctm_study() {
-		createModule(testMouse.X,testMouse.Y,"study",0,1);
+		createModule(testMouse.X,testMouse.Y,"study",1,0);
 }
 
 function ctm_data_sink() {
@@ -292,7 +280,7 @@ function ctm_data_sink() {
 }
 
 function ctm_conditional() {
-		createModule(testMouse.X,testMouse.Y,"conditional",1,1);
+		createModule(testMouse.X,testMouse.Y,"conditional",0,0);
 }		
 
 function cutModule() {

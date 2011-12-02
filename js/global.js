@@ -1,8 +1,8 @@
 // JavaScript Document
 // global
 var fillModuleId = -1;
-var IO2Delete = new Array();
-
+var id2Delete = new Array();
+var type2Delete = new Array();
 $(document).ready( function() {
 	
 
@@ -25,7 +25,7 @@ $(document).ready( function() {
 			var menu = $(this);
 			menu.css('padding', 0);
 	
-			menu.dialog('option', 'position', [jsEvent.clientX, jsEvent.clientY]);
+			menu.dialog('option', 'position', [testMouse.X + canvas.offsetLeft, testMouse.Y + canvas.offsetTop]);
 			menu.unbind('dialogopen');
 			menu.bind('dialogopen', function(event, ui) {
 				$(this).siblings().hide();
@@ -52,18 +52,21 @@ $(document).ready( function() {
 			eval($(this).attr('function'));
 		});
 	});
+	
+	$('#canvas-context-menu a').each(function(index){
+		$(this).bind('click', function(){
+			eval($(this).attr('function'));
+		});
+	});
 
+	$('#canvas').bind('contextmenu', function(e) {
+		return false;
+	});
 
 	document.oncontextmenu = function(e) {
-		$('#module-context-menu').openContextMenu(e);
 		return false;
 	};
 	
-	$('#canvas').bind('contextmenu', function(e) {
-	   $('#module-context-menu').openContextMenu(e);
-	   return false;
-	});
-
 
 	var index_para = 0;
 	
@@ -99,10 +102,12 @@ $(document).ready( function() {
 	
 	$('#removeParaButton').click(function(){
 		// saving the input/output which is deleted
-		var IOId = $('#module-paraWrapper > .para2Copy').eq(index_para).attr('IOId');
-		if (IOId != -1)
-			IO2Delete.push(IOId);
-			
+		var id = $('#module-paraWrapper > .para2Copy').eq(index_para).attr('IOId');
+		var type = $('#module-paraWrapper > .para2Copy').eq(index_para).attr('type');
+		if (id != -1) { // not creating a new module
+			type2Delete.push(type);
+			id2Delete.push(id);
+		}
 		$('#module-paraWrapper > .para2Copy').eq(index_para).detach();
 	});
 	
@@ -161,7 +166,10 @@ $(document).ready( function() {
 				}).play();
 				$("#message").text('Saving');
 				$('#saveFormDiv').slideToggle();
+				fillConnectionsArray();
 			},
+			dataType: "",
+			data: [myModules, myConnections],
 			target: "#responseAjax",
 			success: function(data) {		
 				Spinners.get("#spinner").remove();
