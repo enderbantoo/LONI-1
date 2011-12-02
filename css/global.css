@@ -5,6 +5,22 @@ body {
     margin: 0px;
 }
 
+#canvas-context-menu, #module-context-menu {
+	padding: 100px;
+}
+
+#canvas-context-menu a, #module-context-menu a {
+	padding: 5px;
+	display: block;
+	text-decoration: none;
+	width: 150px;
+}
+
+#canvas-context-menu a:hover, #module-context-menu a:hover {
+	background: #004891;
+	color: #FFF;
+}
+
 input[type='button']{
 	cursor: pointer;
 }

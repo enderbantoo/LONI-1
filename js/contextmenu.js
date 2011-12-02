@@ -1,50 +1,36 @@
-var openModuleDialog = function(){
-	//if (moduleId == -1) // new
-		//$('#masterFormContainer').clearForm();
+var openModuleDialog = function(){	
+	emptyDialog('#module-dialog');
 	$("#module-dialog").dialog("open");
 };
 
 var openDataSourceDialog = function() {
+	emptyDialog('#module-dialog');
 	$("#data-source-dialog").dialog("open");
 }
 
 var openDataSinkDialog = function() {
+	emptyDialog('#data-sink-dialog');
 	$("#data-sink-dialog").dialog("open");
 }
 
 var openStudyDialog = function() {
+	emptyDialog('#study-dialog');
 	$("#study-dialog").dialog("open");
 }
 
 var openConditionalDialog = function() {
+	emptyDialog('#conditional-dialog');
 	$("#conditional-dialog").dialog("open");
 }
 
-// context menus
-var option = { width: 150, items: [
-				{ text: "New", icon: "", alias: "new", action: menuAction, type: "group", width: 170, items: [
-					{ text: "Modules...", icon: "", alias: "ctm_modules", action: openModuleDialog },
-					{ type: "splitLine" },
-					{ text: "Data source", icon: "", alias: "ctm_data_source", action: openDataSourceDialog },
-					{ text: "Data sink", icon: "", alias: "ctm_data_sink", action: openDataSinkDialog },
-					{ text: "Study...", icon: "", alias: "ctm_study", action: openStudyDialog },
-					{ text: "Conditional...", icon: "", alias: "ctm_conditional", action: openConditionalDialog }
-				]},
-				{ type: "splitLine" },
-				{ text: "Delete", icon: "", alias: "ctm_cut", action: cutModule },
-				{ text: "Copy", icon: "", alias: "ctm_copy", action: ctm_copy },
-				{ text: "Paste", icon: "", alias: "ctm_paste", action: ctm_paste }, 
-				{ text: "Select all", icon: "", alias: "ctm_select_all", action: ctm_select_all },
-				{ text: "Rotate", icon: "", alias: "ctm_rotate", action: ctm_rotate }
-				
-			]
-};
-
+//TODY
+var emptyDialog = function(dialog) {
+	$(dialog).clearForm();
+}
 	
-	
-var para2copy_helper = function(name, type, input){
+var para2copy_helper = function(InputOrOutput, IOid, name, type, input){
 	console.log('here');
-	var para2copy = '<div class="para2Copy" style="padding: 2px; text-align: center;">'+
+	var para2copy = '<div class="para2Copy" type="'+InputOrOutput+'" IOId="'+IOId+'" style="padding: 2px; text-align: center;">'+
 		'<div style="float: left; width: 140px;"><input name="parameterName" type="text" id="parameterName" style="width: 120px;" value="'+name+'"/></div>'+
         '<div style="float: left; width: 120px;"><select name="fileTypes" id="fileTypes">'+
               '<option value="Directory"';
@@ -81,14 +67,17 @@ var fillModuleDialog = function(fillModule)
 	
 	for (var i = 0; i < fillModule.inputs.length;i++)
 	{
-		$('#module-paraWrapper').append(para2copy_helper(fillModule.inputs[i].name, fillModule.inputs[i].type, true));
+		$('#module-paraWrapper').empty();
+		$('#module-paraWrapper').append(para2copy_helper('input', i, fillModule.inputs[i].name, fillModule.inputs[i].type, true));	
 	}
 	for (var i = 0; i < fillModule.outputs.length;i++)
 	{
-		$('#module-paraWrapper').append(para2copy_helper(fillModule.outputs[i].name, fillModule.outputs[i].type, false));
+		$('#module-paraWrapper').empty();
+		$('#module-paraWrapper').append(para2copy_helper('output', i, fillModule.outputs[i].name, fillModule.outputs[i].type, false));
 	}
-	
 }
+
+
 
 var saveParameters = function(fillModule, type){
 	$('#' + type + '-dialog input[type!="checkbox"],textarea').each(function(){
@@ -103,7 +92,7 @@ var saveParameters = function(fillModule, type){
 	}
 }
 
-addInputOutput(checkModule, checked, name, type)
+function addInputOutput(checkModule, checked, name, type)
 {
 	if (checked == true)
 	{
@@ -124,28 +113,39 @@ addInputOutput(checkModule, checked, name, type)
 
 
 var editDialog = function() {
-	for (var i = 0; i < myModules.length; i++) {
-		if (myModules[i].selected = true) {
+	
+	//TODO
+	//for (var i = 0; i < myModules.length; i++) {
+	for (var i = 0; i < 1; i++) {
 			switch (myModules[i].type)
 			{
 				case "normal":
+				fillModuleId = i;
 				fillModuleDialog(myModules[i]);
-				openModuleDialog();
+				$("#module-dialog").dialog("open");
 				break;
+				
 				case "conditional":
-				openConditionalDialog();
+				fillModuleId = i;
+				fillModuleDialog(myModules[i]);
+				$("#conditional-dialog").dialog("open");
 				break;
+				
 				case "source":
-				openDataSourceDialog();
+				fillModuleId = i;
+				$("#data-source-dialog").dialog("open");
 				break;
+				
 				case "sink":
-				openDataSinkDialog();
+				fillModuleId = i;
+				$("#data-sink-dialog").dialog("open");
 				break;
+				
 				case "study":
-				openStudyDialog();
+				fillModuleId = i;
+				$("#study-dialog").dialog("open");
 				break;
 			}
-		}
 	}
 }
 
@@ -275,9 +275,7 @@ function menuAction() {
 
 
 function ctm_modules() {
-	createModule(testMouse.X,testMouse.Y,"normal",1,1);
-	//saving parameters
-	
+	createModule(testMouse.X,testMouse.Y,"normal");
 }
 
 function ctm_data_source() {

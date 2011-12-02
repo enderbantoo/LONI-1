@@ -1,14 +1,73 @@
 // JavaScript Document
 // global
-var moduleId = -1;
+var fillModuleId = -1;
+var IO2Delete = new Array();
 
 $(document).ready( function() {
 	
 
+	(function($) {
+		$.fn.setUpContextMenu = function() {
+			$(this).dialog({
+				autoOpen: false,
+				modal: true,
+				resizable: false,
+				width: 'auto',
+				height: 'auto',
+				minHeight: 'auto',
+				minWidth: 'auto'
+			});
+	
+			return $(this);
+		};
+	
+		$.fn.openContextMenu = function(jsEvent) {
+			var menu = $(this);
+			menu.css('padding', 0);
+	
+			menu.dialog('option', 'position', [jsEvent.clientX, jsEvent.clientY]);
+			menu.unbind('dialogopen');
+			menu.bind('dialogopen', function(event, ui) {
+				$(this).siblings().hide();
+				$('.ui-widget-overlay').unbind('click');
+				$('.ui-widget-overlay').css('opacity', 0);
+				$('.ui-widget-content').click(function() {
+					menu.dialog('close');
+				});
+				$('.ui-widget-overlay').click(function() {
+					menu.dialog('close');
+				});
+			});
+			menu.dialog('open');
+	
+			return menu;
+		};
+	})(jQuery); 
+	
+	$('#canvas-context-menu').setUpContextMenu();
+	$('#module-context-menu').setUpContextMenu();
+	
+	$('#module-context-menu a').each(function(index){
+		$(this).bind('click', function(){
+			eval($(this).attr('function'));
+		});
+	});
+
+
+	document.oncontextmenu = function(e) {
+		$('#module-context-menu').openContextMenu(e);
+		return false;
+	};
+	
+	$('#canvas').bind('contextmenu', function(e) {
+	   $('#module-context-menu').openContextMenu(e);
+	   return false;
+	});
+
 
 	var index_para = 0;
 	
-	var para2copy = '<div class="para2Copy" style="padding: 2px; text-align: center;">'+
+	var para2copy = '<div class="para2Copy" type="unknown" IOId="-1" style="padding: 2px; text-align: center;">'+
 		'<div style="float: left; width: 140px;"><input name="parameterName" type="text" id="parameterName" style="width: 120px;"/></div>'+
         '<div style="float: left; width: 120px;"><select name="fileTypes" id="fileTypes">'+
               '<option value="Directory" selected="selected">Directory</option>'+
@@ -39,6 +98,11 @@ $(document).ready( function() {
 	});
 	
 	$('#removeParaButton').click(function(){
+		// saving the input/output which is deleted
+		var IOId = $('#module-paraWrapper > .para2Copy').eq(index_para).attr('IOId');
+		if (IOId != -1)
+			IO2Delete.push(IOId);
+			
 		$('#module-paraWrapper > .para2Copy').eq(index_para).detach();
 	});
 	
@@ -70,7 +134,7 @@ $(document).ready( function() {
 			
 			{
 				text: "Cancel",
-				click: function() { $(this).dialog("close"); }
+				click: function() { IO2Delete = []; $(this).dialog("close"); }
 			}
 		]
 	});
@@ -98,8 +162,6 @@ $(document).ready( function() {
 				$("#message").text('Saving');
 				$('#saveFormDiv').slideToggle();
 			},
-			data: {modulesArray: myModules,
-				   connectionsArray: myConnections},
 			target: "#responseAjax",
 			success: function(data) {		
 				Spinners.get("#spinner").remove();
@@ -138,9 +200,7 @@ $(document).ready( function() {
 	
 	// buttons
 	//$("input:button").button();
-	
-	
-	$("#canvas").contextmenu(option);
+
 	
 	
 	/*

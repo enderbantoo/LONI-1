@@ -1,5 +1,23 @@
 <%@page contentType="text/html" import="java.util.*" %>
 <% Date date = new java.util.Date(); %>
+
+<div id="canvas-context-menu">
+  <a href="javascript:void(0)" function="openModuleDialog()">Modules</a>
+  <a href="javascript:void(0)" function="openDataSourceDialog()">Data source</a>
+  <a href="javascript:void(0)" function="openDataSinkDialog()">Data sink</a>
+  <a href="javascript:void(0)" function="openStudyDialog()">Study</a>
+  <a href="javascript:void(0)" function="openConditionalDialog()">Conditional</a>
+  <hr />
+  <a href="javascript:void(0)" function="ctm_paste()">Paste</a>
+  <a href="javascript:void(0)" function="ctm_select_all()">Select All</a>
+</div>
+
+<div id="module-context-menu">
+  <a href="javascript:void(0)" function="editDialog()">Edit parameters</a>
+  <a href="javascript:void(0)" function="ctm_copy()">Copy</a>
+  <a href="javascript:void(0)" function="ctm_rotate()">Rotate</a>
+</div>
+
 <form id="masterFormContainer" method="post">
 <div id="module-dialog" title="Module Definition" class="tabs dialog" function="ctm_modules()">
 	<ul>

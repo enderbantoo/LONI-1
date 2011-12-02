@@ -729,10 +729,29 @@ function buttonCheck_2() {
  function createModule(x,y,type,input,output)
 {
  	var index=myModules.length;
-	var module1=new module(x,y,type,input,output);
+	if(fillModuleId != -1){ // not creating a new module
+		var module1 = myModules[fillModuleId];
+		if (IO2Delete.length != 0) {
+			//TODO: delete input/output
+		}
+	}
+	else 
+		var module1=new module(x,y,type,input,output);
 	
 	switch (type) {
 		case "normal":
+			$('.para2Copy').each(function(index, element) {
+                if ($(this).attr('IOId') != -1) { // modifying
+					//TODY: modifying input/output
+				} else {
+					if ($(this).children().find("#input").is('checked')) // input
+						module1.addInput($(this).children().find("#fileTypes").attr('value'));
+					else
+						module1.addOutput($(this).children().find("#fileTypes").attr('value'));
+				}
+            });
+		break;
+		
 		case "source":
 		case "sink":
 		case "study":
@@ -754,6 +773,7 @@ function buttonCheck_2() {
 			break;
 	}	 
 	 myModules[index]=module1;
+	 IO2Delete = [];
 }
  
  function deleteModule(index){

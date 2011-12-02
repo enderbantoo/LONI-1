@@ -7,7 +7,6 @@
 <link type="text/css" href="css/Aristo/Aristo.css" rel="stylesheet" />
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
-<script type="text/javascript" src="js/jquery.contextmenu.js"></script>
 <script type="text/javascript" src="js/global.js"></script>
 <script type="text/javascript" src="js/contextmenu.js"></script>
 <script type="text/javascript" src="js/jquery.spinner.min.js"></script>
