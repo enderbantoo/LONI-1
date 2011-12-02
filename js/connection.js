@@ -592,17 +592,23 @@ function fixBoundaries() //make cleaner solution
 	var maxWidth = findMaxX();
 	var maxHeight = findMaxY();
 	
-	if (maxWidth + 100 > canvas.width)
+	if (maxWidth + 100 > canvas.width) {
 		canvas.width = canvas.width + 100;
-	else if (maxWidth + 200 < canvas.width && canvas.width > 700)
-		canvas.width = canvas.width - 100;
+		omw_scrollpane.scrollLeft +=75;
+	}
+	else 
+		if (maxWidth + 200 < canvas.width && canvas.width > 700) 
+			canvas.width = canvas.width - 100;
 	if (canvas.width < 700)
 		canvas.width = 700;
 		
-	if (maxHeight + 50 > canvas.height)
+	if (maxHeight + 100 > canvas.height) {
 		canvas.height = canvas.height + 100;
-	else if (maxHeight + 100 < canvas.height && canvas.height > 600)
-		canvas.height = canvas.height - 100;
+		omw_scrollpane.scrollTop +=75;
+	}
+	else 
+		if (maxHeight + 200 < canvas.height && canvas.height > 600) 
+			canvas.height = canvas.height - 100;
 	if (canvas.height < 600)
 		canvas.height = 600;
 }
@@ -1240,13 +1246,13 @@ function fixModules()
 			break;
 		case "conditional":
 			myModules[i].radius=56;
+			myModules[i].outputs = new Array();
 			for (var j = 0; j < myModules[i].outputsTrue.length;j++)
 			{
 				myModules[i].outputsTrue[j].offsetX;
 				myModules[i].outputsTrue[j].offsetY;
 				
 				myModules[i].outputsTrue[j].inputsConnectedTo = new Array();
-				
 				myModules[i].outputsTrue[j].connectOut = connectOut;
 				myModules[i].outputsTrue[j].parentModule = myModules[i];
 				
@@ -1280,13 +1286,13 @@ function fixModules()
 		case "source":
 		case "study":
 			myModules[i].radius=28;
+			myModules[i].inputs = new Array();
 			for (var j = 0; j < myModules[i].outputs.length;j++)
 			{
 				myModules[i].outputs[j].offsetX;
 				myModules[i].outputs[j].offsetY;
 				
 				myModules[i].outputs[j].inputsConnectedTo = new Array();
-				
 				myModules[i].outputs[j].outputToInput = outputToInput;
 				myModules[i].outputs[j].connectOut = connectOut;
 				myModules[i].outputs[j].parentModule = myModules[i];
@@ -1296,12 +1302,13 @@ function fixModules()
 			break;
 		case "sink":
 			myModules[i].radius=35;
+			myModules[i].outputs = new Array();
 			for (var j = 0; j < myModules[i].inputs.length;j++)
 			{
 				myModules[i].inputs[j].offsetX;
 				myModules[i].inputs[j].offsetY;
 				myModules[i].inputs[j].inputToOutput = inputToOutput;
-
+				myModules[i].outputs = new Array();
 				myModules[i].inputs[j].outputsConnectedTo = new Array();
 				myModules[i].inputs[j].parentModule = myModules[i];
 				
@@ -1311,6 +1318,11 @@ function fixModules()
 			break;
 		}
 	myModules[i].formatModule();
+	if (myModules[i].rotate == 1)
+	{
+		myModules[i].rotate = 0;
+		myModules[i].rotateModule();
+	}
 	//connection information
 	myModules.conIndex;
 	}
@@ -1675,7 +1687,7 @@ function setChildOrder(input, x)
 		input.parentModule.sequence = x;
 	
 	//recursively call on all the input's parent's children
-	if (input.parentModule.type != "conditional") {
+	if (input.parentModule.type != "conditional" && input.parentModule.type != "sink") {
 		for (var i = 0; i < input.parentModule.outputs.length; i++) {
 			for (var j = 0; j < input.parentModule.outputs[i].inputsConnectedTo.length; j++) {
 				if (input.parentModule.outputs[i].inputsConnectedTo[j] != null) {
@@ -1684,7 +1696,7 @@ function setChildOrder(input, x)
 			}
 		}
 	}
-	else {
+	else if ( input.parentModule.type == "conditional"){
 		for (var i = 0; i < input.parentModule.outputsTrue.length; i++) {
 			for (var j = 0; j < input.parentModule.outputsTrue[i].inputsConnectedTo.length; j++) {
 				if (input.parentModule.outputsTrue[i].inputsConnectedTo[j] != null) {
