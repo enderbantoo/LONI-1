@@ -1,24 +1,29 @@
 var openModuleDialog = function(){	
+	fillModuleId = -1;
 	emptyDialog('#module-dialog');
 	$("#module-dialog").dialog("open");
 };
 
 var openDataSourceDialog = function() {
+	fillModuleId = -1;
 	emptyDialog('#data-source-dialog');
 	$("#data-source-dialog").dialog("open");
 }
 
 var openDataSinkDialog = function() {
+	fillModuleId = -1;
 	emptyDialog('#data-sink-dialog');
 	$("#data-sink-dialog").dialog("open");
 }
 
 var openStudyDialog = function() {
+	fillModuleId = -1;
 	emptyDialog('#study-dialog');
 	$("#study-dialog").dialog("open");
 }
 
 var openConditionalDialog = function() {
+	fillModuleId = -1;
 	emptyDialog('#conditional-dialog');
 	$("#conditional-dialog").dialog("open");
 }
@@ -28,6 +33,13 @@ var emptyDialog = function(dialog) {
 	$('#module-paraWrapper').empty();
 	id2Delete = [];
 	type2Delete = [];
+}
+
+function optionsSaveXml() {
+	fillConnectionsArray();
+	$('#SaveXmlForm').append('<input type="hidden" name="myModules" value="'+myModules+'" />');
+	$('#SaveXmlForm').append('<input type="hidden" name="myConnections" value="'+myConnections+'" />');
+	$('#SaveXmlForm').submit();
 }
 	
 var para2copy_helper = function(InputOrOutput, IOId, name, type, input){
@@ -73,21 +85,6 @@ var fillModuleDialog = function(fillModule)
 	for (var i = 0; i < fillModule.outputs.length;i++)
 	{
 		$('#module-paraWrapper').append(para2copy_helper('output', i, fillModule.outputs[i].name, fillModule.outputs[i].type, false));
-	}
-}
-
-
-
-var saveParameters = function(fillModule, type){
-	$('#' + type + '-dialog input[type!="checkbox"],textarea').each(function(){
-		fillModule[$(this).attr('id')] = $(this).attr('value');
-	})
-	
-	//insert new
-	if (type == 'normal' || type == 'conditional') {
-		$('#' + type + '-dialog .para2copy input[type="checkbox"]').each(function(){
-			addInputOutput(fillModule, $(this).is(':checked'), $(this).parent().childrens('input[id="parameterName"]'), $(this).parent().childrens('input[id="filesType"]'));
-		})
 	}
 }
 

@@ -5,6 +5,10 @@ body {
     margin: 0px;
 }
 
+input[type="submit"], input[type="button"] {
+	cursor: pointer;
+}
+
 #canvas-context-menu, #module-context-menu {
 	padding: 100px;
 }

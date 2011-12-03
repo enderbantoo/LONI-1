@@ -746,34 +746,31 @@ function buttonCheck_2() {
  //============================================
  //        Module Manipulations
  //============================================
+ 
+function decreaseIO(type, index_para) { //
+	var para = $('.para2Copy[type="'+type+'"][ioid!="-1"]').filter(':eq('+index_para+'), :gt('+index_para+')');
+	$(para).each(function(){
+		$(this).attr('ioid', $(this).attr('ioid') - 1);
+	});
+}
+ 
  function createModule(x,y,type,input,output)
 {
  	var index=myModules.length;
 	if(fillModuleId != -1){ // not creating a new module
 		var module1 = myModules[fillModuleId];
-		for (var i = 0; i < id2Delete.length; ++i) {
+		for (var i = 0; i < IO2Delete.length; ++i) {
 			//delete input/output
-			if (type2Delete[i] == 'input') {
-				module1.inputs[i].deleteInput(0);
-				var paraInput = $('.para2Copy[type="input"][ioid!="-1"]');
-				for (var j = 0; j < paraInput.length; ++j) {
-					$(paraInput).each(function(){
-						$(this).attr('ioid', j);
-					});
-				}
+			if (IO2Delete[i][0] == 'input') {
+				module1.inputs[IODelete[i][1]].deleteInput(0);
+				decreaseIO('input', IO2Delete[i][2]);
 			}
 			else {
-				var paraOutput = $('.para2Copy[type="output"][ioid!="-1"]');
-				for (var j = 0; j < paraOutput.length; ++j) {
-					$(paraOutput).each(function(){
-						$(this).attr('ioid', j);
-					});
-				}
-				module1.outputs[i].deleteOutput(0);
+				module1.outputs[IO2Delete[i][1]].deleteOutput(0);
+				decreaseIO('output', IO2Delete[i][2]);
 			}	
 		}
-		type2Delete = [];
-		id2Delete = [];
+		IO2Delete = [];
 		
 	}
 	else 
@@ -781,23 +778,32 @@ function buttonCheck_2() {
 	
 	switch (type) {
 		case "normal":
-			$('.para2Copy').each(function(index, element) {
+			$('.para2Copy').each(function(index) {
 				var id = $(this).attr('IOId');
 				var IOtype = $(this).attr('type');
 				var fileType = $(this).children().find("#fileTypes").attr('value');
+				var name = $(this).children().find("#name").attr('value');
 				var checkbox = $(this).children().find("#input");
 				
                 if (id != -1) { // modifying
-                	if (IOtype == 'input')
+                	if (IOtype == 'input') {
+						module1.inputs[id].name = name;
 						module1.inputs[id].type = fileType;
-					else 
+					}
+					else {
+						module1.outputs[id].name = name;
 						module1.outputs[id].type = fileType;
+					}
 					
 					// converting if any
-					if (IOtype == 'input' && !checkbox.is(':checked'))
+					if (IOtype == 'input' && !checkbox.is(':checked')) { // to output
 						module1.inputs[id].deleteInput(1);
-					if (IOtype == 'output' && checkbox.is(':checked'))
+						decreaseIO('input', index);
+					}
+					if (IOtype == 'output' && checkbox.is(':checked')) { // to input
 						module1.outputs[id].deleteOutput(1);	
+						decreaseIO('output', index);
+					}
 				} else {
 					if (checkbox.is(':checked')) // input
 						module1.addInput(fileType);

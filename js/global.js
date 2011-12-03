@@ -1,10 +1,11 @@
 // JavaScript Document
 // global
 var fillModuleId = -1;
-var id2Delete = new Array();
-var type2Delete = new Array();
-$(document).ready( function() {
+var IO2Delete = new Array();
+var index_para = 0;
 	
+	
+$(document).ready( function() {
 
 	(function($) {
 		$.fn.setUpContextMenu = function() {
@@ -67,9 +68,6 @@ $(document).ready( function() {
 		return false;
 	};
 	
-
-	var index_para = 0;
-	
 	var para2copy = '<div class="para2Copy" type="unknown" IOId="-1" style="padding: 2px; text-align: center;">'+
 		'<div style="float: left; width: 140px;"><input name="parameterName" type="text" id="parameterName" style="width: 120px;"/></div>'+
         '<div style="float: left; width: 120px;"><select name="fileTypes" id="fileTypes">'+
@@ -105,8 +103,10 @@ $(document).ready( function() {
 		var id = $('#module-paraWrapper > .para2Copy').eq(index_para).attr('IOId');
 		var type = $('#module-paraWrapper > .para2Copy').eq(index_para).attr('type');
 		if (id != -1) { // not creating a new module
-			type2Delete.push(type);
-			id2Delete.push(id);
+			IO2Delete[IO2Delete.length] = new Array();
+			IO2Delete[IO2Delete.length-1].push(type);
+			IO2Delete[IO2Delete.length-1].push(parseInt(id));
+			IO2Delete[IO2Delete.length-1].push(index_para);
 		}
 		$('#module-paraWrapper > .para2Copy').eq(index_para).detach();
 	});
@@ -158,25 +158,6 @@ $(document).ready( function() {
 		$('#loadFormDiv').slideToggle();
 	});	
 	
-	var optionsSaveXML = {
-		beforeSubmit: function() {
-				Spinners.create('#spinner', {
-					radii: [4,8],
-					dashWidth: 1
-				}).play();
-				$("#message").text('Saving');
-				$('#saveFormDiv').slideToggle();
-				fillConnectionsArray();
-			},
-			dataType: "",
-			data: [myModules, myConnections],
-			target: "#responseAjax",
-			success: function(data) {		
-				Spinners.get("#spinner").remove();
-				$('#message').text(data);
-			}
-	};
-	
 	var optionsLoadXml = {
 		dataType: 'json',
 		beforeSubmit: function() {
@@ -204,41 +185,5 @@ $(document).ready( function() {
 	
 	$('#SaveXmlForm').ajaxForm(function(){});
 	$('#LoadXmlForm').ajaxForm(optionsLoadXml);
-	
-	
-	// buttons
-	//$("input:button").button();
-
-	
-	
-	/*
-	$("body").keydown(function(e){
-		if (e.keyCode === 46)
-			cutModule();
-		else if (e.keyCode === 65)
-		{
-			if (e.ctrlKey)
-				ctm_select_all();
-		}
-		else if (e.keyCode === 67)
-		{
-			if (e.ctrlKey)
-				ctm_copy();
-		}
-		else if (e.keyCode === 86)
-		{
-			if (e.ctrlKey)
-				ctm_paste();
-		}
-		return false;
-	})
-	
-	$("body").keydown(function(e){
-		if (e.keyCode ===46)
-			input.ctrlFlag = false;
-		return false;
-	})	
-		
-	*/
 
 });

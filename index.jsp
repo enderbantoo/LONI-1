@@ -36,7 +36,7 @@
       <form id="SaveXmlForm" action="" method="post">
       	<label>File name: </label><input type="text" id="xml_file" />
       .xml 
-       <input type="submit" value="Save" />
+       <input type="button" value="Save" onclick="optionsSaveXml()" />
        </form>
       </div>
        <div id="loadFormDiv" class="yellowWrapper">
