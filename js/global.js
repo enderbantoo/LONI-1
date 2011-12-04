@@ -68,6 +68,8 @@ $(document).ready( function() {
 		return false;
 	};
 	
+	//conditional dialog
+	
 	var para2copy = '<div class="para2Copy" type="unknown" IOId="-1" style="padding: 2px; text-align: center;">'+
 		'<div style="float: left; width: 140px;"><input name="parameterName" type="text" id="parameterName" style="width: 120px;"/></div>'+
         '<div style="float: left; width: 120px;"><select name="fileTypes" id="fileTypes">'+
@@ -90,6 +92,7 @@ $(document).ready( function() {
 	// dialogs misc
 	$('.addParaButton').click(function(){
 		$(this).siblings().filter('.module-paraWrapper').append(para2copy);
+		$('#conditional-dialog [name="input"]').prop('checked', true).attr('disabled', 'disabled');
 	});
 	
 	$('.module-paraWrapper > .para2Copy').live("click", function(){
