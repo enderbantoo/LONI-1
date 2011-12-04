@@ -778,11 +778,12 @@ function decreaseIO(type, index_para) { //
 	
 	switch (type) {
 		case "normal":
+		case "conditional":
 			$('.para2Copy').each(function(index) {
 				var id = $(this).attr('IOId');
 				var IOtype = $(this).attr('type');
 				var fileType = $(this).children().find("#fileTypes").attr('value');
-				var name = $(this).children().find("#name").attr('value');
+				var name = $(this).children().find("#parameterName").attr('value');
 				var checkbox = $(this).children().find("#input");
 				
                 if (id != -1) { // modifying
@@ -825,32 +826,6 @@ function decreaseIO(type, index_para) { //
 				
 					module1.addOutput("");
 			}
-			break;
-		case "conditional":
-			$('.para2Copy').each(function(index, element) {
-				var id = $(this).attr('IOId');
-				var IOtype = $(this).attr('type');
-				var fileType = $(this).children().find("#fileTypes").attr('value');
-				var checkbox = $(this).children().find("#input");
-				
-                if (id != -1) { // modifying
-                	if (IOtype == 'input')
-						module1.inputs[id].type = fileType;
-					else 
-						module1.outputs[id].type = fileType;
-					
-					// converting if any
-					if (IOtype == 'input' && !checkbox.is(':checked'))
-						module1.inputs[id].deleteInput(1);
-					if (type == 'output' && $checkbox.is(':checked'))
-						module1.outputs[id].deleteOutput(1);	
-				} else {
-					if (checkbox.is(':checked')) // input
-						module1.addInput(fileType);
-					else
-						module1.addOutput(fileType);
-				}
-            });			
 			break;
 	}	 
 	 myModules[index]=module1;

@@ -29,8 +29,8 @@ var openConditionalDialog = function() {
 }
 
 //TODY
-var emptyDialog = function(dialog) {
-	$('#module-paraWrapper').empty();
+var emptyDialog = function() {
+	$('.module-paraWrapper').empty();
 	id2Delete = [];
 	type2Delete = [];
 }
@@ -80,11 +80,11 @@ var fillModuleDialog = function(fillModule)
 	
 	for (var i = 0; i < fillModule.inputs.length;i++)
 	{
-		$('#module-paraWrapper').append(para2copy_helper('input', i, fillModule.inputs[i].name, fillModule.inputs[i].type, true));	
+		$('.module-paraWrapper').append(para2copy_helper('input', i, fillModule.inputs[i].name, fillModule.inputs[i].type, true));	
 	}
 	for (var i = 0; i < fillModule.outputs.length;i++)
 	{
-		$('#module-paraWrapper').append(para2copy_helper('output', i, fillModule.outputs[i].name, fillModule.outputs[i].type, false));
+		$('.module-paraWrapper').append(para2copy_helper('output', i, fillModule.outputs[i].name, fillModule.outputs[i].type, false));
 	}
 }
 
@@ -109,35 +109,31 @@ function addInputOutput(checkModule, checked, name, type)
 
 
 var editDialog = function() {
+	emptyDialog();
 			switch (myModules[fillModuleId].type)
 			{
 				case "normal":
-				emptyDialog('#module-dialog');
 				fillModuleDialog(myModules[fillModuleId]);
 				$("#module-dialog").dialog("open");
 				break;
 				
 				case "conditional":
-				emptyDialog('#conditional-dialog');
 				fillModuleDialog(myModules[fillModuleId]);
 				$("#conditional-dialog").dialog("open");
 				break;
 				
 				case "source":
-				emptyDialog('#data-source-dialog');
-				fillModuleDialog(myModules[fillModuleId]);
+				//fillModuleDialog(myModules[fillModuleId]);
 				$("#data-source-dialog").dialog("open");
 				break;
 				
 				case "sink":
-				emptyDialog('#data-sink-dialog');
-				fillModuleDialog(myModules[fillModuleId]);
+				//fillModuleDialog(myModules[fillModuleId]);
 				$("#data-sink-dialog").dialog("open");
 				break;
 				
 				case "study":
-				emptyDialog('#study-dialog');
-				fillModuleDialog(myModules[fillModuleId]);
+				//fillModuleDialog(myModules[fillModuleId]);
 				$("#study-dialog").dialog("open");
 				break;
 	}

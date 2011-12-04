@@ -88,27 +88,27 @@ $(document).ready( function() {
 		'<div style="clear: both;"></div></div>';
 	
 	// dialogs misc
-	$('#addParaButton').click(function(){
-		$('#module-paraWrapper').append(para2copy);
+	$('.addParaButton').click(function(){
+		$(this).siblings().filter('.module-paraWrapper').append(para2copy);
 	});
 	
-	$('#module-paraWrapper > .para2Copy').live("click", function(){
+	$('.module-paraWrapper > .para2Copy').live("click", function(){
 		index_para = $(this).parent().children().index(this);
 		$(this).siblings().removeClass("highlight");
 		$(this).toggleClass("highlight");
 	});
 	
-	$('#removeParaButton').click(function(){
+	$('.removeParaButton').click(function(){
 		// saving the input/output which is deleted
-		var id = $('#module-paraWrapper > .para2Copy').eq(index_para).attr('IOId');
-		var type = $('#module-paraWrapper > .para2Copy').eq(index_para).attr('type');
+		var id = $(this).parent().find('.para2Copy').eq(index_para).attr('IOId');
+		var type = $(this).parent().find('.para2Copy').eq(index_para).attr('type');
 		if (id != -1) { // not creating a new module
 			IO2Delete[IO2Delete.length] = new Array();
 			IO2Delete[IO2Delete.length-1].push(type);
 			IO2Delete[IO2Delete.length-1].push(parseInt(id));
 			IO2Delete[IO2Delete.length-1].push(index_para);
 		}
-		$('#module-paraWrapper > .para2Copy').eq(index_para).detach();
+		$(this).parent().find('.para2Copy').eq(index_para).detach();
 	});
 	
 	// conditional

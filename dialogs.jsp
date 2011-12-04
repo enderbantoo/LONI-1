@@ -72,11 +72,11 @@
       <div style="width: 60px;" class="para-title">Required</div>
       <div style="width: 40px;" class="para-title">Input</div>
         <div style="clear: both;"></div>
-      <div id="module-paraWrapper">
+      <div class="module-paraWrapper">
             
       </div>
-       <input name="removeParaButton" type="button" id="removeParaButton" value="Remove" />
-       <input name="addParaButton" type="button" id="addParaButton" value="Add" />
+       <input name="removeParaButton" type="button" class="removeParaButton" value="Remove" />
+       <input name="addParaButton" type="button" class="addParaButton" value="Add" />
     </div>
     
     <div id="execution-tab" class="tabs">
@@ -265,11 +265,11 @@
       <div style="width: 60px;" class="para-title">Required</div>
       <div style="width: 40px;" class="para-title">Input</div>
         <div style="clear: both;"></div>
-      <div id="conditional-paraWrapper">
+      <div class="module-paraWrapper">
                 
       </div>
-       <input name="conditional-removeParaButton" type="button" id="conditional-removeParaButton" value="Remove" />
-       <input name="conditional-addParaButton" type="button" id="conditional-addParaButton" value="Add" />
+       <input name="removeParaButton" type="button" class="removeParaButton" value="Remove" />
+       <input name="addParaButton" type="button" class="addParaButton" value="Add" />
     </div>
     <div id="conditions-tab">
     	<fieldset>
