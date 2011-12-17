@@ -76,7 +76,16 @@ var para2copy_helper = function(InputOrOutput, IOId, name, type, input){
 
 var fillModuleDialog = function(fillModule)
 {
-	//$('#module-dialog #name').attr('value', fillModule.name);
+	if (fillModule.type == 'normal')
+		var theDialog = $('#module-dialog');
+	else
+		var theDialog = $('#'+ fillModule.type +'-dialog');
+
+	theDialog.find('#name').attr('value', fillModule.name);
+	theDialog.find('#package').attr('value', fillModule.packaged);
+	theDialog.find('#version').attr('value', fillModule.version);
+	theDialog.find('#executableVersion').attr('value', fillModule.executableVersion);
+	theDialog.find('#description').attr('value', fillModule.descriptions);
 	
 	for (var i = 0; i < fillModule.inputs.length;i++)
 	{
@@ -110,6 +119,7 @@ function addInputOutput(checkModule, checked, name, type)
 
 var editDialog = function() {
 	emptyDialog();
+	
 			switch (myModules[fillModuleId].type)
 			{
 				case "normal":
@@ -119,6 +129,7 @@ var editDialog = function() {
 				
 				case "conditional":
 				fillModuleDialog(myModules[fillModuleId]);
+				$('#conditional-dialog [name="input"]').prop('checked', true).attr('disabled', 'disabled');
 				$("#conditional-dialog").dialog("open");
 				break;
 				

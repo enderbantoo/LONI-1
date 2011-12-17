@@ -223,7 +223,7 @@ function deleteOutput(deleteOrSwap) //0: delete
 {
 	for (var i = this.outputIndex + 1; i < this.parentModule.outputs.length;i++)
 	{
-			myModules[this.parentModule].outputs[i].outputIndex--;
+			this.parentModule.outputs[i].outputIndex--;
 	}
 	
 	for (var i = 0; i < this.inputsConnectedTo.length;i++)
@@ -268,7 +268,7 @@ function deleteInput(deleteorSwap) // 0: delete
 	
 	for (var i = this.inputIndex + 1; i < this.parentModule.inputs.length;i++)
 	{
-			myModules[this.parentModule].inputs[i].inputIndex--;
+			this.parentModule.inputs[i].inputIndex--;
 	}
 	
 	for (var i = 0; i < this.outputsConnectedTo.length;i++)
@@ -779,7 +779,17 @@ function decreaseIO(type, index_para) { //
 	switch (type) {
 		case "normal":
 		case "conditional":
-			$('.para2Copy').each(function(index) {
+			if (type == "normal"){
+				var theDialog = $('#module-dialog');
+				var para = $('#module-dialog .para2Copy');
+			}
+			else {
+				var theDialog = $('#conditional-dialog');
+				var para = $('#conditional-dialog .para2Copy');
+			}
+			
+			
+			para.each(function(index) {
 				var id = $(this).attr('IOId');
 				var IOtype = $(this).attr('type');
 				var fileType = $(this).children().find("#fileTypes").attr('value');
@@ -817,6 +827,7 @@ function decreaseIO(type, index_para) { //
 		case "source":
 		case "sink":
 		case "study":
+			var theDialog = $('#'+type+'-dialog');
 			if (type == "sink") {
 				if (module1.inputs.length == 0) 
 					module1.addInput("");
@@ -827,7 +838,12 @@ function decreaseIO(type, index_para) { //
 					module1.addOutput("");
 			}
 			break;
-	}	 
+	}
+	module1.name = theDialog.find('#name').attr('value');
+	module1.packaged = theDialog.find('#package').attr('value');
+	module1.version = theDialog.find('#version').attr('value');
+	module1.executableVersion = theDialog.find('#executableVersion').attr('value');
+	module1.descriptions = theDialog.find('#description').attr('value');
 	 myModules[index]=module1;
 	 IO2Delete = [];
 }
