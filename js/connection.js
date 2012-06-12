@@ -132,7 +132,6 @@ function module(x,y,type,input,output)
 	this.formatModule = formatModule;
 	this.addOutput = addOutput;
 	this.addInput = addInput;
-
 	//outputs
 	this.outputs=new Array();	
 	this.inputs=new Array();
@@ -210,10 +209,6 @@ function Output(type,parentModule)
 {
 	this.offsetX;
 	this.offsetY;
-	this.type;
-	this.inputConnectedTo = null;
-	this.connectOut = connectOut;
-	this.parentModule = parentModule;
 	this.type = type;
 	this.inputsConnectedTo = new Array();
 	this.connectOut = connectOut;
@@ -253,9 +248,6 @@ function Input(type,parentModule)
 {
 	this.offsetX;
 	this.offsetY;
-	this.type;
-	this.outputConnectedTo = null;
-	this.parentModule = parentModule;
 	this.type = type;
 	this.outputsConnectedTo = new Array();
 	this.parentModule = parentModule;
@@ -288,18 +280,12 @@ function inputToOutput()
 	}
 	this.outputsConnectedTo.splice(0,this.inputsConnectedTo.length);
 	this.parentModule.formatModule();
->>>>>>> .merge_file_a07340
 }
 
 function connectOut(input)
 {
-<<<<<<< .merge_file_a02836
-	this.inputConnectedTo = input;
-	input.outputConnectedTo = this;
-=======
 	this.inputsConnectedTo.push(input);
 	input.outputsConnectedTo.push(this);
->>>>>>> .merge_file_a07340
 }
 
 function copy(sourceModule)
@@ -443,48 +429,7 @@ function copy(sourceModule)
  	switch(this.type)
 	{
 	case "normal":
-<<<<<<< .merge_file_a02836
-<<<<<<< HEAD
-	if (this.rotate == 0) {
-		if (mouseX < this.x + 5 + offsetLeft &&
-		mouseX > this.x - 5 + offsetLeft &&
-		mouseY > this.y - 62 + offsetTop &&
-		mouseY < this.y - 52 + offsetTop) 
-			return true;
-	}
-	else if (this.rotate == 1){
-		if (mouseX > this.x - 62 + offsetLeft &&
-		mouseX < this.x - 52 + offsetLeft &&
-		mouseY < this.y + 5 + offsetTop &&
-		mouseY > this.y - 5 + offsetTop) 
-			return true;
-	}
-	else 
-		return false;
-		
-	case "conditional":	
-	if (this.rotate == 0) {
-		if (mouseX < this.x + 5 + offsetLeft &&
-		mouseX > this.x - 5 + offsetLeft &&
-		mouseY > this.y - 58 + offsetTop &&
-		mouseY < this.y - 48 + offsetTop) 
-			return true;
-	}
-	else if (this.rotate == 1){
-		if (mouseX > this.x - 58 + offsetLeft &&
-		mouseX < this.x - 48 + offsetLeft &&
-		mouseY < this.y + 5 + offsetTop &&
-		mouseY > this.y - 5 + offsetTop) 
-			return true;
-	}
-	else 
-		return false;
-=======
 	case "conditional":
->>>>>>> 4fc6a47666baf0cc1cd8f7239a95913c5694a87f
-=======
-	case "conditional":
->>>>>>> .merge_file_a07340
 	case "sink":
 		for (var i = 0;i < this.inputs.length;i++) {
 			if (mouseX < this.x + this.inputs[i].offsetX + 7 + offsetLeft &&
@@ -507,16 +452,6 @@ function copy(sourceModule)
 	{
 		
 	case "normal":
-<<<<<<< .merge_file_a02836
-<<<<<<< HEAD
-		if (this.rotate == 0) {
-			if (mouseX < this.x + 7 + offsetLeft &&
-			mouseX > this.x - 7 + offsetLeft &&
-			mouseY < this.y + 63 + offsetTop &&
-			mouseY > this.y + 53 + offsetTop) {
-=======
-=======
->>>>>>> .merge_file_a07340
 	case "source":
 	case "study":
 		for (var i = 0;i < this.outputs.length;i++) {
@@ -524,33 +459,9 @@ function copy(sourceModule)
 			mouseX > this.x + this.outputs[i].offsetX  - 7 + offsetLeft &&
 			mouseY < this.y + this.outputs[i].offsetY + 7  + offsetTop &&
 			mouseY > this.y + this.outputs[i].offsetY - 7 + offsetTop) {
-<<<<<<< .merge_file_a02836
->>>>>>> 4fc6a47666baf0cc1cd8f7239a95913c5694a87f
 				this.connecting = true;
 				return this.outputs[i];
 			}
-<<<<<<< HEAD
-			else 
-				return -1;
-		}
-		else
-		{
-			if (mouseX > this.x + 53 + offsetLeft &&
-			mouseX < this.x + 63 + offsetLeft &&
-			mouseY > this.y - 7  + offsetTop &&
-			mouseY < this.y + 7 + offsetTop) {
-=======
->>>>>>> .merge_file_a07340
-				this.connecting = true;
-				return this.outputs[i];
-			}
-<<<<<<< .merge_file_a02836
-			else 
-				return -1;
-=======
->>>>>>> 4fc6a47666baf0cc1cd8f7239a95913c5694a87f
-=======
->>>>>>> .merge_file_a07340
 		}
 		break;	
 	case "conditional":
@@ -584,162 +495,6 @@ function copy(sourceModule)
  
  
  //============================================
-<<<<<<< .merge_file_a02836
- function createModule(x,y,type,input,output)
-{
- 	var index=myModules.length;
-	var module1=new module(x,y,type,input,output);
-	
-	switch (type) {
-		case "normal":
-		case "source":
-		case "sink":
-		case "study":
-			for (var o = 0; o < output; o++) {
-				//placeholder
-				module1.addOutput("untyped");
-			}
-			
-			for (var i = 0; i < input; i++) {
-				//placeholder
-				module1.addInput("untyped");
-			}
-			break;
-		case "conditional":
-			for (var i = 0; i < input; i++) {
-				//placeholder
-				module1.addInput("untyped");
-			}
-			break;
-	}	 
-	 myModules[index]=module1;
-}
- 
- function deleteModule(index){
- 	switch (myModules[index].type) {
- 		case "normal":
- 		case "source":
- 		case "sink":
- 		case "study":
- 			for (var o = 0; o < myModules[index].outputs.length; o++) {
- 				if (myModules[index].outputs[o].inputConnectedTo != null) 
- 					myModules[index].outputs[o].inputConnectedTo = null;
- 			}
- 			
- 			for (var i = 0; i < myModules[index].inputs.length; i++) {
- 				if (myModules[index].inputs[i].outputConnectedTo != null) 
- 					myModules[index].inputs[i].inputConnectedTo = null;
- 			}
- 			break;
- 		case "conditional":
- 			for (var i = 0; i < myModules[index].inputs.length; i++) {
- 				if (myModules[index].inputs[i].outputConnectedTo != null) 
- 					myModules[index].inputs[i].inputConnectedTo = null;
- 				
- 				if (myModules[index].outputsTrue[i].outputConnectedTo != null) 
- 					myModules[index].outputsTrue[i].inputConnectedTo = null;
- 				
- 				if (myModules[index].outputsFalse[i].outputConnectedTo != null) 
- 					myModules[index].outputsFalse[i].inputConnectedTo = null;
- 			}
- 			myModules.splice(index, 1);
- 	}
- }
- 
-function formatModule()
-{
-	switch(this.type)
-	{
-	case "normal":
-		for (var i = 0; i < this.inputs.length; i++)
-		{
-			this.inputs[i].offsetY = -58;
-			if (i % 2 == 0)
-				this.inputs[i].offsetX = i*10;
-			else
-				this.inputs[i].offsetX = 0-i*10;
-		}
-		
-		for (var i = 0; i < this.outputs.length; i++)
-		{
-			this.outputs[i].offsetY = 58;
-			if (i % 2 == 0)
-				this.outputs[i].offsetX = i*10;
-			else
-				this.outputs[i].offsetX = 0-i*10;
-		}	
-		return;
-		
-	case "source":
-	case "study":
-		for (var i = 0; i < this.outputs.length; i++)
-		{
-			this.outputs[i].offsetY = 37;
-			if (i % 2 == 0)
-				this.outputs[i].offsetX = i*10;
-			else
-				this.outputs[i].offsetX = 0-i*10;
-		}
-		return;
-		
-	case "sink":
-		for (var i = 0; i < this.inputs.length; i++)
-		{
-			this.inputs[i].offsetY = -37;
-			if (i % 2 == 0)
-				this.inputs[i].offsetX = i*10;
-			else
-				this.inputs[i].offsetX = 0-i*10;
-		}
-		return;
-		
-	case "conditional":
-		for (var i = 0; i < this.inputs.length; i++)
-		{
-			this.inputs[i].offsetY = -45;
-			if (i % 2 == 0)
-			
-				this.inputs[i].offsetX = i*10;
-			else
-				this.inputs[i].offsetX = 0-i*10;
-				
-			this.outputsTrue[i].offsetY = 45;
-			this.outputsFalse[i].offsetY = 45;
-			this.outputsTrue[i].offsetX = -10-10*i;
-			this.outputsFalse[i].offsetX = 10+10*i;;
-			
-		}
-		return;
-	}
-}
-
-function addInput(type)
-{
-	if (this.type != "conditional")
-	{
-		this.inputs[this.inputs.length] = new Input(type,this);
-	}
-	else
-	{
-		this.inputs[this.inputs.length] = new Input(type,this);
-		this.outputsTrue[this.outputsTrue.length]= new Output(type,this);
-		this.outputsFalse[this.outputsFalse.length]= new Output(type,this);
-	}
-	this.formatModule();	
-}
-
-function addOutput(type)
-{
-	this.outputs[this.outputs.length]= new Output(type,this);
-	this.formatModule();
-}
-
-function moveModule(e){
-	testMouse.X = e.pageX - canvas.offsetLeft;
-	testMouse.Y = e.pageY - canvas.offsetTop;
-	
-	for (var i = 0; i < myModules.length; i++)
-=======
  //        Tab Manipulations
  //============================================
  
@@ -794,7 +549,6 @@ function tabsMouseHover(e)
 {
 	var i = 0;
 	for (i = 0; i < myModuleArrays.length;i++)
->>>>>>> .merge_file_a07340
 	{
 		if (e.pageX < 100 +100*i + tabsCanvas.offsetLeft &&
 	    e.pageX >100*i + tabsCanvas.offsetLeft )
@@ -870,8 +624,6 @@ function findMaxX()
 }
 function findMaxY()
 {
-<<<<<<< .merge_file_a02836
-=======
 	var maxY = 0;
 	for (var i = 0;i < myModules.length;i++)
 	{
@@ -1295,7 +1047,6 @@ function checkSelected()
 
 function rotateModule()
 {
->>>>>>> .merge_file_a07340
 	if (this.rotate==0)
 		this.rotate=1;
 	else
@@ -1329,8 +1080,6 @@ function rotateModule()
 		this.outputsFalse[i].offsetY = placeHolder;
 	}
 	
-<<<<<<< .merge_file_a02836
-=======
 }
 
 
@@ -1580,7 +1329,6 @@ function fixModules()
 	//connection information
 	myModules.conIndex;
 	}
->>>>>>> .merge_file_a07340
 }
 
 //============================================
@@ -1591,19 +1339,8 @@ function moduleMouseDown(e){
 	{
 		//check if right click selecting
 		for (var i = 0; i < myModules.length; i++) {
-<<<<<<< .merge_file_a02836
-<<<<<<< HEAD
-			if (myModules[i].checkMoving(e.pageX, e.pageY, canvas.offsetLeft, canvas.offsetTop))
-			{
-				if (myModules[i].selected == true)
-=======
-			if (myModules[i].checkMoving(e.pageX, e.pageY, canvas.offsetLeft, canvas.offsetTop)) {
-				if (myModules[i].selected == true) 
->>>>>>> 4fc6a47666baf0cc1cd8f7239a95913c5694a87f
-=======
 			if (myModules[i].checkMoving(e.pageX + omw_scrollpane.scrollLeft, e.pageY + omw_scrollpane.scrollTop, canvas.offsetLeft, canvas.offsetTop)) {
 				if (myModules[i].selected == true) 
->>>>>>> .merge_file_a07340
 					break;
 				else {
 					//if not selected reset selection and select
@@ -1611,19 +1348,8 @@ function moduleMouseDown(e){
 						myModules[k].selected = false;
 					}
 					lineSelection.selected = false;
-<<<<<<< .merge_file_a02836
-<<<<<<< HEAD
-					lineSelection.fromModule = -1;
-					lineSelection.toIndex = -1;
-					lineSelection.fromType = "none";
-=======
 					lineSelection.fromOutput = null;
 					lineSelection.toInput = null;
->>>>>>> 4fc6a47666baf0cc1cd8f7239a95913c5694a87f
-=======
-					lineSelection.fromOutput = null;
-					lineSelection.toInput = null;
->>>>>>> .merge_file_a07340
 					
 					myModules[i].selected = true;
 					break;
@@ -1681,22 +1407,13 @@ function moduleMouseDown(e){
 	
 	//check if connecting
 	for (var i = 0; i < myModules.length; i++) {		
-<<<<<<< .merge_file_a02836
-		var connectionStart = myModules[i].checkConnection (e.pageX,e.pageY,canvas.offsetLeft,canvas.offsetTop);
-=======
 		var connectionStart = myModules[i].checkConnection (e.pageX + omw_scrollpane.scrollLeft,e.pageY + omw_scrollpane.scrollTop,canvas.offsetLeft,canvas.offsetTop);
->>>>>>> .merge_file_a07340
 
 		if (connectionStart != null) {
 			makingConnection.connecting = true;
 			makingConnection.output = connectionStart;
-<<<<<<< .merge_file_a02836
-			makingConnection.x = e.pageX - canvas.offsetLeft;
-			makingConnection.y = e.pageY - canvas.offsetTop;
-=======
 			makingConnection.x = e.pageX + omw_scrollpane.scrollLeft - canvas.offsetLeft;
 			makingConnection.y = e.pageY + omw_scrollpane.scrollTop - canvas.offsetTop;
->>>>>>> .merge_file_a07340
 			canvas.onmousemove = moveLine;
 			return;
 		}
@@ -1712,34 +1429,6 @@ function moduleMouseDown(e){
 		case "study":
 			for (var j=0;j<myModules[i].outputs.length;j++)
 			{
-<<<<<<< .merge_file_a02836
-				if (myModules[i].outputs[j].inputConnectedTo == null)
-					continue;
-					
-				var startX = myModules[i].x+myModules[i].outputs[j].offsetX;
-				var startY = myModules[i].y+myModules[i].outputs[j].offsetY;
-				var startRotate = myModules[i].rotate;
-				var endX = myModules[i].outputs[j].inputConnectedTo.parentModule.x + myModules[i].outputs[j].inputConnectedTo.offsetX;
-				var endY = myModules[i].outputs[j].inputConnectedTo.parentModule.y + myModules[i].outputs[j].inputConnectedTo.offsetY;	
-				var endRotate = myModules[i].outputs[j].inputConnectedTo.parentModule.rotate;
-				
-				if (clickConnection(startX, startY, endX, endY, startRotate, endRotate))
-				{
-<<<<<<< HEAD
-					if (clickConnection(myModules[i].x, myModules[i].y + 65, myModules[myModules[i].outputs[p]].x, myModules[myModules[i].outputs[p]].y - myModules[myModules[i].outputs[p]].radius, myModules[i].rotate, myModules[myModules[i].outputs[p]].rotate, e.pageX - canvas.offsetLeft,e.pageY - canvas.offsetTop))
-					{
-						lineSelection.selected = true;
-						lineSelection.fromModule = i;
-						lineSelection.toIndex = p;
-						lineSelection.fromType = "normal";
-					}
-
-=======
-					lineSelection.selected = true;
-					lineSelection.fromOutput = myModules[i].outputs[j];
-					lineSelection.toInput = myModules[i].outputs[j].inputConnectedTo;
->>>>>>> 4fc6a47666baf0cc1cd8f7239a95913c5694a87f
-=======
 				for (var k = 0; k < myModules[i].outputs[j].inputsConnectedTo.length; k++) {
 					if (myModules[i].outputs[j].inputsConnectedTo[k] == null) 
 						continue;
@@ -1756,7 +1445,6 @@ function moduleMouseDown(e){
 						lineSelection.fromOutput = myModules[i].outputs[j];
 						lineSelection.toInput = myModules[i].outputs[j].inputsConnectedTo[k];
 						}
->>>>>>> .merge_file_a07340
 				}
 			}
 			break;
@@ -1764,23 +1452,6 @@ function moduleMouseDown(e){
 		case "conditional":
 			for (var j=0;j<myModules[i].outputsTrue.length;j++)
 			{
-<<<<<<< .merge_file_a02836
-				if (myModules[i].outputsTrue[j].inputConnectedTo == null)
-					continue;
-					
-				var startX = myModules[i].x+myModules[i].outputsTrue[j].offsetX;
-				var startY = myModules[i].y+myModules[i].outputsTrue[j].offsetY;
-				var startRotate = myModules[i].rotate;
-				var endX = myModules[i].outputsTrue[j].inputConnectedTo.parentModule.x + myModules[i].outputsTrue[j].inputConnectedTo.offsetX;
-				var endY = myModules[i].outputsTrue[j].inputConnectedTo.parentModule.y + myModules[i].outputsTrue[j].inputConnectedTo.offsetY;	
-				var endRotate = myModules[i].outputsTrue[j].inputConnectedTo.parentModule.rotate;
-				
-				if (clickConnection(startX, startY, endX, endY, startRotate, endRotate))
-				{
-					lineSelection.selected = true;
-					lineSelection.fromOutput = myModules[i].outputsTrue[j];
-					lineSelection.toInput = myModules[i].outputsTrue[j].inputConnectedTo;
-=======
 				for (var k = 0; k < myModules[i].outputsTrue[j].inputsConnectedTo.length; k++) {
 					if (myModules[i].outputsTrue[j].inputsConnectedTo[k] == null) 
 						continue;
@@ -1797,29 +1468,10 @@ function moduleMouseDown(e){
 						lineSelection.fromOutput = myModules[i].outputsTrue[j];
 						lineSelection.toInput = myModules[i].outputsTrue[j].inpustConnectedTo[k];
 					}
->>>>>>> .merge_file_a07340
 				}
 			}
 			
 			for (var j=0;j<myModules[i].outputsFalse.length;j++)
-<<<<<<< .merge_file_a02836
-			{		
-				if (myModules[i].outputsFalse[j].inputConnectedTo == null)
-					continue;
-					
-				var startX = myModules[i].x+myModules[i].outputsFalse[j].offsetX;
-				var startY = myModules[i].y+myModules[i].outputsFalse[j].offsetY;
-				var startRotate = myModules[i].rotate;
-				var endX = myModules[i].outputsFalse[j].inputConnectedTo.parentModule.x + myModules[i].outputsFalse[j].inputConnectedTo.offsetX;
-				var endY = myModules[i].outputsFalse[j].inputConnectedTo.parentModule.y + myModules[i].outputsFalse[j].inputConnectedTo.offsetY;	
-				var endRotate = myModules[i].outputsFalse[j].inputConnectedTo.parentModule.rotate;
-				
-				if (clickConnection(startX, startY, endX, endY, startRotate, endRotate))
-				{
-					lineSelection.selected = true;
-					lineSelection.fromOutput = myModules[i].outputsFalse[j];
-					lineSelection.toInput = myModules[i].outputsFalse[j].inputConnectedTo;
-=======
 			{	
 				for (var k = 0; k < myModules[i].outputsFalse[j].inputsConnectedTo.length; k++) {
 					if (myModules[i].outputsFalse[j].inputsConnectedTo[k] == null) 
@@ -1837,7 +1489,6 @@ function moduleMouseDown(e){
 						lineSelection.fromOutput = myModules[i].outputsFalse[j];
 						lineSelection.toInput = myModules[i].outputsFalse[j].inputsConnectedTo[k];
 					}
->>>>>>> .merge_file_a07340
 				}
 			}
 			break;
@@ -1862,13 +1513,8 @@ function moduleMouseUp(e){
 		return;
 	if (makingConnection.connecting == true) {
 		for (var i = 0; i < myModules.length; i++) {
-<<<<<<< .merge_file_a02836
-			var checkConnect = myModules[i].checkConnected(e.pageX, e.pageY, canvas.offsetLeft, canvas.offsetTop)
-			if (checkConnect != null) {
-=======
 			var checkConnect = myModules[i].checkConnected(e.pageX + omw_scrollpane.scrollLeft, e.pageY + omw_scrollpane.scrollTop, canvas.offsetLeft, canvas.offsetTop)
 			/*if (checkConnect != null) {
->>>>>>> .merge_file_a07340
 				var doubleFlag = false;
 				switch (makingConnection.output.parentModule.type) {
 					case "normal":
@@ -1892,15 +1538,6 @@ function moduleMouseUp(e){
 							}
 						}
 						
-<<<<<<< .merge_file_a02836
-				}
-				if (doubleFlag == false && checkConnect != null) 
-					makingConnection.output.connectOut(checkConnect);
-				break;
-			}
-		}
-	}
-=======
 				}
 				if (doubleFlag == false && checkConnect != null)*/
 				if (checkConnect != null && (checkConnect.parentModule != makingConnection.output.parentModule) && (checkConnect.type == makingConnection.output.type)) {
@@ -1909,7 +1546,6 @@ function moduleMouseUp(e){
 				}
 			}
 		}
->>>>>>> .merge_file_a07340
 	//handle selecting
 	if (selectionBox.selecting == true)
 	{
@@ -1953,16 +1589,6 @@ function init()
 	
 	 canvas = document.getElementById("canvas");
 	 ctx = canvas.getContext("2d");
-<<<<<<< .merge_file_a02836
-	 
-		createModule(75,50,"normal",1,1);
-		myModules[0].addInput("untyped");
-		myModules[0].addOutput("untyped");
-		createModule(200,200,"conditional",1,1)
-		createModule(150,150,"source",0,1)
-		createModule(300,300,"sink",1,0)
-		createModule(400,400,"study",0,1)
-=======
      tabsCanvas = document.getElementById("tabsCanvas");
 	 tabsCtx = tabsCanvas.getContext("2d");  
 	 omw_scrollpane = document.getElementById("omw_scrollpane");
@@ -1978,7 +1604,6 @@ function init()
 		//myModules[0].addOutput("file");
 		createModule(300,300,"sink",1,0);
 		myModules[1].addInput("file");
->>>>>>> .merge_file_a07340
 	 return setInterval(draw, 10);
 }
 
@@ -2107,36 +1732,6 @@ function draw(){
 		case "study":
 			for (var j=0;j<myModules[i].outputs.length;j++)
 			{
-<<<<<<< .merge_file_a02836
-				if (myModules[i].outputs[j].inputConnectedTo != null) {
-					if (myModules[i].outputs[j].inputConnectedTo.parentModule.selected == true || myModules[i].selected == true)
-						ctx.strokeStyle="#99CC32";
-					else
-						ctx.strokeStyle="#7585C1";
-<<<<<<< HEAD
-						
-					if (myModules[i].rotate == 0 && myModules[myModules[i].outputs[j]].rotate == 0)	
-						drawConnection(myModules[i].x, myModules[i].y + 65, myModules[myModules[i].outputs[j]].x, myModules[myModules[i].outputs[j]].y - myModules[myModules[i].outputs[j]].radius, myModules[i].rotate,myModules[myModules[i].outputs[j]].rotate)
-					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputs[j]].rotate == 0)
-						drawConnection(myModules[i].x+65, myModules[i].y, myModules[myModules[i].outputs[j]].x, myModules[myModules[i].outputs[j]].y - myModules[myModules[i].outputs[j]].radius, myModules[i].rotate,myModules[myModules[i].outputs[j]].rotate)
-					else if (myModules[i].rotate == 0 && myModules[myModules[i].outputs[j]].rotate == 1)	
-						drawConnection(myModules[i].x, myModules[i].y+65, myModules[myModules[i].outputs[j]].x - myModules[myModules[i].outputs[j]].radius, myModules[myModules[i].outputs[j]].y, myModules[i].rotate,myModules[myModules[i].outputs[j]].rotate)			
-					else if (myModules[i].rotate == 1 && myModules[myModules[i].outputs[j]].rotate == 1)							
-						drawConnection(myModules[i].x+65, myModules[i].y, myModules[myModules[i].outputs[j]].x - myModules[myModules[i].outputs[j]].radius, myModules[myModules[i].outputs[j]].y, myModules[i].rotate,myModules[myModules[i].outputs[j]].rotate)
-=======
-					
-					var startX = myModules[i].x+myModules[i].outputs[j].offsetX;
-					var startY = myModules[i].y+myModules[i].outputs[j].offsetY;
-					var startRotate = myModules[i].rotate;
-					var endX = myModules[i].outputs[j].inputConnectedTo.parentModule.x + myModules[i].outputs[j].inputConnectedTo.offsetX;
-					var endY = myModules[i].outputs[j].inputConnectedTo.parentModule.y + myModules[i].outputs[j].inputConnectedTo.offsetY;	
-					var endRotate = myModules[i].outputs[j].inputConnectedTo.parentModule.rotate;
-					
-					if (myModules[i].outputs[j] == lineSelection.fromOutput && myModules[i].outputs[j].inputConnectedTo == lineSelection.toInput)
-						ctx.strokeStyle="#99CC32";
-					drawConnection(startX, startY, endX, endY, startRotate, endRotate);
->>>>>>> 4fc6a47666baf0cc1cd8f7239a95913c5694a87f
-=======
 				for (var k = 0;k<myModules[i].outputs[j].inputsConnectedTo.length;k++) { //continue ... ? [8]
 					if (myModules[i].outputs[j].inputsConnectedTo[k] != null) {
 						if (myModules[i].outputs[j].inputsConnectedTo[k].parentModule.selected == true || myModules[i].selected == true) 
@@ -2155,69 +1750,12 @@ function draw(){
 							ctx.strokeStyle = "#99CC32";
 						drawConnection(startX, startY, endX, endY, startRotate, endRotate);
 					}
->>>>>>> .merge_file_a07340
 				}
 			}
 			break;
 			
 		case "conditional":
 			for (var j=0;j<myModules[i].outputsTrue.length;j++)
-<<<<<<< .merge_file_a02836
-			{
-				if (myModules[i].outputsTrue[j].inputConnectedTo != null) {
-					if (myModules[i].outputsTrue[j].inputConnectedTo.parentModule.selected == true || myModules[i].selected == true)
-						ctx.strokeStyle="#99CC32";
-					else
-						ctx.strokeStyle="#7585C1";
-					
-					var startX = myModules[i].x+myModules[i].outputsTrue[j].offsetX;
-					var startY = myModules[i].y+myModules[i].outputsTrue[j].offsetY;
-					var startRotate = myModules[i].rotate;
-					var endX = myModules[i].outputsTrue[j].inputConnectedTo.parentModule.x + myModules[i].outputsTrue[j].inputConnectedTo.offsetX;
-					var endY = myModules[i].outputsTrue[j].inputConnectedTo.parentModule.y + myModules[i].outputsTrue[j].inputConnectedTo.offsetY;	
-					var endRotate = myModules[i].outputsTrue[j].inputConnectedTo.parentModule.rotate;
-					
-					if (myModules[i].outputsTrue[j] == lineSelection.fromOutput && myModules[i].outputsTrue[j].inputConnectedTo == lineSelection.toInput)
-						ctx.strokeStyle="#99CC32";
-					drawConnection(startX, startY, endX, endY, startRotate, endRotate);
-				}
-			}
-			
-			for (var j=0;j<myModules[i].outputsFalse.length;j++)
-			{
-				if (myModules[i].outputsFalse[j].inputConnectedTo != null) {
-					if (myModules[i].outputsFalse[j].inputConnectedTo.parentModule.selected == true || myModules[i].selected == true)
-						ctx.strokeStyle="#99CC32";
-					else
-						ctx.strokeStyle="#7585C1";
-					
-					var startX = myModules[i].x+myModules[i].outputsFalse[j].offsetX;
-					var startY = myModules[i].y+myModules[i].outputsFalse[j].offsetY;
-					var startRotate = myModules[i].rotate;
-					var endX = myModules[i].outputsFalse[j].inputConnectedTo.parentModule.x + myModules[i].outputsFalse[j].inputConnectedTo.offsetX;
-					var endY = myModules[i].outputsFalse[j].inputConnectedTo.parentModule.y + myModules[i].outputsFalse[j].inputConnectedTo.offsetY;	
-					var endRotate = myModules[i].outputsFalse[j].inputConnectedTo.parentModule.rotate;
-					
-					if (myModules[i].outputsFalse[j] == lineSelection.fromOutput && myModules[i].outputsFalse[j].inputConnectedTo == lineSelection.toInput)
-						ctx.strokeStyle="#99CC32";
-					drawConnection(startX, startY, endX, endY, startRotate, endRotate);
-				}
-			}
-			break;
-			
-		default:
-			break;
-		}
-	}
-	ctx.lineWidth = "3";
-	ctx.strokeStyle="#7585C1";
-	//Drawing a Line
-	if (makingConnection.connecting==true)
-	{
-<<<<<<< HEAD
-		for (var i = 0; i < myModules.length; i++) {
-			switch(myModules[i].type)
-=======
 			{
 				for (var k = 0;k<myModules[i].outputsTrue[j].inputsConnectedTo.length;k++) {
 					if (myModules[i].outputsTrue[j].inputsConnectedTo[k] != null) {
@@ -2242,7 +1780,6 @@ function draw(){
 			}
 			
 			for (var j=0;j<myModules[i].outputsFalse.length;j++)
->>>>>>> .merge_file_a07340
 			{
 				
 				for (var k = 0;k<myModules[i].outputsFalse[j].inputsConnectedTo.length;k++) {
@@ -2267,12 +1804,6 @@ function draw(){
 			}
 			break;
 		}
-=======
-		var startX = makingConnection.output.parentModule.x+makingConnection.output.offsetX;
-		var startY = makingConnection.output.parentModule.y+makingConnection.output.offsetY;
-		var parentRotate = makingConnection.output.parentModule.rotate;
-		drawConnection(startX,startY, testMouse.X,testMouse.Y ,parentRotate,0)
->>>>>>> 4fc6a47666baf0cc1cd8f7239a95913c5694a87f
 	}
 	
 	//Draw the Modules
@@ -2641,33 +2172,6 @@ function draw(){
 }
 
 function drawNormal(drawModule){
-<<<<<<< .merge_file_a02836
-
-	var isSelected = new Boolean();
-	if (drawModule.selected == true){
-		ctx.strokeStyle = "#99CC32";
-<<<<<<< HEAD
-	else
-		ctx.strokeStyle = "#7585C1"
-	/*ctx.beginPath();
-	ctx.fillStyle = "LightBlue";
-	ctx.lineWidth = "3";
-	ctx.beginPath();
-	ctx.arc(drawModule.x, drawModule.y, 45, 0, 2 * 3.141592653589792348624, 0);
-	ctx.stroke();
-	ctx.fill();*/
-	 ctx.save();
-=======
-		isSelected = true;
-	}
-	else {
-		ctx.strokeStyle = "#7585C1"
-		isSelected = false;
-	}
-
-	ctx.save();
->>>>>>> 4fc6a47666baf0cc1cd8f7239a95913c5694a87f
-=======
 	
 	var isSelected = new Boolean();
 	if (drawModule.selected == true){
@@ -2682,7 +2186,6 @@ function drawNormal(drawModule){
 	}
 	
 	ctx.save();
->>>>>>> .merge_file_a07340
     ctx.translate(drawModule.x, drawModule.y);	
     var r = 45;
 	var linGrd = ctx.createLinearGradient(-0.71*r,-0.71*r,0.71*r,0.71*r);
@@ -2713,23 +2216,6 @@ function drawNormal(drawModule){
 	ctx.fill();
 
 	ctx.restore();
-<<<<<<< .merge_file_a02836
-	ctx.lineWidth = "1";
-	ctx.fillStyle = "#7585C1";
-	if (drawModule.rotate == 0) {
-<<<<<<< HEAD
-		ctx.lineWidth = "3";
-		ctx.fillStyle = "Gray";
-		ctx.beginPath();
-		ctx.moveTo(drawModule.x-7,drawModule.y+53)
-		ctx.lineTo(drawModule.x+7,drawModule.y+53)
-		ctx.lineTo(drawModule.x,drawModule.y+65)
-		ctx.closePath();
-		ctx.stroke();
-		if (drawModule.outputs.length > 0) {
-			ctx.fillStyle = "#7585C1"
-			ctx.fill();
-=======
 	ctx.lineWidth = "3";
 	if (drawModule.rotate == 0) {
 		//draw outputs
@@ -2743,7 +2229,6 @@ function drawNormal(drawModule){
 			if (drawModule.outputs[i].inputsConnectedTo.length > 0) {
 				ctx.fill();
 			}
->>>>>>> .merge_file_a07340
 		}
 		//draw inputs
 		for (var i = 0; i < drawModule.inputs.length; i++) {	
@@ -2782,56 +2267,6 @@ function drawNormal(drawModule){
 	}
 }		
                                                                 
-=======
-		//draw outputs
-		for (var i = 0; i < drawModule.outputs.length; i++) {
-			ctx.beginPath();
-			ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 7, drawModule.y + drawModule.outputs[i].offsetY - 5)
-			ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX + 7, drawModule.y + drawModule.outputs[i].offsetY - 5)
-			ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX, drawModule.y + drawModule.outputs[i].offsetY + 5)
-			ctx.closePath();
-			ctx.stroke();
-			if (drawModule.outputs[i].inputConnectedTo != null) {
-				ctx.fill();
-			}
-		}
-		//draw inputs
-		for (var i = 0; i < drawModule.inputs.length; i++) {	
-			ctx.beginPath();
-			ctx.arc(drawModule.x + drawModule.inputs[i].offsetX, drawModule.y + drawModule.inputs[i].offsetY, 5, 0, 2 * 3.141592653589792348624, 0)
-
-			ctx.stroke();
-			if (drawModule.inputs[i].outputConnectedTo != null) {
-				ctx.fill();
-			}
-		}
-	}
-	else
-	{
-		//draw outputs
-		for (var i = 0; i < drawModule.outputs.length; i++) {
-			ctx.beginPath();
-			ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY + 7)
-			ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY - 7)
-			ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX + 5, drawModule.y + drawModule.outputs[i].offsetY)
-			ctx.closePath();
-			ctx.stroke();
-			if (drawModule.outputs[i].inputConnectedTo != null) {
-				ctx.fill();
-			}
-		}
-		//draw inputs
-		for (var i = 0; i < drawModule.inputs.length; i++) {	
-			ctx.beginPath();
-			ctx.arc(drawModule.x + drawModule.inputs[i].offsetX, drawModule.y + drawModule.inputs[i].offsetY, 5, 0, 2 * 3.141592653589792348624, 0)
-			ctx.stroke();
-			if (drawModule.inputs[i].outputConnectedTo != null) {
-				ctx.fill();
-			}
-		}
-	}
-}		                             
->>>>>>> 4fc6a47666baf0cc1cd8f7239a95913c5694a87f
                                              
 function drawConditional (drawModule)
 {
@@ -2847,20 +2282,6 @@ function drawConditional (drawModule)
 		isSelected = false;
 	}
 			
-<<<<<<< .merge_file_a02836
-<<<<<<< HEAD
-			/*
-		ctx.beginPath();
-		ctx.fillStyle = "LightBlue";
-		ctx.lineWidth = "2";
-		ctx.fillRect(drawModule.x - 45, drawModule.y - 45, 90, 90);
-		ctx.strokeRect(drawModule.x - 45, drawModule.y - 45, 90, 90);
-		
-		ctx.lineWidth = "3";
-		ctx.fillStyle = "Gray";
-		*/
-=======
->>>>>>> .merge_file_a07340
 		ctx.save();	
 		
 		//outer rect size
@@ -2877,29 +2298,10 @@ function drawConditional (drawModule)
 		outterLinGrd.addColorStop(0, "#AEB3DA"); 
 		outterLinGrd.addColorStop(1,"#2F388B"); 
 		
-=======
-		ctx.save();	
-		
-		//outer rect size
-		var height = 80; 
-		var width = 100;
-		
-        ctx.translate(drawModule.x, drawModule.y);
-		var innerLinGrd = ctx.createLinearGradient(-width/2.2,-height/2.2,width/2.2,height/2.2); //gradiance of inner square
-		innerLinGrd.addColorStop(0, "#8491C8"); 
-		innerLinGrd.addColorStop(0.50, "#98A1D0"); 
-		innerLinGrd.addColorStop(1,"#AEB3DA"); 
-
-		var outterLinGrd = ctx.createLinearGradient(-width/2,-height/2,width/2,height/2); //gradiance of outer square
-		outterLinGrd.addColorStop(0, "#AEB3DA"); 
-		outterLinGrd.addColorStop(1,"#2F388B"); 
-		
->>>>>>> 4fc6a47666baf0cc1cd8f7239a95913c5694a87f
 		if(isSelected){
 			var oh = height*1.06;
 			var ow = width*1.06;
 			var rad = oh/6.5;
-<<<<<<< HEAD
 			
 			ctx.beginPath();                        
 			ctx.moveTo(-ow/2,-oh/2+rad);
@@ -2942,28 +2344,6 @@ function drawConditional (drawModule)
 		ctx.restore();	
 		ctx.lineWidth = "3";
 		if (drawModule.rotate == 0) {
-<<<<<<< .merge_file_a02836
-			ctx.beginPath();
-			ctx.arc(drawModule.x, drawModule.y - 53, 5, 0, 2 * 3.141592653589792348624, 0)
-			ctx.stroke();
-			ctx.fill();
-			
-			ctx.beginPath();
-			ctx.arc(drawModule.x - 20, drawModule.y + 53, 5, 0, 2 * 3.141592653589792348624, 0)
-			ctx.stroke();
-			ctx.fill();
-=======
->>>>>>> 4fc6a47666baf0cc1cd8f7239a95913c5694a87f
-			
-			ctx.beginPath();                        
-			ctx.moveTo(-ow/2,-oh/2+rad);
-			ctx.arcTo(-ow/2,-oh/2,ow/2-rad,-oh/2,rad);
-			ctx.arcTo(ow/2,-oh/2,ow/2,oh/2-rad,rad); 
-			ctx.arcTo(ow/2,oh/2,-ow/2+rad,oh/2,rad);
-			ctx.arcTo(-ow/2,oh/2,-ow/2,-oh/2+rad,rad);
-			ctx.fillStyle = "yellow";
-			ctx.fill();
-=======
 			//draw outputs
 			for (var i = 0; i < drawModule.inputs.length; i++) {
 				ctx.beginPath();
@@ -2995,73 +2375,6 @@ function drawConditional (drawModule)
 					ctx.fill();
 				}
 			}
->>>>>>> .merge_file_a07340
-		}
-
-		//arc radius
-		var r = height/6.5;
-		
-		//draw outer square
-		ctx.beginPath();
-		ctx.moveTo(-width/2,-height/2+r);
-		ctx.arcTo(-width/2,-height/2,width/2-r,-height/2,r);
-		ctx.arcTo(width/2,-height/2,width/2,height/2-r,r); 
-		ctx.arcTo(width/2,height/2,-width/2+r,height/2,r);
-		ctx.arcTo(-width/2,height/2,-width/2,-height/2+r,r);
-		ctx.fillStyle = outterLinGrd;
-		ctx.fill();
-		//ctx.fillRect(-width/2,-height/2,width,height);
-
-		//inner rect size
-        var ss = 0.92*height;
-		var ww = 0.92*width;
-
-        //draw inner rect
-		ctx.beginPath();                        
-		ctx.moveTo(-ww/2,-ss/2+r);
-		ctx.arcTo(-ww/2,-ss/2,ww/2-r,-ss/2,r);
-		ctx.arcTo(ww/2,-ss/2,ww/2,ss/2-r,r); 
-		ctx.arcTo(ww/2,ss/2,-ww/2+r,ss/2,r);
-		ctx.arcTo(-ww/2,ss/2,-ww/2,-ss/2+r,r);
-		ctx.fillStyle = innerLinGrd;
-		ctx.fill();				
-
-		ctx.restore();	
-		ctx.lineWidth = "3";
-		ctx.fillStyle = "#7585C1";
-		ctx.strokeStyle = "#7585C1";
-		if (drawModule.rotate == 0) {
-			//draw outputs
-			for (var i = 0; i < drawModule.inputs.length; i++) {
-				ctx.beginPath();
-				ctx.moveTo(drawModule.x + drawModule.outputsTrue[i].offsetX - 5, drawModule.y + drawModule.outputsTrue[i].offsetY - 5)
-				ctx.lineTo(drawModule.x + drawModule.outputsTrue[i].offsetX + 5, drawModule.y + drawModule.outputsTrue[i].offsetY - 5)
-				ctx.lineTo(drawModule.x + drawModule.outputsTrue[i].offsetX, drawModule.y + drawModule.outputsTrue[i].offsetY + 5)
-				ctx.closePath();
-				ctx.stroke();
-				if (drawModule.outputsTrue[i].inputConnectedTo != null) {
-					ctx.fill();
-				}
-				
-				ctx.beginPath();
-				ctx.moveTo(drawModule.x + drawModule.outputsFalse[i].offsetX - 5, drawModule.y + drawModule.outputsFalse[i].offsetY - 5)
-				ctx.lineTo(drawModule.x + drawModule.outputsFalse[i].offsetX + 5, drawModule.y + drawModule.outputsFalse[i].offsetY - 5)
-				ctx.lineTo(drawModule.x + drawModule.outputsFalse[i].offsetX, drawModule.y + drawModule.outputsFalse[i].offsetY + 5)
-				ctx.closePath();
-				ctx.stroke();
-				if (drawModule.outputsTrue[i].inputConnectedTo != null) {
-					ctx.fill();
-				}
-			}
-			//draw inputs
-			for (var i = 0; i < drawModule.inputs.length; i++) {	
-				ctx.beginPath();
-				ctx.arc(drawModule.x + drawModule.inputs[i].offsetX, drawModule.y + drawModule.inputs[i].offsetY, 5, 0, 2 * 3.141592653589792348624, 0)
-				ctx.stroke();
-				if (drawModule.inputs[i].outputConnectedTo != null) {
-					ctx.fill();
-				}
-			}
 		}
 		else
 		{
@@ -3073,11 +2386,7 @@ function drawConditional (drawModule)
 				ctx.lineTo(drawModule.x + drawModule.outputsTrue[i].offsetX + 5, drawModule.y + drawModule.outputsTrue[i].offsetY)
 				ctx.closePath();
 				ctx.stroke();
-<<<<<<< .merge_file_a02836
-				if (drawModule.outputsTrue[i].inputConnectedTo != null) {
-=======
 				if (drawModule.outputsTrue[i].inputsConnectedTo.length > 0) {
->>>>>>> .merge_file_a07340
 					ctx.fill();
 				}
 				
@@ -3087,11 +2396,7 @@ function drawConditional (drawModule)
 				ctx.lineTo(drawModule.x + drawModule.outputsFalse[i].offsetX + 5, drawModule.y + drawModule.outputsFalse[i].offsetY)
 				ctx.closePath();
 				ctx.stroke();
-<<<<<<< .merge_file_a02836
-				if (drawModule.outputsTrue[i].inputConnectedTo != null) {
-=======
 				if (drawModule.outputsTrue[i].inputsConnectedTo.length  > 0) {
->>>>>>> .merge_file_a07340
 					ctx.fill();
 				}
 			}
@@ -3100,11 +2405,7 @@ function drawConditional (drawModule)
 				ctx.beginPath();
 				ctx.arc(drawModule.x + drawModule.inputs[i].offsetX, drawModule.y + drawModule.inputs[i].offsetY, 5, 0, 2 * 3.141592653589792348624, 0)
 				ctx.stroke();
-<<<<<<< .merge_file_a02836
-				if (drawModule.inputs[i].outputConnectedTo != null) {
-=======
 				if (drawModule.inputs[i].outputsConnectedTo.length  > 0) {
->>>>>>> .merge_file_a07340
 					ctx.fill();
 				}
 			}
@@ -3116,16 +2417,6 @@ function drawSource (drawModule)
 	var isSelected = new Boolean();
 	if (drawModule.selected == true){
 		ctx.strokeStyle = "#99CC32";
-<<<<<<< .merge_file_a02836
-		isSelected = true;
-	}
-	else {
-		ctx.strokeStyle = "black"
-		isSelected = false;
-	}
-	
-		ctx.save();	
-=======
 		ctx.fillStyle = "#99CC32";
 		isSelected = true;
 	}
@@ -3136,7 +2427,6 @@ function drawSource (drawModule)
 	}
 	
 	ctx.save();	
->>>>>>> .merge_file_a07340
 		var s = 25;
 	    ctx.translate(drawModule.x, drawModule.y);
 	    var ss = 0.68*s; 
@@ -3158,7 +2448,7 @@ function drawSource (drawModule)
 		
 		var outterLinGrd = ctx.createLinearGradient(-s/2,-s/2,s/2,s/2); //gradiance of inner square
 		outterLinGrd.addColorStop(0, "#DBDBE0"); 
-		outterLinGrd.addColorStop(1,"#7F7F88");
+		outterLinGrd.addColorStop(1,"#7F7F88"); 
 		                        						
 		ctx.beginPath();
 		ctx.arc(0,0,s,0,2*Math.PI);  
@@ -3176,11 +2466,6 @@ function drawSource (drawModule)
 		if (drawModule.rotate == 0) {
 		//draw outputs
 			ctx.lineWidth = "3";
-<<<<<<< .merge_file_a02836
-			ctx.fillStyle = "#7585C1";
-			ctx.strokeStyle = "#7585C1";
-=======
->>>>>>> .merge_file_a07340
 			for (var i = 0; i < drawModule.outputs.length; i++) {
 				ctx.beginPath();
 				ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY - 5)
@@ -3188,11 +2473,7 @@ function drawSource (drawModule)
 				ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX, drawModule.y + drawModule.outputs[i].offsetY + 5)
 				ctx.closePath();
 				ctx.stroke();
-<<<<<<< .merge_file_a02836
-				if (drawModule.outputs[i].inputConnectedTo != null) {
-=======
 				if (drawModule.outputs[i].inputsConnectedTo.length > 0) {
->>>>>>> .merge_file_a07340
 					ctx.fill();
 				}
 			}
@@ -3201,11 +2482,6 @@ function drawSource (drawModule)
 		{
 		//draw outputs
 			ctx.lineWidth = "3";
-<<<<<<< .merge_file_a02836
-			ctx.fillStyle = "#7585C1";
-			ctx.strokeStyle = "#7585C1";
-=======
->>>>>>> .merge_file_a07340
 			for (var i = 0; i < drawModule.outputs.length; i++) {
 				ctx.beginPath();
 				ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY + 5)
@@ -3213,11 +2489,7 @@ function drawSource (drawModule)
 				ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX + 5, drawModule.y + drawModule.outputs[i].offsetY)
 				ctx.closePath();
 				ctx.stroke();
-<<<<<<< .merge_file_a02836
-				if (drawModule.outputs[i].inputConnectedTo != null) {
-=======
 				if (drawModule.outputs[i].inputsConnectedTo.length > 0) {
->>>>>>> .merge_file_a07340
 					ctx.fill();
 				}
 			}	
@@ -3227,18 +2499,6 @@ function drawSource (drawModule)
 function drawSink (drawModule)
 {
 	var isSelected = new Boolean();
-<<<<<<< .merge_file_a02836
-	if (drawModule.selected == true) {
-		ctx.strokeStyle = "#99CC32";
-		isSelected = true;
-	}
-	else {
-		ctx.strokeStyle = "black";
-		isSelected = false;
-	}	
-		
-	ctx.fillStyle = "LightGray";
-=======
 	if (drawModule.selected == true){
 		ctx.strokeStyle = "#99CC32";
 		ctx.fillStyle = "#99CC32";
@@ -3250,7 +2510,6 @@ function drawSink (drawModule)
 		isSelected = false;
 	}
 	
->>>>>>> .merge_file_a07340
 	ctx.lineWidth = "3";
 	
 	if (drawModule.rotate == 0) {
@@ -3259,7 +2518,6 @@ function drawSink (drawModule)
 		var s = 50;
             ctx.translate(drawModule.x, drawModule.y);
             var ss = 0.58*s; 
-			
 			var innerLinGrd = ctx.createLinearGradient(-ss/2,-ss/2,ss/2,ss/2); //gradiance of inner square
 			innerLinGrd.addColorStop(0, "#52525A"); 
 			innerLinGrd.addColorStop(0.25, "#676770"); 
@@ -3271,7 +2529,6 @@ function drawSink (drawModule)
 			outterLinGrd.addColorStop(0, "#DBDBE0"); 
 			outterLinGrd.addColorStop(1,"#7F7F88"); 
 			
-			
 			function drawEtriangle(x,y,l)
 			{		
 			ctx.beginPath();
@@ -3280,13 +2537,6 @@ function drawSink (drawModule)
 			ctx.lineTo(0.5*l,-0.55735*l/2);
 			ctx.lineTo(0,0.55735*l);
 								             
-			}
-			
-			if (isSelected) {
-				var os = s*1.2;
-				drawEtriangle(0,0,os);
-				ctx.fillStyle = "yellow";
-				ctx.fill();
 			}
             
 			if (isSelected) {
@@ -3307,20 +2557,11 @@ function drawSink (drawModule)
 		ctx.restore();
 		//draw inputs
 		ctx.lineWidth = "3";
-<<<<<<< .merge_file_a02836
-		ctx.fillStyle = "#7585C1";
-		ctx.strokeStyle = "#7585C1";
-=======
->>>>>>> .merge_file_a07340
 		for (var i = 0; i < drawModule.inputs.length; i++) {	
 			ctx.beginPath();
 			ctx.arc(drawModule.x + drawModule.inputs[i].offsetX, drawModule.y + drawModule.inputs[i].offsetY, 5, 0, 2 * 3.141592653589792348624, 0)
 			ctx.stroke();
-<<<<<<< .merge_file_a02836
-			if (drawModule.inputs[i].outputConnectedTo != null) {
-=======
 			if (drawModule.inputs[i].outputsConnectedTo.length > 0) {
->>>>>>> .merge_file_a07340
 				ctx.fill();
 			}
 		}
@@ -3352,13 +2593,6 @@ function drawSink (drawModule)
 			ctx.lineTo(0.55735*l,0);
 								             
 			}
-			
-			if (isSelected) {
-				var os = s*1.2;
-				drawRotatedEtriangle(0,0,os);
-				ctx.fillStyle = "yellow";
-				ctx.fill();
-			}
             
 			if (isSelected) {
 				var os = s*1.2;
@@ -3379,20 +2613,11 @@ function drawSink (drawModule)
 		ctx.restore();	
 		//draw inputs
 		ctx.lineWidth = "3";
-<<<<<<< .merge_file_a02836
-		ctx.fillStyle = "#7585C1";
-		ctx.strokeStyle = "#7585C1";
-=======
->>>>>>> .merge_file_a07340
 		for (var i = 0; i < drawModule.inputs.length; i++) {	
 			ctx.beginPath();
 			ctx.arc(drawModule.x + drawModule.inputs[i].offsetX, drawModule.y + drawModule.inputs[i].offsetY, 5, 0, 2 * 3.141592653589792348624, 0)
 			ctx.stroke();
-<<<<<<< .merge_file_a02836
-			if (drawModule.inputs[i].outputConnectedTo != null) {
-=======
 			if (drawModule.inputs[i].outputsConnectedTo.length > 0) {
->>>>>>> .merge_file_a07340
 				ctx.fill();
 			}
 		}
@@ -3402,17 +2627,6 @@ function drawSink (drawModule)
 function drawStudy (drawModule)
 {
 	var isSelected = new Boolean();
-<<<<<<< .merge_file_a02836
-	if (drawModule.selected == true) {
-		ctx.strokeStyle = "#99CC32";
-		isSelected = true;
-	}
-	else {
-		ctx.strokeStyle = "black";
-		isSelected = false;
-	}
-		
-=======
 	if (drawModule.selected == true){
 		ctx.strokeStyle = "#99CC32";
 		ctx.fillStyle = "#99CC32";
@@ -3424,7 +2638,6 @@ function drawStudy (drawModule)
 		isSelected = false;
 	}
 	
->>>>>>> .merge_file_a07340
 	 ctx.save();	
 	 var s = 50;
         ctx.translate(drawModule.x, drawModule.y);
@@ -3466,11 +2679,6 @@ function drawStudy (drawModule)
 	if (drawModule.rotate == 0) {
 	//draw outputs
 		ctx.lineWidth = "3";
-<<<<<<< .merge_file_a02836
-		ctx.fillStyle = "#7585C1";
-		ctx.strokeStyle = "#7585C1";
-=======
->>>>>>> .merge_file_a07340
 		for (var i = 0; i < drawModule.outputs.length; i++) {
 			ctx.beginPath();
 			ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY - 5)
@@ -3478,11 +2686,7 @@ function drawStudy (drawModule)
 			ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX, drawModule.y + drawModule.outputs[i].offsetY + 5)
 			ctx.closePath();
 			ctx.stroke();
-<<<<<<< .merge_file_a02836
-			if (drawModule.outputs[i].inputConnectedTo != null) {
-=======
 			if (drawModule.outputs[i].inputsConnectedTo.length > 0) {
->>>>>>> .merge_file_a07340
 				ctx.fill();
 			}
 		}
@@ -3491,11 +2695,6 @@ function drawStudy (drawModule)
 	{
 	//draw outputs
 		ctx.lineWidth = "3";
-<<<<<<< .merge_file_a02836
-		ctx.fillStyle = "#7585C1";
-		ctx.strokeStyle = "#7585C1";
-=======
->>>>>>> .merge_file_a07340
 		for (var i = 0; i < drawModule.outputs.length; i++) {
 			ctx.beginPath();
 			ctx.moveTo(drawModule.x + drawModule.outputs[i].offsetX - 5, drawModule.y + drawModule.outputs[i].offsetY + 5)
@@ -3503,18 +2702,12 @@ function drawStudy (drawModule)
 			ctx.lineTo(drawModule.x + drawModule.outputs[i].offsetX + 5, drawModule.y + drawModule.outputs[i].offsetY)
 			ctx.closePath();
 			ctx.stroke();
-<<<<<<< .merge_file_a02836
-			if (drawModule.outputs[i].inputConnectedTo != null) {
-=======
 			if (drawModule.outputs[i].inputsConnectedTo > 0) {
->>>>>>> .merge_file_a07340
 				ctx.fill();
 			}
 		}	
 	}	
 }
-<<<<<<< .merge_file_a02836
-=======
 
 
 function animate(module){
@@ -3678,7 +2871,6 @@ function animate(module){
 		isValid = true;
 		isIncremented = false;		
 		
->>>>>>> .merge_file_a07340
 
 		
 		processingLevel = 1;
