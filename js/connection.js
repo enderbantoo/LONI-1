@@ -70,12 +70,9 @@ makingConnection= {
 	y : 0,
 	connecting : false,
 	output : null
-<<<<<<< .merge_file_a02836
-=======
 }
 tabSelected = {
 	index : 0
->>>>>>> .merge_file_a07340
 }
 selectionBox = {
 	startX : 0,
@@ -88,15 +85,12 @@ lineSelection = {
 	selected : false,
 	fromOutput : null,
 	toInput : null
-<<<<<<< .merge_file_a02836
-=======
 }
 hoverPlus= {
 	selected : false,
 	hoverIndex : -1,
 	hoveringIndex : false,
 	hoverClose : false
->>>>>>> .merge_file_a07340
 }
 testMouse = {
 	X : -1,
@@ -138,10 +132,7 @@ function module(x,y,type,input,output)
 	this.formatModule = formatModule;
 	this.addOutput = addOutput;
 	this.addInput = addInput;
-<<<<<<< .merge_file_a02836
-	
-=======
->>>>>>> .merge_file_a07340
+
 	//outputs
 	this.outputs=new Array();	
 	this.inputs=new Array();
@@ -219,12 +210,10 @@ function Output(type,parentModule)
 {
 	this.offsetX;
 	this.offsetY;
-<<<<<<< .merge_file_a02836
 	this.type;
 	this.inputConnectedTo = null;
 	this.connectOut = connectOut;
 	this.parentModule = parentModule;
-=======
 	this.type = type;
 	this.inputsConnectedTo = new Array();
 	this.connectOut = connectOut;
@@ -258,18 +247,15 @@ function outputToInput()
 	}
 	this.inputsConnectedTo.splice(0,this.inputsConnectedTo.length);
 	this.parentModule.formatModule();
->>>>>>> .merge_file_a07340
 }
 
 function Input(type,parentModule)
 {
 	this.offsetX;
 	this.offsetY;
-<<<<<<< .merge_file_a02836
 	this.type;
 	this.outputConnectedTo = null;
 	this.parentModule = parentModule;
-=======
 	this.type = type;
 	this.outputsConnectedTo = new Array();
 	this.parentModule = parentModule;
